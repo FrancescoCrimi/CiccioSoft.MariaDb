@@ -6,9 +6,19 @@
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
 {
+    /// <summary>
+    /// Represents a simplified outcome of native MariaDB/MySQL operations.
+    /// </summary>
     public enum MySqlResultCode
     {
+        /// <summary>
+        /// Operation completed successfully.
+        /// </summary>
         Ok = 0,
+
+        /// <summary>
+        /// Operation failed.
+        /// </summary>
         Error = 1
     }
 }
