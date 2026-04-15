@@ -1,0 +1,8 @@
+C:\Users\franc\Dev\CiccioSoft.Data.MariaDb\CiccioSoft.Data.MariaDbEmbedded.Interop\obj\Debug\net10.0\CiccioSoft.Data.MariaDbEmbedded.Interop.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\franc\Dev\CiccioSoft.Data.MariaDb\CiccioSoft.Data.MariaDbEmbedded.Interop\obj\Debug\net10.0\CiccioSoft.Data.MariaDbEmbedded.Interop.AssemblyInfoInputs.cache
+C:\Users\franc\Dev\CiccioSoft.Data.MariaDb\CiccioSoft.Data.MariaDbEmbedded.Interop\obj\Debug\net10.0\CiccioSoft.Data.MariaDbEmbedded.Interop.AssemblyInfo.cs
+C:\Users\franc\Dev\CiccioSoft.Data.MariaDb\CiccioSoft.Data.MariaDbEmbedded.Interop\obj\Debug\net10.0\CiccioSoft.Data.MariaDbEmbedded.Interop.csproj.CoreCompileInputs.cache
+C:\Users\franc\Dev\CiccioSoft.Data.MariaDbEmbedded\CiccioSoft.Data.MariaDbEmbedded.Interop\obj\Debug\net10.0\CiccioSoft.Data.MariaDbEmbedded.Interop.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\franc\Dev\CiccioSoft.Data.MariaDbEmbedded\CiccioSoft.Data.MariaDbEmbedded.Interop\obj\Debug\net10.0\CiccioSoft.Data.MariaDbEmbedded.Interop.AssemblyInfoInputs.cache
+C:\Users\franc\Dev\CiccioSoft.Data.MariaDbEmbedded\CiccioSoft.Data.MariaDbEmbedded.Interop\obj\Debug\net10.0\CiccioSoft.Data.MariaDbEmbedded.Interop.AssemblyInfo.cs
+C:\Users\franc\Dev\CiccioSoft.Data.MariaDbEmbedded\CiccioSoft.Data.MariaDbEmbedded.Interop\obj\Debug\net10.0\CiccioSoft.Data.MariaDbEmbedded.Interop.csproj.CoreCompileInputs.cache
