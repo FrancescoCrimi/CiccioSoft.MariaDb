@@ -12,7 +12,7 @@ using CiccioSoft.Data.MariaDbEmbedded.Interop.IA.Native;
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
 {
     /// <summary>
-    /// Thin wrapper around a native <c>MYSQL*</c> handle.
+    /// Thin idiomatic OOP wrapper around a native <c>MYSQL*</c> connection handle.
     /// </summary>
     public sealed class MySqlClient : IDisposable
     {
@@ -23,6 +23,16 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
             _handle = handle;
         }
 
+        /// <summary>
+        /// Allocates, initializes and opens a connection using <c>mysql_real_connect</c>.
+        /// </summary>
+        /// <param name="host">Server host name or IP address.</param>
+        /// <param name="port">Server TCP port.</param>
+        /// <param name="user">User name used to authenticate.</param>
+        /// <param name="password">Password used to authenticate.</param>
+        /// <param name="database">Default schema name selected after connecting.</param>
+        /// <returns>A connected <see cref="MySqlClient"/> instance.</returns>
+        /// <exception cref="MySqlInteropException">Thrown when native initialization or connection fails.</exception>
         public static MySqlClient Open(string host, uint port, string user, string password, string database)
         {
             IntPtr handle = NativeMySqlClient.mysql_init(IntPtr.Zero);
@@ -66,6 +76,91 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
             return new MySqlClient(handle);
         }
 
+        /// <summary>
+        /// Sets a string option on the current connection handle via <c>mysql_options</c>.
+        /// </summary>
+        /// <param name="option">Native option key to configure.</param>
+        /// <param name="value">Option value encoded as UTF-8 and passed as null-terminated string.</param>
+        /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+        /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
+        public void SetOption(MySqlOption option, string value)
+        {
+            EnsureNotDisposed();
+            byte[] valueBytes = BuildUtf8NullTerminated(value);
+
+            unsafe
+            {
+                fixed (byte* pvalue = valueBytes)
+                {
+                    int result = NativeMySqlClient.mysql_options(_handle, option, pvalue);
+                    ThrowIfError(result, "mysql_options");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets a numeric option on the current connection handle via <c>mysql_options</c>.
+        /// </summary>
+        /// <param name="option">Native option key to configure.</param>
+        /// <param name="value">Unsigned numeric option value.</param>
+        /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+        /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
+        public void SetOption(MySqlOption option, uint value)
+        {
+            EnsureNotDisposed();
+
+            unsafe
+            {
+                uint localValue = value;
+                int result = NativeMySqlClient.mysql_options(_handle, option, (byte*)&localValue);
+                ThrowIfError(result, "mysql_options");
+            }
+        }
+
+        /// <summary>
+        /// Sets a boolean option on the current connection handle via <c>mysql_options</c>.
+        /// </summary>
+        /// <param name="option">Native option key to configure.</param>
+        /// <param name="enabled"><see langword="true"/> to enable the option; otherwise <see langword="false"/>.</param>
+        /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+        /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
+        public void SetOption(MySqlOption option, bool enabled)
+        {
+            SetOption(option, enabled ? 1u : 0u);
+        }
+
+        /// <summary>
+        /// Executes a SQL statement using the native <c>mysql_query</c> API.
+        /// </summary>
+        /// <param name="sql">SQL command text to execute.</param>
+        /// <returns><see cref="MySqlResultCode.Ok"/> when successful.</returns>
+        /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+        /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
+        public MySqlResultCode Query(string sql)
+        {
+            EnsureNotDisposed();
+            byte[] queryBytes = BuildUtf8NullTerminated(sql);
+
+            unsafe
+            {
+                fixed (byte* psql = queryBytes)
+                {
+                    int result = NativeMySqlClient.mysql_query(_handle, psql);
+                    if (result != 0)
+                    {
+                        throw new MySqlInteropException($"mysql_query failed: {GetLastError(_handle)}");
+                    }
+                }
+            }
+
+            return MySqlResultCode.Ok;
+        }
+
+        /// <summary>
+        /// Checks if the server connection is alive by calling <c>mysql_ping</c>.
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+        /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
         public void Ping()
         {
             EnsureNotDisposed();
@@ -76,6 +171,9 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
             }
         }
 
+        /// <summary>
+        /// Closes the native connection handle and releases unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             if (_handle == IntPtr.Zero)
@@ -93,6 +191,14 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
             if (_handle == IntPtr.Zero)
             {
                 throw new ObjectDisposedException(nameof(MySqlClient));
+            }
+        }
+
+        private void ThrowIfError(int result, string operationName)
+        {
+            if (result != 0)
+            {
+                throw new MySqlInteropException($"{operationName} failed: {GetLastError(_handle)}");
             }
         }
 

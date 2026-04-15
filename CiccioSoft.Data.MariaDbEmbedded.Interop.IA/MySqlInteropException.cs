@@ -5,30 +5,40 @@
 // https://opensource.org/licenses/MIT.
 
 using System;
-using System.Runtime.Serialization;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
 {
+    /// <summary>
+    /// Exception raised when a native MariaDB/MySQL interop call fails.
+    /// </summary>
     [Serializable]
     public sealed class MySqlInteropException : Exception
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MySqlInteropException"/> class.
+        /// </summary>
         public MySqlInteropException()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MySqlInteropException"/> class with an error message.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
         public MySqlInteropException(string message)
             : base(message)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MySqlInteropException"/> class
+        /// with an error message and an inner exception.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
+        /// <param name="innerException">The exception that caused the current exception.</param>
         public MySqlInteropException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
-
-        // private MySqlInteropException(SerializationInfo info, StreamingContext context)
-        //     : base(info, context)
-        // {
-        // }
     }
 }
