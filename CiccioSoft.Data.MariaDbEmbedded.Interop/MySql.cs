@@ -164,6 +164,31 @@ public sealed unsafe class MySql : IDisposable
         SetOption(option, enabled ? 1u : 0u);
     }
 
+    /// <summary>
+    /// Executes a SQL statement using the native <c>mysql_query</c> API.
+    /// </summary>
+    /// <param name="sql">SQL command text to execute.</param>
+    /// <returns>Native <c>mysql_query</c> result code (zero when successful).</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+    public int Query(string sql)
+    {
+        EnsureNotDisposed();
+        byte[] queryBytes = BuildUtf8NullTerminated(sql);
+
+        unsafe
+        {
+            fixed (byte* psql = queryBytes)
+            {
+               return NativeMySql.mysql_query(_handle.DangerousGetHandle(), psql);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Checks if the server connection is alive by calling <c>mysql_ping</c>.
+    /// </summary>
+    /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+    /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
     public void Ping()
     {
         EnsureNotDisposed();
@@ -174,18 +199,28 @@ public sealed unsafe class MySql : IDisposable
         }
     }
 
+    /// <summary>
+    /// Gets the version string for the loaded client library via <c>mysql_get_client_info</c>.
+    /// </summary>
+    /// <returns>The client library version string; or <see langword="null"/> if unavailable.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
     public string GetClientInfo()
     {
         EnsureNotDisposed();
         var pText = NativeMySql.mysql_get_client_info();
-        return GetStringFromPointerBytes(pText);
+        return Utils.GetStringFromPointerBytes(pText);
     }
 
+    /// <summary>
+    /// Gets the server version string for the current connection via <c>mysql_get_server_info</c>.
+    /// </summary>
+    /// <returns>The server version string; or <see langword="null"/> if unavailable.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
     public string GetServerInfo()
     {
         EnsureNotDisposed();
         var pText = NativeMySql.mysql_get_server_info(_handle.DangerousGetHandle());
-        return GetStringFromPointerBytes(pText);
+        return Utils.GetStringFromPointerBytes(pText);
     }
 
     private void EnsureNotDisposed()
@@ -220,20 +255,9 @@ public sealed unsafe class MySql : IDisposable
         }
     }
 
-    private string GetStringFromPointerBytes(byte* pBytes)
-    {
-        if (pBytes == null)
-            return string.Empty;
-
-        int nbBytes = 0;
-        while (pBytes[nbBytes] != 0)
-            nbBytes++;
-
-        ReadOnlySpan<byte> span = new(pBytes, nbBytes);
-
-        return Encoding.UTF8.GetString(span);
-    }
-
+    /// <summary>
+    /// Closes the native connection handle and releases unmanaged resources.
+    /// </summary>
     public void Dispose()
     {
         throw new NotImplementedException();
