@@ -190,6 +190,30 @@ public sealed class MySql : IDisposable
     }
 
     /// <summary>
+    /// Gets the version string for the loaded client library via <c>mysql_get_client_info</c>.
+    /// </summary>
+    /// <returns>The client library version string; or <see langword="null"/> if unavailable.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+    public string? GetClientInfo()
+    {
+        EnsureNotDisposed();
+        IntPtr pText = NativeMySql.mysql_get_client_info();
+        return Marshal.PtrToStringUTF8(pText);
+    }
+
+    /// <summary>
+    /// Gets the server version string for the current connection via <c>mysql_get_server_info</c>.
+    /// </summary>
+    /// <returns>The server version string; or <see langword="null"/> if unavailable.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+    public string? GetServerInfo()
+    {
+        EnsureNotDisposed();
+        IntPtr pText = NativeMySql.mysql_get_server_info(_handle);
+        return Marshal.PtrToStringUTF8(pText);
+    }
+
+    /// <summary>
     /// Closes the native connection handle and releases unmanaged resources.
     /// </summary>
     public void Dispose()

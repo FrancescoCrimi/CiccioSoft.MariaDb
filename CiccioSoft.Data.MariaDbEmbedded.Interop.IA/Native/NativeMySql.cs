@@ -35,6 +35,12 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA.Native
         public static extern int mysql_ping(IntPtr mysql);
 
         [DllImport(MySqlClientLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr mysql_get_server_info(IntPtr mysql);
+
+        [DllImport(MySqlClientLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr mysql_get_client_info();
+
+        [DllImport(MySqlClientLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr mysql_error(IntPtr mysql);
 
         [DllImport(MySqlClientLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
