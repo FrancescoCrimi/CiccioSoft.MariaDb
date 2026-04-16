@@ -9,11 +9,11 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
     internal static class MySqlClientLibrary
     {
 #if WINDOWS
-        public const string Name = "libmysql";
+        public const string Name = "libmariadb";
 #elif OSX
-        public const string Name = "libmysqlclient";
+        public const string Name = "libmariadb";
 #else
-        public const string Name = "libmysqlclient";
+        public const string Name = "libmariadb";
 #endif
     }
 }

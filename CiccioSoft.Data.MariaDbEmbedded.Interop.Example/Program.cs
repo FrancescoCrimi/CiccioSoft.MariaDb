@@ -17,8 +17,8 @@ class Program
         MySql mysql = MySql.Init();
         mysql.SetOption(MySqlOption.MYSQL_OPT_SSL_VERIFY_SERVER_CERT, false);
         mysql.Open("localhost", 3306, "root", "password", "testdb");
-        // Console.WriteLine($"MariaDB client version: {mysql.GetClientInfo()}");
-        // Console.WriteLine($"MariaDB server version: {mysql.GetServerInfo()}");
+        Console.WriteLine($"MariaDB client version: {mysql.GetClientInfo()}");
+        Console.WriteLine($"MariaDB server version: {mysql.GetServerInfo()}");
         mysql.Dispose();
     }
 }
