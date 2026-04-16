@@ -1,1 +1,81 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+TestResults/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vcxproj.user
+*.vcxproj.filters.user
+*.dbmdl
+*.pfx
+
+# Rider
+.idea/
+*.sln.iml
+*.sln.DotSettings.user
+
+# Visual Studio Code
+.vscode/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# StyleCop
+StyleCopReport.xml
+
+# User-specific files
+*.rsuser
+*.dotCover
+*.ncrunch*
+*.mtm
+*.coverage
+*.coveragexml
+*.testsettings
+*.vsmdi
+*.vsp
+*.vspscc
+*.vssscc
+
+# Mono
+mono_crash.*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# Publish folder
+publish/
+
+# Web publish folder
+*.Publish.xml
+
+# Package files
+*.nupkg
+*.snupkg
+
+# Build logs
+*.log
+
+# Generated files
+*.resharper
+_ReSharper*
+*.DotSettings.user
+
 /Native.old
