@@ -27,6 +27,7 @@ mysql_fetch_field*=nint
 st_mysql_field=nint
 st_mysql_res=nint
 char=byte
+mysql_option=MySqlOption
 --config
 multi-file
 generate-helper-types
