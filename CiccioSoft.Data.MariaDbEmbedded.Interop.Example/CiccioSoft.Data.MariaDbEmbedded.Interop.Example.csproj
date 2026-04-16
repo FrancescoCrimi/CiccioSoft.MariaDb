@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CiccioSoft.Data.MariaDbEmbedded.Interop\CiccioSoft.Data.MariaDbEmbedded.Interop.csproj" />
+    <ProjectReference Include="..\CiccioSoft.Data.MariaDbEmbedded.Interop.IA\CiccioSoft.Data.MariaDbEmbedded.Interop.IA.csproj" />
   </ItemGroup>
 
 </Project>
