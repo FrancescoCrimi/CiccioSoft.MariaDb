@@ -13,6 +13,7 @@ public sealed class MySqlTests
 
         Assert.Throws<ObjectDisposedException>(() => sut.Ping());
         Assert.Throws<ObjectDisposedException>(() => sut.Query("SELECT 1"));
+        Assert.Throws<ObjectDisposedException>(() => sut.Open("localhost", 3306, "root", "root", "db"));
         Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.ConnectTimeout, 1u));
         Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.Reconnect, true));
         Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.SetCharsetName, "utf8mb4"));

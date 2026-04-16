@@ -17,6 +17,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
     public sealed class MySql : IDisposable
     {
         private IntPtr _handle;
+        private bool _isConnected;
 
         private MySql(IntPtr handle)
         {
@@ -24,21 +25,40 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
         }
 
         /// <summary>
-        /// Allocates, initializes and opens a connection using <c>mysql_real_connect</c>.
+        /// Allocates and initializes a connection handle via <c>mysql_init</c>.
+        /// Use <see cref="Open(string,uint,string,string,string)"/> to actually connect.
+        /// </summary>
+        /// <returns>An initialized (but not connected) <see cref="MySql"/> instance.</returns>
+        /// <exception cref="MySqlInteropException">Thrown when native initialization fails.</exception>
+        public static MySql Init()
+        {
+            IntPtr handle = NativeMySqlClient.mysql_init(IntPtr.Zero);
+            if (handle == IntPtr.Zero)
+            {
+                throw new MySqlInteropException("Unable to allocate MYSQL handle via mysql_init.");
+            }
+
+            return new MySql(handle);
+        }
+
+        /// <summary>
+        /// Opens the current initialized handle using <c>mysql_real_connect</c>.
         /// </summary>
         /// <param name="host">Server host name or IP address.</param>
         /// <param name="port">Server TCP port.</param>
         /// <param name="user">User name used to authenticate.</param>
         /// <param name="password">Password used to authenticate.</param>
         /// <param name="database">Default schema name selected after connecting.</param>
-        /// <returns>A connected <see cref="MySql"/> instance.</returns>
-        /// <exception cref="MySqlInteropException">Thrown when native initialization or connection fails.</exception>
-        public static MySql Open(string host, uint port, string user, string password, string database)
+        /// <param name="clientFlag">Client capability flags passed to <c>mysql_real_connect</c>.</param>
+        /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when this instance is already connected.</exception>
+        /// <exception cref="MySqlInteropException">Thrown when native connection fails.</exception>
+        public void Open(string host, uint port, string user, string password, string database, ulong clientFlag = 0)
         {
-            IntPtr handle = NativeMySqlClient.mysql_init(IntPtr.Zero);
-            if (handle == IntPtr.Zero)
+            EnsureNotDisposed();
+            if (_isConnected)
             {
-                throw new MySqlInteropException("Unable to allocate MYSQL handle via mysql_init.");
+                throw new InvalidOperationException("Connection is already open.");
             }
 
             byte[] hostBytes = BuildUtf8NullTerminated(host);
@@ -55,25 +75,23 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
                 fixed (byte* pdatabase = databaseBytes)
                 {
                     connected = NativeMySqlClient.mysql_real_connect(
-                        handle,
+                        _handle,
                         phost,
                         puser,
                         ppassword,
                         pdatabase,
                         port,
                         unix_socket: (byte*)IntPtr.Zero,
-                        client_flag: 0);
+                        client_flag: clientFlag);
                 }
             }
 
             if (connected == IntPtr.Zero)
             {
-                string error = GetLastError(handle);
-                NativeMySqlClient.mysql_close(handle);
-                throw new MySqlInteropException($"mysql_real_connect failed: {error}");
+                throw new MySqlInteropException($"mysql_real_connect failed: {GetLastError(_handle)}");
             }
 
-            return new MySql(handle);
+            _isConnected = true;
         }
 
         /// <summary>
@@ -183,6 +201,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
 
             NativeMySqlClient.mysql_close(_handle);
             _handle = IntPtr.Zero;
+            _isConnected = false;
             GC.SuppressFinalize(this);
         }
 
