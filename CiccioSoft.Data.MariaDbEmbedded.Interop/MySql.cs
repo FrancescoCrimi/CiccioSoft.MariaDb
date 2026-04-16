@@ -174,16 +174,18 @@ public sealed unsafe class MySql : IDisposable
         }
     }
 
-    public string? GetClientInfo()
+    public string GetClientInfo()
     {
+        EnsureNotDisposed();
         var pText = NativeMySql.mysql_get_client_info();
-        return Marshal.PtrToStringUTF8((nint)pText);
+        return GetStringFromPointerBytes(pText);
     }
 
-    public string? GetServerInfo()
+    public string GetServerInfo()
     {
+        EnsureNotDisposed();
         var pText = NativeMySql.mysql_get_server_info(_handle.DangerousGetHandle());
-        return Marshal.PtrToStringUTF8((nint)pText);
+        return GetStringFromPointerBytes(pText);
     }
 
     private void EnsureNotDisposed()
@@ -216,6 +218,20 @@ public sealed unsafe class MySql : IDisposable
         {
             throw new MySqlInteropException($"{operationName} failed: {GetLastError(_handle.DangerousGetHandle())}");
         }
+    }
+
+    private string GetStringFromPointerBytes(byte* pBytes)
+    {
+        if (pBytes == null)
+            return string.Empty;
+
+        int nbBytes = 0;
+        while (pBytes[nbBytes] != 0)
+            nbBytes++;
+
+        ReadOnlySpan<byte> span = new(pBytes, nbBytes);
+
+        return Encoding.UTF8.GetString(span);
     }
 
     public void Dispose()
