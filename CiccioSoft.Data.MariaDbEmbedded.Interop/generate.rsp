@@ -12,6 +12,7 @@ NativeMySql
 c
 --with-access-specifier
 *=internal
+MySqlOption=public
 --exclude
 st_mysql
 st_mysql_stmt
