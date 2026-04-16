@@ -20,27 +20,60 @@ public sealed class MySqlHandle : SafeHandleZeroOrMinusOneIsInvalid
     }
     protected override bool ReleaseHandle()
     {
-        NativeMysql.mysql_close(handle);
+        NativeMySql.mysql_close(handle);
         return true;
     }
 }
 
 
+/// <summary>
+/// Thin idiomatic OOP wrapper around a native <c>MYSQL*</c> connection handle.
+/// </summary>
 public sealed unsafe class MySql : IDisposable
 {
     private readonly MySqlHandle _handle;
+    private bool _isConnected;
 
     private MySql(MySqlHandle handle)
     {
         _handle = handle;
     }
 
-    public static MySql Open(string host, uint port, string user, string password, string database)
+    /// <summary>
+    /// Allocates and initializes a connection handle via <c>mysql_init</c>.
+    /// Use <see cref="Open(string,uint,string,string,string)"/> to actually connect.
+    /// </summary>
+    /// <returns>An initialized (but not connected) <see cref="MySql"/> instance.</returns>
+    /// <exception cref="MySqlInteropException">Thrown when native initialization fails.</exception>
+    public static MySql Init()
     {
-        nint pMySql = NativeMysql.mysql_init(nint.Zero);
-        if (pMySql == nint.Zero)
+        IntPtr pMysql = NativeMySql.mysql_init(IntPtr.Zero);
+        if (pMysql == IntPtr.Zero)
         {
             throw new MySqlInteropException("Unable to allocate MYSQL handle via mysql_init.");
+        }
+
+        return new MySql(new MySqlHandle(pMysql));
+    }
+
+    /// <summary>
+    /// Opens the current initialized handle using <c>mysql_real_connect</c>.
+    /// </summary>
+    /// <param name="host">Server host name or IP address.</param>
+    /// <param name="port">Server TCP port.</param>
+    /// <param name="user">User name used to authenticate.</param>
+    /// <param name="password">Password used to authenticate.</param>
+    /// <param name="database">Default schema name selected after connecting.</param>
+    /// <param name="clientFlag">Client capability flags passed to <c>mysql_real_connect</c>.</param>
+    /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when this instance is already connected.</exception>
+    /// <exception cref="MySqlInteropException">Thrown when native connection fails.</exception>
+    public void Open(string host, uint port, string user, string password, string database)
+    {
+        EnsureNotDisposed();
+        if (_isConnected)
+        {
+            throw new InvalidOperationException("Connection is already open.");
         }
 
         byte[] hostBytes = BuildUtf8NullTerminated(host);
@@ -56,8 +89,8 @@ public sealed unsafe class MySql : IDisposable
             fixed (byte* ppassword = passwordBytes)
             fixed (byte* pdatabase = databaseBytes)
             {
-                connected = NativeMysql.mysql_real_connect(
-                    pMySql,
+                connected = NativeMySql.mysql_real_connect(
+                    _handle.DangerousGetHandle(),
                     phost,
                     puser,
                     ppassword,
@@ -70,19 +103,39 @@ public sealed unsafe class MySql : IDisposable
 
         if (connected == IntPtr.Zero)
         {
-            string error = GetLastError(pMySql);
-            NativeMysql.mysql_close(pMySql);
+            string error = GetLastError(_handle.DangerousGetHandle());
+            NativeMySql.mysql_close(_handle.DangerousGetHandle());
             throw new MySqlInteropException($"mysql_real_connect failed: {error}");
         }
-        return new MySql(new MySqlHandle(pMySql));
+
+        _isConnected = true;
     }
 
+    /// <summary>
+    /// Sets a string option on the current connection handle via <c>mysql_options</c>.
+    /// </summary>
+    /// <param name="option">Native option key to configure.</param>
+    /// <param name="value">Option value encoded as UTF-8 and passed as null-terminated string.</param>
+    /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+    /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
+    public void SetOption(MySqlOption option, string value)
+    {
+        EnsureNotDisposed();
+        byte[] valueBytes = BuildUtf8NullTerminated(value);
 
-
+        unsafe
+        {
+            fixed (byte* pvalue = valueBytes)
+            {
+                int result = NativeMySql.mysql_options(_handle, option, pvalue);
+                ThrowIfError(result, "mysql_options");
+            }
+        }
+    }
     public void Ping()
     {
         EnsureNotDisposed();
-        int result = NativeMysql.mysql_ping(_handle.DangerousGetHandle());
+        int result = NativeMySql.mysql_ping(_handle.DangerousGetHandle());
         if (result != 0)
         {
             throw new MySqlInteropException($"mysql_ping failed: {GetLastError(_handle.DangerousGetHandle())}");
@@ -91,13 +144,13 @@ public sealed unsafe class MySql : IDisposable
 
     public string? GetClientInfo()
     {
-        var pText = NativeMysql.mysql_get_client_info();
+        var pText = NativeMySql.mysql_get_client_info();
         return Marshal.PtrToStringUTF8((nint)pText);
     }
 
     public string? GetServerInfo()
     {
-        var pText = NativeMysql.mysql_get_server_info(_handle.DangerousGetHandle());
+        var pText = NativeMySql.mysql_get_server_info(_handle.DangerousGetHandle());
         return Marshal.PtrToStringUTF8((nint)pText);
     }
 
@@ -111,7 +164,7 @@ public sealed unsafe class MySql : IDisposable
 
     private static string GetLastError(IntPtr handle)
     {
-        byte* ptr = NativeMysql.mysql_error(handle);
+        byte* ptr = NativeMySql.mysql_error(handle);
         return ptr == null
             ? "unknown error"
             : Marshal.PtrToStringUTF8((nint)ptr) ?? "unknown error";

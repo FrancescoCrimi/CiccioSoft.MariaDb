@@ -3,7 +3,7 @@ using static CiccioSoft.Data.MariaDbEmbedded.Interop.Native.mariadb_field_attr_t
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 {
-    internal static unsafe partial class NativeMysql
+    internal static unsafe partial class NativeMySql
     {
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         public static extern int mariadb_field_attr([NativeTypeName("MARIADB_CONST_STRING *")] st_ma_const_string* attr, [NativeTypeName("const MYSQL_FIELD *")] nint* field, [NativeTypeName("enum mariadb_field_attr_t")] mariadb_field_attr_t type);

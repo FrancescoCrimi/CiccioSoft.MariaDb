@@ -7,7 +7,7 @@ CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 --libraryPath
 libmariadb
 --methodClassName
-NativeMysql
+NativeMySql
 --language
 c
 --with-access-specifier

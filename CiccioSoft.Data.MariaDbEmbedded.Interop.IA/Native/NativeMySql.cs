@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA.Native
 {
-    internal static unsafe class NativeMySqlClient
+    internal static unsafe class NativeMySql
     {
         [DllImport(MySqlClientLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr mysql_init(IntPtr mysql);
