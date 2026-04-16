@@ -14,11 +14,11 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
     /// <summary>
     /// Thin idiomatic OOP wrapper around a native <c>MYSQL*</c> connection handle.
     /// </summary>
-    public sealed class MySqlClient : IDisposable
+    public sealed class MySql : IDisposable
     {
         private IntPtr _handle;
 
-        private MySqlClient(IntPtr handle)
+        private MySql(IntPtr handle)
         {
             _handle = handle;
         }
@@ -31,9 +31,9 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
         /// <param name="user">User name used to authenticate.</param>
         /// <param name="password">Password used to authenticate.</param>
         /// <param name="database">Default schema name selected after connecting.</param>
-        /// <returns>A connected <see cref="MySqlClient"/> instance.</returns>
+        /// <returns>A connected <see cref="MySql"/> instance.</returns>
         /// <exception cref="MySqlInteropException">Thrown when native initialization or connection fails.</exception>
-        public static MySqlClient Open(string host, uint port, string user, string password, string database)
+        public static MySql Open(string host, uint port, string user, string password, string database)
         {
             IntPtr handle = NativeMySqlClient.mysql_init(IntPtr.Zero);
             if (handle == IntPtr.Zero)
@@ -73,7 +73,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
                 throw new MySqlInteropException($"mysql_real_connect failed: {error}");
             }
 
-            return new MySqlClient(handle);
+            return new MySql(handle);
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA
         {
             if (_handle == IntPtr.Zero)
             {
-                throw new ObjectDisposedException(nameof(MySqlClient));
+                throw new ObjectDisposedException(nameof(MySql));
             }
         }
 

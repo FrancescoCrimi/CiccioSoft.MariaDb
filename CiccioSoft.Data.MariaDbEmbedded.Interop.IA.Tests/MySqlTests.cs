@@ -4,12 +4,12 @@ using CiccioSoft.Data.MariaDbEmbedded.Interop.IA;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA.Tests;
 
-public sealed class MySqlClientTests
+public sealed class MySqlTests
 {
     [Fact]
     public void MethodsThrowObjectDisposedExceptionWhenHandleIsZero()
     {
-        using MySqlClient sut = CreateDisposedClient();
+        using MySql sut = CreateDisposedClient();
 
         Assert.Throws<ObjectDisposedException>(() => sut.Ping());
         Assert.Throws<ObjectDisposedException>(() => sut.Query("SELECT 1"));
@@ -21,7 +21,7 @@ public sealed class MySqlClientTests
     [Fact]
     public void Dispose_IsNoOpWhenAlreadyDisposed()
     {
-        using MySqlClient sut = CreateDisposedClient();
+        using MySql sut = CreateDisposedClient();
 
         sut.Dispose();
     }
@@ -64,15 +64,15 @@ public sealed class MySqlClientTests
         Assert.Same(inner, sut.InnerException);
     }
 
-    private static MySqlClient CreateDisposedClient()
+    private static MySql CreateDisposedClient()
     {
-        ConstructorInfo ctor = typeof(MySqlClient).GetConstructor(
+        ConstructorInfo ctor = typeof(MySql).GetConstructor(
             BindingFlags.NonPublic | BindingFlags.Instance,
             binder: null,
             [typeof(IntPtr)],
             modifiers: null)
-            ?? throw new InvalidOperationException("Unable to find private MySqlClient(IntPtr) constructor.");
+            ?? throw new InvalidOperationException("Unable to find private MySql(IntPtr) constructor.");
 
-        return (MySqlClient)ctor.Invoke([IntPtr.Zero]);
+        return (MySql)ctor.Invoke([IntPtr.Zero]);
     }
 }
