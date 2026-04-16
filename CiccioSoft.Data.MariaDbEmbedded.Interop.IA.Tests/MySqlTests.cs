@@ -19,7 +19,7 @@ public sealed class MySqlTests
         Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.SetCharsetName, "utf8mb4"));
         Assert.Throws<ObjectDisposedException>(() => sut.GetClientInfo());
         Assert.Throws<ObjectDisposedException>(() => sut.GetServerInfo());
-        Assert.Throws<ObjectDisposedException>(() => sut.GetLastError());
+        Assert.Throws<ObjectDisposedException>(() => sut.Error());
     }
 
     [Fact]

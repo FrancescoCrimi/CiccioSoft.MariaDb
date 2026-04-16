@@ -88,7 +88,7 @@ public sealed class MySql : IDisposable
 
         if (connected == IntPtr.Zero)
         {
-            throw new MySqlInteropException($"mysql_real_connect failed: {GetLastError(_handle)}");
+            throw new MySqlInteropException($"mysql_real_connect failed: {Error()}");
         }
 
         _isConnected = true;
@@ -172,10 +172,13 @@ public sealed class MySql : IDisposable
     /// </summary>
     /// <returns>Native error text; or <c>unknown error</c> if unavailable.</returns>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
-    public string GetLastError()
+    public string Error()
     {
         EnsureNotDisposed();
-        return GetLastError(_handle);
+        IntPtr ptr = NativeMySql.mysql_error(_handle);
+        return ptr == IntPtr.Zero
+            ? "unknown error"
+            : Marshal.PtrToStringUTF8(ptr) ?? "unknown error";
     }
 
     /// <summary>
@@ -189,7 +192,7 @@ public sealed class MySql : IDisposable
         int result = NativeMySql.mysql_ping(_handle);
         if (result != 0)
         {
-            throw new MySqlInteropException($"mysql_ping failed: {GetLastError(_handle)}");
+            throw new MySqlInteropException($"mysql_ping failed: {Error()}");
         }
     }
 
@@ -245,17 +248,10 @@ public sealed class MySql : IDisposable
     {
         if (result != 0)
         {
-            throw new MySqlInteropException($"{operationName} failed: {GetLastError(_handle)}");
+            throw new MySqlInteropException($"{operationName} failed: {Error()}");
         }
     }
 
-    private static string GetLastError(IntPtr handle)
-    {
-        IntPtr ptr = NativeMySql.mysql_error(handle);
-        return ptr == IntPtr.Zero
-            ? "unknown error"
-            : Marshal.PtrToStringUTF8(ptr) ?? "unknown error";
-    }
 
     private static byte[] BuildUtf8NullTerminated(string value)
     {
