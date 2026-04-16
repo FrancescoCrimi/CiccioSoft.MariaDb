@@ -151,10 +151,9 @@ public sealed class MySql : IDisposable
     /// Executes a SQL statement using the native <c>mysql_query</c> API.
     /// </summary>
     /// <param name="sql">SQL command text to execute.</param>
-    /// <returns><see cref="MySqlResultCode.Ok"/> when successful.</returns>
+    /// <returns>Native <c>mysql_query</c> result code (zero when successful).</returns>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
-    /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
-    public MySqlResultCode Query(string sql)
+    public int Query(string sql)
     {
         EnsureNotDisposed();
         byte[] queryBytes = BuildUtf8NullTerminated(sql);
@@ -163,15 +162,20 @@ public sealed class MySql : IDisposable
         {
             fixed (byte* psql = queryBytes)
             {
-                int result = NativeMySql.mysql_query(_handle, psql);
-                if (result != 0)
-                {
-                    throw new MySqlInteropException($"mysql_query failed: {GetLastError(_handle)}");
-                }
+                return NativeMySql.mysql_query(_handle, psql);
             }
         }
+    }
 
-        return MySqlResultCode.Ok;
+    /// <summary>
+    /// Gets the last error message associated with the current connection handle.
+    /// </summary>
+    /// <returns>Native error text; or <c>unknown error</c> if unavailable.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+    public string GetLastError()
+    {
+        EnsureNotDisposed();
+        return GetLastError(_handle);
     }
 
     /// <summary>

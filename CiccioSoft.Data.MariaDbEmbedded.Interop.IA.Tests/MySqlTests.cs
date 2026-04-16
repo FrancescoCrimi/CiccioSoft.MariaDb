@@ -19,6 +19,7 @@ public sealed class MySqlTests
         Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.SetCharsetName, "utf8mb4"));
         Assert.Throws<ObjectDisposedException>(() => sut.GetClientInfo());
         Assert.Throws<ObjectDisposedException>(() => sut.GetServerInfo());
+        Assert.Throws<ObjectDisposedException>(() => sut.GetLastError());
     }
 
     [Fact]
@@ -30,15 +31,12 @@ public sealed class MySqlTests
     }
 
     [Fact]
-    public void QueryReturnsOkEnumValueIsZero()
+    public void Query_ReturnType_IsInt()
     {
-        Assert.Equal(0, (int)MySqlResultCode.Ok);
-    }
+        MethodInfo method = typeof(MySql).GetMethod(nameof(MySql.Query), [typeof(string)])
+            ?? throw new InvalidOperationException("Unable to find Query(string) method.");
 
-    [Fact]
-    public void ErrorEnumValueIsOne()
-    {
-        Assert.Equal(1, (int)MySqlResultCode.Error);
+        Assert.Equal(typeof(int), method.ReturnType);
     }
 
     [Fact]
