@@ -17,6 +17,8 @@ public sealed class MySqlTests
         Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.ConnectTimeout, 1u));
         Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.Reconnect, true));
         Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.SetCharsetName, "utf8mb4"));
+        Assert.Throws<ObjectDisposedException>(() => sut.GetClientInfo());
+        Assert.Throws<ObjectDisposedException>(() => sut.GetServerInfo());
     }
 
     [Fact]
