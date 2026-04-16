@@ -127,11 +127,43 @@ public sealed unsafe class MySql : IDisposable
         {
             fixed (byte* pvalue = valueBytes)
             {
-                int result = NativeMySql.mysql_options(_handle, option, pvalue);
+                int result = NativeMySql.mysql_options(_handle.DangerousGetHandle(), option, pvalue);
                 ThrowIfError(result, "mysql_options");
             }
         }
     }
+
+    /// <summary>
+    /// Sets a numeric option on the current connection handle via <c>mysql_options</c>.
+    /// </summary>
+    /// <param name="option">Native option key to configure.</param>
+    /// <param name="value">Unsigned numeric option value.</param>
+    /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+    /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
+    public void SetOption(MySqlOption option, uint value)
+    {
+        EnsureNotDisposed();
+
+        unsafe
+        {
+            uint localValue = value;
+            int result = NativeMySql.mysql_options(_handle.DangerousGetHandle(), option, (byte*)&localValue);
+            ThrowIfError(result, "mysql_options");
+        }
+    }
+
+    /// <summary>
+    /// Sets a boolean option on the current connection handle via <c>mysql_options</c>.
+    /// </summary>
+    /// <param name="option">Native option key to configure.</param>
+    /// <param name="enabled"><see langword="true"/> to enable the option; otherwise <see langword="false"/>.</param>
+    /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+    /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
+    public void SetOption(MySqlOption option, bool enabled)
+    {
+        SetOption(option, enabled ? 1u : 0u);
+    }
+
     public void Ping()
     {
         EnsureNotDisposed();
@@ -178,6 +210,13 @@ public sealed unsafe class MySql : IDisposable
         return nullTerminated;
     }
 
+    private void ThrowIfError(int result, string operationName)
+    {
+        if (result != 0)
+        {
+            throw new MySqlInteropException($"{operationName} failed: {GetLastError(_handle.DangerousGetHandle())}");
+        }
+    }
 
     public void Dispose()
     {
