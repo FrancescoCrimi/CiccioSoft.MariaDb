@@ -26,4 +26,12 @@ internal static class Utils
 
         return Encoding.UTF8.GetString(span);
     }
+
+    internal static byte[] BuildUtf8NullTerminated(string value)
+    {
+        byte[] bytes = Encoding.UTF8.GetBytes(value ?? string.Empty);
+        byte[] nullTerminated = new byte[bytes.Length + 1];
+        bytes.CopyTo(nullTerminated, 0);
+        return nullTerminated;
+    }    
 }

@@ -44,13 +44,13 @@ public sealed unsafe class MySql : IDisposable
     /// Use <see cref="Open(string,uint,string,string,string)"/> to actually connect.
     /// </summary>
     /// <returns>An initialized (but not connected) <see cref="MySql"/> instance.</returns>
-    /// <exception cref="MySqlInteropException">Thrown when native initialization fails.</exception>
+    /// <exception cref="Exception">Thrown when native initialization fails.</exception>
     public static MySql Init()
     {
         IntPtr pMysql = NativeMySql.mysql_init(IntPtr.Zero);
         if (pMysql == IntPtr.Zero)
         {
-            throw new MySqlInteropException("Unable to allocate MYSQL handle via mysql_init.");
+            throw new Exception("Unable to allocate MYSQL handle via mysql_init.");
         }
 
         return new MySql(new MySqlHandle(pMysql));
@@ -67,8 +67,7 @@ public sealed unsafe class MySql : IDisposable
     /// <param name="clientFlag">Client capability flags passed to <c>mysql_real_connect</c>.</param>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
     /// <exception cref="InvalidOperationException">Thrown when this instance is already connected.</exception>
-    /// <exception cref="MySqlInteropException">Thrown when native connection fails.</exception>
-    public void Open(string host, uint port, string user, string password, string database)
+    public MySql Open(string host, uint port, string user, string password, string database)
     {
         EnsureNotDisposed();
         if (_isConnected)
@@ -76,10 +75,10 @@ public sealed unsafe class MySql : IDisposable
             throw new InvalidOperationException("Connection is already open.");
         }
 
-        byte[] hostBytes = BuildUtf8NullTerminated(host);
-        byte[] userBytes = BuildUtf8NullTerminated(user);
-        byte[] passwordBytes = BuildUtf8NullTerminated(password);
-        byte[] databaseBytes = BuildUtf8NullTerminated(database);
+        byte[] hostBytes = Utils.BuildUtf8NullTerminated(host);
+        byte[] userBytes = Utils.BuildUtf8NullTerminated(user);
+        byte[] passwordBytes = Utils.BuildUtf8NullTerminated(password);
+        byte[] databaseBytes = Utils.BuildUtf8NullTerminated(database);
 
         IntPtr connected;
         unsafe
@@ -103,12 +102,15 @@ public sealed unsafe class MySql : IDisposable
 
         if (connected == IntPtr.Zero)
         {
-            string error = GetLastError(_handle.DangerousGetHandle());
-            NativeMySql.mysql_close(_handle.DangerousGetHandle());
-            throw new MySqlInteropException($"mysql_real_connect failed: {error}");
+            _isConnected = false;
+            Dispose();
+            return null!;
         }
-
-        _isConnected = true;
+        else
+        {
+            _isConnected = true;
+            return this;
+        }
     }
 
     /// <summary>
@@ -117,18 +119,16 @@ public sealed unsafe class MySql : IDisposable
     /// <param name="option">Native option key to configure.</param>
     /// <param name="value">Option value encoded as UTF-8 and passed as null-terminated string.</param>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
-    /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
-    public void SetOption(MySqlOption option, string value)
+    public int SetOption(MySqlOption option, string value)
     {
         EnsureNotDisposed();
-        byte[] valueBytes = BuildUtf8NullTerminated(value);
+        byte[] valueBytes = Utils.BuildUtf8NullTerminated(value);
 
         unsafe
         {
             fixed (byte* pvalue = valueBytes)
             {
-                int result = NativeMySql.mysql_options(_handle.DangerousGetHandle(), option, pvalue);
-                ThrowIfError(result, "mysql_options");
+                return NativeMySql.mysql_options(_handle.DangerousGetHandle(), option, pvalue);
             }
         }
     }
@@ -139,16 +139,14 @@ public sealed unsafe class MySql : IDisposable
     /// <param name="option">Native option key to configure.</param>
     /// <param name="value">Unsigned numeric option value.</param>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
-    /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
-    public void SetOption(MySqlOption option, uint value)
+    public int SetOption(MySqlOption option, uint value)
     {
         EnsureNotDisposed();
 
         unsafe
         {
             uint localValue = value;
-            int result = NativeMySql.mysql_options(_handle.DangerousGetHandle(), option, (byte*)&localValue);
-            ThrowIfError(result, "mysql_options");
+            return NativeMySql.mysql_options(_handle.DangerousGetHandle(), option, (byte*)&localValue);
         }
     }
 
@@ -158,10 +156,9 @@ public sealed unsafe class MySql : IDisposable
     /// <param name="option">Native option key to configure.</param>
     /// <param name="enabled"><see langword="true"/> to enable the option; otherwise <see langword="false"/>.</param>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
-    /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
-    public void SetOption(MySqlOption option, bool enabled)
+    public int SetOption(MySqlOption option, bool enabled)
     {
-        SetOption(option, enabled ? 1u : 0u);
+        return SetOption(option, enabled ? 1u : 0u);
     }
 
     /// <summary>
@@ -173,30 +170,37 @@ public sealed unsafe class MySql : IDisposable
     public int Query(string sql)
     {
         EnsureNotDisposed();
-        byte[] queryBytes = BuildUtf8NullTerminated(sql);
+        byte[] queryBytes = Utils.BuildUtf8NullTerminated(sql);
 
         unsafe
         {
             fixed (byte* psql = queryBytes)
             {
-               return NativeMySql.mysql_query(_handle.DangerousGetHandle(), psql);
+                return NativeMySql.mysql_query(_handle.DangerousGetHandle(), psql);
             }
         }
+    }
+
+    /// <summary>
+    /// Gets the last error message associated with the current connection handle.
+    /// </summary>
+    /// <returns>Native error text; or <c>unknown error</c> if unavailable.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
+    public string Error()
+    {
+        EnsureNotDisposed();
+        byte* pBytes = NativeMySql.mysql_error(_handle.DangerousGetHandle());
+        return Utils.GetStringFromPointerBytes(pBytes);
     }
 
     /// <summary>
     /// Checks if the server connection is alive by calling <c>mysql_ping</c>.
     /// </summary>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
-    /// <exception cref="MySqlInteropException">Thrown when native call returns an error code.</exception>
-    public void Ping()
+    public int Ping()
     {
         EnsureNotDisposed();
-        int result = NativeMySql.mysql_ping(_handle.DangerousGetHandle());
-        if (result != 0)
-        {
-            throw new MySqlInteropException($"mysql_ping failed: {GetLastError(_handle.DangerousGetHandle())}");
-        }
+        return NativeMySql.mysql_ping(_handle.DangerousGetHandle());
     }
 
     /// <summary>
@@ -207,8 +211,8 @@ public sealed unsafe class MySql : IDisposable
     public string GetClientInfo()
     {
         EnsureNotDisposed();
-        var pText = NativeMySql.mysql_get_client_info();
-        return Utils.GetStringFromPointerBytes(pText);
+        byte* pBytes = NativeMySql.mysql_get_client_info();
+        return Utils.GetStringFromPointerBytes(pBytes);
     }
 
     /// <summary>
@@ -219,8 +223,8 @@ public sealed unsafe class MySql : IDisposable
     public string GetServerInfo()
     {
         EnsureNotDisposed();
-        var pText = NativeMySql.mysql_get_server_info(_handle.DangerousGetHandle());
-        return Utils.GetStringFromPointerBytes(pText);
+        byte* pBytes = NativeMySql.mysql_get_server_info(_handle.DangerousGetHandle());
+        return Utils.GetStringFromPointerBytes(pBytes);
     }
 
     private void EnsureNotDisposed()
@@ -231,35 +235,8 @@ public sealed unsafe class MySql : IDisposable
         }
     }
 
-    private static string GetLastError(IntPtr handle)
-    {
-        byte* ptr = NativeMySql.mysql_error(handle);
-        return ptr == null
-            ? "unknown error"
-            : Marshal.PtrToStringUTF8((nint)ptr) ?? "unknown error";
-    }
-
-    private static byte[] BuildUtf8NullTerminated(string value)
-    {
-        byte[] bytes = Encoding.UTF8.GetBytes(value ?? string.Empty);
-        byte[] nullTerminated = new byte[bytes.Length + 1];
-        bytes.CopyTo(nullTerminated, 0);
-        return nullTerminated;
-    }
-
-    private void ThrowIfError(int result, string operationName)
-    {
-        if (result != 0)
-        {
-            throw new MySqlInteropException($"{operationName} failed: {GetLastError(_handle.DangerousGetHandle())}");
-        }
-    }
-
     /// <summary>
     /// Closes the native connection handle and releases unmanaged resources.
     /// </summary>
-    public void Dispose()
-    {
-        throw new NotImplementedException();
-    }
+    public void Dispose() => _handle.Dispose();
 }
