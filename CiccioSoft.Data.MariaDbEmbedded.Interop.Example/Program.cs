@@ -17,8 +17,13 @@ class Program
         MySql mysql = MySql.Init();
         mysql.SetOption(MySqlOption.MYSQL_OPT_SSL_VERIFY_SERVER_CERT, false);
         mysql.Open("localhost", 3306, "root", "password", "test");
+
         Console.WriteLine($"MariaDB client version: {mysql.GetClientInfo()}");
         Console.WriteLine($"MariaDB server version: {mysql.GetServerInfo()}");
+
+        mysql.Query("CREATE TABLE IF NOT EXISTS test_table(id INT PRIMARY KEY AUTO_INCREMENT, nome VARCHAR(255))");
+        mysql.Query("INSERT INTO test_table(nome) VALUES('MSYS2 User')");
+
         mysql.Dispose();
     }
 }

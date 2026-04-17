@@ -14,11 +14,12 @@ public sealed class MySqlTests
         Assert.Throws<ObjectDisposedException>(() => sut.Ping());
         Assert.Throws<ObjectDisposedException>(() => sut.Query("SELECT 1"));
         Assert.Throws<ObjectDisposedException>(() => sut.Open("localhost", 3306, "root", "root", "db"));
-        Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.ConnectTimeout, 1u));
-        Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.Reconnect, true));
-        Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.SetCharsetName, "utf8mb4"));
+        Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.MYSQL_OPT_CONNECT_TIMEOUT, 1u));
+        Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.MYSQL_OPT_RECONNECT, true));
+        Assert.Throws<ObjectDisposedException>(() => sut.SetOption(MySqlOption.MYSQL_SET_CHARSET_NAME, "utf8mb4"));
         Assert.Throws<ObjectDisposedException>(() => sut.GetClientInfo());
         Assert.Throws<ObjectDisposedException>(() => sut.GetServerInfo());
+        Assert.Throws<ObjectDisposedException>(() => sut.Error());
     }
 
     [Fact]
@@ -30,42 +31,39 @@ public sealed class MySqlTests
     }
 
     [Fact]
-    public void QueryReturnsOkEnumValueIsZero()
+    public void Query_ReturnType_IsInt()
     {
-        Assert.Equal(0, (int)MySqlResultCode.Ok);
+        MethodInfo method = typeof(MySql).GetMethod(nameof(MySql.Query), [typeof(string)])
+            ?? throw new InvalidOperationException("Unable to find Query(string) method.");
+
+        Assert.Equal(typeof(int), method.ReturnType);
     }
 
-    [Fact]
-    public void ErrorEnumValueIsOne()
-    {
-        Assert.Equal(1, (int)MySqlResultCode.Error);
-    }
+    // [Fact]
+    // public void MySqlInteropException_DefaultConstructor_InitializesType()
+    // {
+    //     Exception sut = new MySqlInteropException();
 
-    [Fact]
-    public void MySqlInteropException_DefaultConstructor_InitializesType()
-    {
-        Exception sut = new MySqlInteropException();
+    //     Assert.IsType<MySqlInteropException>(sut);
+    // }
 
-        Assert.IsType<MySqlInteropException>(sut);
-    }
+    // [Fact]
+    // public void MySqlInteropException_MessageConstructor_SetsMessage()
+    // {
+    //     var sut = new MySqlInteropException("native call failed");
 
-    [Fact]
-    public void MySqlInteropException_MessageConstructor_SetsMessage()
-    {
-        var sut = new MySqlInteropException("native call failed");
+    //     Assert.Equal("native call failed", sut.Message);
+    // }
 
-        Assert.Equal("native call failed", sut.Message);
-    }
+    // [Fact]
+    // public void MySqlInteropException_InnerExceptionConstructor_SetsAllValues()
+    // {
+    //     var inner = new InvalidOperationException("inner");
+    //     var sut = new MySqlInteropException("native call failed", inner);
 
-    [Fact]
-    public void MySqlInteropException_InnerExceptionConstructor_SetsAllValues()
-    {
-        var inner = new InvalidOperationException("inner");
-        var sut = new MySqlInteropException("native call failed", inner);
-
-        Assert.Equal("native call failed", sut.Message);
-        Assert.Same(inner, sut.InnerException);
-    }
+    //     Assert.Equal("native call failed", sut.Message);
+    //     Assert.Same(inner, sut.InnerException);
+    // }
 
     private static MySql CreateDisposedClient()
     {
