@@ -18,7 +18,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public uint protocol;
 
         [NativeTypeName("unsigned long")]
-        public uint client_flag;
+        public CULong client_flag;
 
         [NativeTypeName("char *")]
         public byte* host;
@@ -69,7 +69,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public byte* shared_memory_base_name;
 
         [NativeTypeName("unsigned long")]
-        public uint max_allowed_packet;
+        public CULong max_allowed_packet;
 
         [NativeTypeName("my_bool")]
         public sbyte use_ssl;

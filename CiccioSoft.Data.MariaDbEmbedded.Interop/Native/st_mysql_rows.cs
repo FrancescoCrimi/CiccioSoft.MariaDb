@@ -9,6 +9,6 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public byte** data;
 
         [NativeTypeName("unsigned long")]
-        public uint length;
+        public CULong length;
     }
 }

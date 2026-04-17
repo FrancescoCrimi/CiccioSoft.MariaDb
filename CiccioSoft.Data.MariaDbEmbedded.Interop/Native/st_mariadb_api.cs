@@ -57,7 +57,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, byte*> mysql_info;
 
         [NativeTypeName("unsigned long (*)(MYSQL *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, uint> mysql_thread_id;
+        public delegate* unmanaged[Stdcall]<nint, CULong> mysql_thread_id;
 
         [NativeTypeName("const char *(*)(MYSQL *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, byte*> mysql_character_set_name;
@@ -87,7 +87,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, byte*, byte*, byte*, sbyte> mysql_change_user;
 
         [NativeTypeName("MYSQL *(*)(MYSQL *, const char *, const char *, const char *, const char *, unsigned int, const char *, unsigned long) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, byte*, byte*, byte*, byte*, uint, byte*, uint, nint> mysql_real_connect;
+        public delegate* unmanaged[Stdcall]<nint, byte*, byte*, byte*, byte*, uint, byte*, CULong, nint> mysql_real_connect;
 
         [NativeTypeName("void (*)(MYSQL *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, void> mysql_close;
@@ -99,13 +99,13 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, byte*, int> mysql_query;
 
         [NativeTypeName("int (*)(MYSQL *, const char *, unsigned long) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, byte*, uint, int> mysql_send_query;
+        public delegate* unmanaged[Stdcall]<nint, byte*, CULong, int> mysql_send_query;
 
         [NativeTypeName("my_bool (*)(MYSQL *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, sbyte> mysql_read_query_result;
 
         [NativeTypeName("int (*)(MYSQL *, const char *, unsigned long) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, byte*, uint, int> mysql_real_query;
+        public delegate* unmanaged[Stdcall]<nint, byte*, CULong, int> mysql_real_query;
 
         [NativeTypeName("int (*)(MYSQL *, enum mysql_enum_shutdown_level) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, mysql_enum_shutdown_level, int> mysql_shutdown;
@@ -117,7 +117,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, uint, int> mysql_refresh;
 
         [NativeTypeName("int (*)(MYSQL *, unsigned long) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, uint, int> mysql_kill;
+        public delegate* unmanaged[Stdcall]<nint, CULong, int> mysql_kill;
 
         [NativeTypeName("int (*)(MYSQL *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, int> mysql_ping;
@@ -129,7 +129,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, byte*> mysql_get_server_info;
 
         [NativeTypeName("unsigned long (*)(MYSQL *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, uint> mysql_get_server_version;
+        public delegate* unmanaged[Stdcall]<nint, CULong> mysql_get_server_version;
 
         [NativeTypeName("char *(*)(MYSQL *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, byte*> mysql_get_host_info;
@@ -174,13 +174,13 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint*, byte**> mysql_fetch_row;
 
         [NativeTypeName("unsigned long *(*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, uint*> mysql_fetch_lengths;
+        public delegate* unmanaged[Stdcall]<nint*, CULong*> mysql_fetch_lengths;
 
         [NativeTypeName("unsigned long (*)(char *, const char *, unsigned long) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<byte*, byte*, uint, uint> mysql_escape_string;
+        public delegate* unmanaged[Stdcall]<byte*, byte*, CULong, CULong> mysql_escape_string;
 
         [NativeTypeName("unsigned long (*)(MYSQL *, char *, const char *, unsigned long) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, byte*, byte*, uint, uint> mysql_real_escape_string;
+        public delegate* unmanaged[Stdcall]<nint, byte*, byte*, CULong, CULong> mysql_real_escape_string;
 
         [NativeTypeName("unsigned int (*)(void) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<uint> mysql_thread_safe;
@@ -210,7 +210,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<byte*> mysql_get_client_info;
 
         [NativeTypeName("unsigned long (*)(void) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<uint> mysql_get_client_version;
+        public delegate* unmanaged[Stdcall]<CULong> mysql_get_client_version;
 
         [NativeTypeName("my_bool (*)(MYSQL *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, sbyte> mariadb_connection;
@@ -237,7 +237,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, MySqlOption, void*, int> mysql_get_option;
 
         [NativeTypeName("unsigned long (*)(char *, const char *, unsigned long) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<byte*, byte*, uint, uint> mysql_hex_string;
+        public delegate* unmanaged[Stdcall]<byte*, byte*, CULong, CULong> mysql_hex_string;
 
         [NativeTypeName("unsigned long long (*)(MYSQL *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, ulong> mysql_get_socket;
@@ -255,7 +255,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, nint> mysql_stmt_init;
 
         [NativeTypeName("int (*)(MYSQL_STMT *, const char *, unsigned long) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, byte*, uint, int> mysql_stmt_prepare;
+        public delegate* unmanaged[Stdcall]<nint, byte*, CULong, int> mysql_stmt_prepare;
 
         [NativeTypeName("int (*)(MYSQL_STMT *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, int> mysql_stmt_execute;
@@ -264,13 +264,13 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, int> mysql_stmt_fetch;
 
         [NativeTypeName("int (*)(MYSQL_STMT *, MYSQL_BIND *, unsigned int, unsigned long) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, st_mysql_bind*, uint, uint, int> mysql_stmt_fetch_column;
+        public delegate* unmanaged[Stdcall]<nint, st_mysql_bind*, uint, CULong, int> mysql_stmt_fetch_column;
 
         [NativeTypeName("int (*)(MYSQL_STMT *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, int> mysql_stmt_store_result;
 
         [NativeTypeName("unsigned long (*)(MYSQL_STMT *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, uint> mysql_stmt_param_count;
+        public delegate* unmanaged[Stdcall]<nint, CULong> mysql_stmt_param_count;
 
         [NativeTypeName("my_bool (*)(MYSQL_STMT *, enum enum_stmt_attr_type, const void *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, enum_stmt_attr_type, void*, sbyte> mysql_stmt_attr_set;
@@ -294,7 +294,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, sbyte> mysql_stmt_free_result;
 
         [NativeTypeName("my_bool (*)(MYSQL_STMT *, unsigned int, const char *, unsigned long) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, uint, byte*, uint, sbyte> mysql_stmt_send_long_data;
+        public delegate* unmanaged[Stdcall]<nint, uint, byte*, CULong, sbyte> mysql_stmt_send_long_data;
 
         [NativeTypeName("MYSQL_RES *(*)(MYSQL_STMT *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, nint*> mysql_stmt_result_metadata;

@@ -27,8 +27,10 @@ ma_charset_info_st*=nint
 mysql_fetch_field*=nint
 st_mysql_field=nint
 st_mysql_res=nint
-char=byte
 mysql_option=MySqlOption
+char=byte
+long=CLong
+unsigned long=CULong
 --config
 multi-file
 generate-helper-types

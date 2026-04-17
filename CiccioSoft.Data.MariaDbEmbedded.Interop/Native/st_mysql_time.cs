@@ -21,7 +21,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public uint second;
 
         [NativeTypeName("unsigned long")]
-        public uint second_part;
+        public CULong second_part;
 
         [NativeTypeName("my_bool")]
         public sbyte neg;

@@ -68,7 +68,7 @@ public sealed unsafe class MySql : IDisposable
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
     /// <exception cref="InvalidOperationException">Thrown when this instance is already connected.</exception>
     /// <exception cref="MySqlInteropException">Thrown when native connection fails.</exception>
-    public void Open(string host, uint port, string user, string password, string database)
+    public void Open(string host, uint port, string user, string password, string database, uint clientFlag = 0)
     {
         EnsureNotDisposed();
         if (_isConnected)
@@ -80,6 +80,7 @@ public sealed unsafe class MySql : IDisposable
         byte[] userBytes = BuildUtf8NullTerminated(user);
         byte[] passwordBytes = BuildUtf8NullTerminated(password);
         byte[] databaseBytes = BuildUtf8NullTerminated(database);
+        CULong cClientFlag = new CULong(clientFlag);
 
         IntPtr connected;
         unsafe
@@ -97,7 +98,7 @@ public sealed unsafe class MySql : IDisposable
                     pdatabase,
                     port,
                     unix_socket: (byte*)IntPtr.Zero,
-                    clientflag: 0);
+                    clientflag: cClientFlag);
             }
         }
 
