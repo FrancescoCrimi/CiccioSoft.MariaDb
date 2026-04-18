@@ -29,8 +29,6 @@ st_mysql_field=nint
 st_mysql_res=nint
 mysql_option=MySqlOption
 char=byte
-long=CLong
-unsigned long=CULong
 --config
 multi-file
 generate-helper-types

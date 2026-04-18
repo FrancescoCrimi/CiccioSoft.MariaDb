@@ -5,8 +5,6 @@
 // https://opensource.org/licenses/MIT.
 
 using System;
-using System.Runtime.InteropServices;
-using System.Text;
 using CiccioSoft.Data.MariaDbEmbedded.Interop.Native;
 using Microsoft.Win32.SafeHandles;
 
@@ -67,7 +65,7 @@ public sealed unsafe class MySql : IDisposable
     /// <param name="clientFlag">Client capability flags passed to <c>mysql_real_connect</c>.</param>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
     /// <exception cref="InvalidOperationException">Thrown when this instance is already connected.</exception>
-    public MySql Open(string host, uint port, string user, string password, string database, uint clientFlag = 0)
+    public MySql Connect(string host, uint port, string user, string password, string database, uint clientFlag = 0)
     {
         EnsureNotDisposed();
         if (_isConnected)
@@ -79,7 +77,6 @@ public sealed unsafe class MySql : IDisposable
         byte[] userBytes = Utils.BuildUtf8NullTerminated(user);
         byte[] passwordBytes = Utils.BuildUtf8NullTerminated(password);
         byte[] databaseBytes = Utils.BuildUtf8NullTerminated(database);
-        CULong cClientFlag = new CULong(clientFlag);
 
         IntPtr connected;
         unsafe
@@ -97,7 +94,7 @@ public sealed unsafe class MySql : IDisposable
                     pdatabase,
                     port,
                     unix_socket: (byte*)IntPtr.Zero,
-                    clientflag: cClientFlag);
+                    clientflag: clientFlag);
             }
         }
 
