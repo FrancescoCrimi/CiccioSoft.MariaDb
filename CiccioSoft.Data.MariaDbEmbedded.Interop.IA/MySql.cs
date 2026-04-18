@@ -52,7 +52,7 @@ public sealed class MySql : IDisposable
     /// <param name="clientFlag">Client capability flags passed to <c>mysql_real_connect</c>.</param>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
     /// <exception cref="InvalidOperationException">Thrown when this instance is already connected.</exception>
-    public MySql Open(string host, uint port, string user, string password, string database, ulong clientFlag = 0)
+    public MySql Connect(string host, uint port, string user, string password, string database, ulong clientFlag = 0)
     {
         EnsureNotDisposed();
         if (_isConnected)
