@@ -1,7 +1,5 @@
 --file
 ./include/mysql.h
---traverse
-./include/ma_list.h
 --output
 Native
 --namespace
@@ -9,7 +7,7 @@ CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 --libraryPath
 libmariadb
 --methodClassName
-NativeMaList
+NativeMySql
 --language
 c
 --with-access-specifier

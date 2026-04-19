@@ -93,7 +93,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public sbyte unused_3;
 
         [NativeTypeName("enum mysql_option")]
-        public MySqlOption methods_to_use;
+        public mysql_option methods_to_use;
 
         [NativeTypeName("char *")]
         public byte* bind_address;

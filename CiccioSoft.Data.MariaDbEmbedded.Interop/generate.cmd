@@ -1,3 +1,6 @@
+call ClangSharpPInvokeGenerator "@generate.rsp"
 call ClangSharpPInvokeGenerator "@generate1.rsp"
 call ClangSharpPInvokeGenerator "@generate2.rsp"
 call ClangSharpPInvokeGenerator "@generate3.rsp"
+call ClangSharpPInvokeGenerator "@generate4.rsp"
+call ClangSharpPInvokeGenerator "@generate5.rsp"

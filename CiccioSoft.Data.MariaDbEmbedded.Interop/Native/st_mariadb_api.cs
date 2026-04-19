@@ -156,7 +156,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, nint*> mysql_use_result;
 
         [NativeTypeName("int (*)(MYSQL *, enum mysql_option, const void *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, MySqlOption, void*, int> mysql_options;
+        public delegate* unmanaged[Stdcall]<nint, mysql_option, void*, int> mysql_options;
 
         [NativeTypeName("void (*)(MYSQL_RES *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint*, void> mysql_free_result;
@@ -175,6 +175,9 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 
         [NativeTypeName("unsigned long *(*)(MYSQL_RES *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint*, uint*> mysql_fetch_lengths;
+
+        [NativeTypeName("MYSQL_FIELD *(*)(MYSQL_RES *) __attribute__((stdcall))")]
+        public delegate* unmanaged[Stdcall]<nint*, nint*> mysql_fetch_field;
 
         [NativeTypeName("unsigned long (*)(char *, const char *, unsigned long) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<byte*, byte*, uint, uint> mysql_escape_string;
@@ -228,13 +231,13 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<byte*, nuint*, nint, byte*, nuint*, nint, int*, nuint> mariadb_convert_string;
 
         [NativeTypeName("int (*)(MYSQL *, enum mysql_option, ...)")]
-        public delegate* unmanaged[Cdecl]<nint, MySqlOption, int> mysql_optionsv;
+        public delegate* unmanaged[Cdecl]<nint, mysql_option, int> mysql_optionsv;
 
         [NativeTypeName("int (*)(MYSQL *, enum mysql_option, void *, ...)")]
-        public delegate* unmanaged[Cdecl]<nint, MySqlOption, void*, int> mysql_get_optionv;
+        public delegate* unmanaged[Cdecl]<nint, mysql_option, void*, int> mysql_get_optionv;
 
         [NativeTypeName("int (*)(MYSQL *, enum mysql_option, void *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, MySqlOption, void*, int> mysql_get_option;
+        public delegate* unmanaged[Stdcall]<nint, mysql_option, void*, int> mysql_get_option;
 
         [NativeTypeName("unsigned long (*)(char *, const char *, unsigned long) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<byte*, byte*, uint, uint> mysql_hex_string;
