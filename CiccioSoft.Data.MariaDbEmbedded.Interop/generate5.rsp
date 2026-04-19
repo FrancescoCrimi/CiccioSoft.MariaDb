@@ -16,6 +16,7 @@ c
 *=internal
 MySqlOption=public
 --exclude
+MARIADB_X509_INFO
 ma_charset_info_st
 mysql_fetch_field
 st_mysql
