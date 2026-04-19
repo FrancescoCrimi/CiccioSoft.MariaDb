@@ -1,8 +1,9 @@
 using System;
 using System.Reflection;
-using CiccioSoft.Data.MariaDbEmbedded.Interop.IA;
+using CiccioSoft.Data.MariaDbEmbedded.Interop.Native;
+using Xunit;
 
-namespace CiccioSoft.Data.MariaDbEmbedded.Interop.IA.Tests;
+namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Tests;
 
 public sealed class MySqlTests
 {

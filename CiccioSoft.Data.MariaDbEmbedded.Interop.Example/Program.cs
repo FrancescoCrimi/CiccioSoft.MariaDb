@@ -5,7 +5,8 @@
 // https://opensource.org/licenses/MIT.
 
 using System;
-using CiccioSoft.Data.MariaDbEmbedded.Interop.IA;
+using CiccioSoft.Data.MariaDbEmbedded.Interop;
+using CiccioSoft.Data.MariaDbEmbedded.Interop.Native;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Example;
 

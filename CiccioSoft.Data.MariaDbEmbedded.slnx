@@ -4,9 +4,7 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="CiccioSoft.Data.MariaDbEmbedded.Interop.IA/CiccioSoft.Data.MariaDbEmbedded.Interop.IA.csproj" />
   <Project Path="CiccioSoft.Data.MariaDbEmbedded.Interop.Example/CiccioSoft.Data.MariaDbEmbedded.Interop.Example.csproj" />
-  <Project Path="CiccioSoft.Data.MariaDbEmbedded.Interop.IA.Tests/CiccioSoft.Data.MariaDbEmbedded.Interop.IA.Tests.csproj" />
   <Project Path="CiccioSoft.Data.MariaDbEmbedded.Interop.Tests/CiccioSoft.Data.MariaDbEmbedded.Interop.Tests.csproj" />
   <Project Path="CiccioSoft.Data.MariaDbEmbedded.Interop/CiccioSoft.Data.MariaDbEmbedded.Interop.csproj" />
   <Project Path="CiccioSoft.Data.MariaDbEmbedded.Tests/CiccioSoft.Data.MariaDbEmbedded.Tests.csproj" />
