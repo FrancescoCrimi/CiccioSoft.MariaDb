@@ -35,31 +35,31 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("my_ulonglong")]
-        public static extern ulong mysql_num_rows([NativeTypeName("MYSQL_RES *")] nint* res);
+        public static extern ulong mysql_num_rows([NativeTypeName("MYSQL_RES *")] nint res);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("unsigned int")]
-        public static extern uint mysql_num_fields([NativeTypeName("MYSQL_RES *")] nint* res);
+        public static extern uint mysql_num_fields([NativeTypeName("MYSQL_RES *")] nint res);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("my_bool")]
-        public static extern sbyte mysql_eof([NativeTypeName("MYSQL_RES *")] nint* res);
+        public static extern sbyte mysql_eof([NativeTypeName("MYSQL_RES *")] nint res);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_FIELD *")]
-        public static extern nint* mysql_fetch_field_direct([NativeTypeName("MYSQL_RES *")] nint* res, [NativeTypeName("unsigned int")] uint fieldnr);
+        public static extern nint* mysql_fetch_field_direct([NativeTypeName("MYSQL_RES *")] nint res, [NativeTypeName("unsigned int")] uint fieldnr);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_FIELD *")]
-        public static extern nint* mysql_fetch_fields([NativeTypeName("MYSQL_RES *")] nint* res);
+        public static extern nint* mysql_fetch_fields([NativeTypeName("MYSQL_RES *")] nint res);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_ROWS *")]
-        public static extern st_mysql_rows* mysql_row_tell([NativeTypeName("MYSQL_RES *")] nint* res);
+        public static extern st_mysql_rows* mysql_row_tell([NativeTypeName("MYSQL_RES *")] nint res);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("unsigned int")]
-        public static extern uint mysql_field_tell([NativeTypeName("MYSQL_RES *")] nint* res);
+        public static extern uint mysql_field_tell([NativeTypeName("MYSQL_RES *")] nint res);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("unsigned int")]
@@ -201,27 +201,27 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_RES *")]
-        public static extern nint* mysql_list_dbs([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("const char *")] byte* wild);
+        public static extern nint mysql_list_dbs([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("const char *")] byte* wild);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_RES *")]
-        public static extern nint* mysql_list_tables([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("const char *")] byte* wild);
+        public static extern nint mysql_list_tables([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("const char *")] byte* wild);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_RES *")]
-        public static extern nint* mysql_list_fields([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("const char *")] byte* table, [NativeTypeName("const char *")] byte* wild);
+        public static extern nint mysql_list_fields([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("const char *")] byte* table, [NativeTypeName("const char *")] byte* wild);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_RES *")]
-        public static extern nint* mysql_list_processes([NativeTypeName("MYSQL *")] nint mysql);
+        public static extern nint mysql_list_processes([NativeTypeName("MYSQL *")] nint mysql);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_RES *")]
-        public static extern nint* mysql_store_result([NativeTypeName("MYSQL *")] nint mysql);
+        public static extern nint mysql_store_result([NativeTypeName("MYSQL *")] nint mysql);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_RES *")]
-        public static extern nint* mysql_use_result([NativeTypeName("MYSQL *")] nint mysql);
+        public static extern nint mysql_use_result([NativeTypeName("MYSQL *")] nint mysql);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         public static extern int mysql_options([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_option")] MySqlOption option, [NativeTypeName("const void *")] void* arg);
@@ -230,26 +230,26 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public static extern int mysql_options4([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_option")] MySqlOption option, [NativeTypeName("const void *")] void* arg1, [NativeTypeName("const void *")] void* arg2);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern void mysql_free_result([NativeTypeName("MYSQL_RES *")] nint* result);
+        public static extern void mysql_free_result([NativeTypeName("MYSQL_RES *")] nint result);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern void mysql_data_seek([NativeTypeName("MYSQL_RES *")] nint* result, [NativeTypeName("unsigned long long")] ulong offset);
+        public static extern void mysql_data_seek([NativeTypeName("MYSQL_RES *")] nint result, [NativeTypeName("unsigned long long")] ulong offset);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_ROW_OFFSET")]
-        public static extern st_mysql_rows* mysql_row_seek([NativeTypeName("MYSQL_RES *")] nint* result, [NativeTypeName("MYSQL_ROW_OFFSET")] st_mysql_rows* param1);
+        public static extern st_mysql_rows* mysql_row_seek([NativeTypeName("MYSQL_RES *")] nint result, [NativeTypeName("MYSQL_ROW_OFFSET")] st_mysql_rows* param1);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_FIELD_OFFSET")]
-        public static extern uint mysql_field_seek([NativeTypeName("MYSQL_RES *")] nint* result, [NativeTypeName("MYSQL_FIELD_OFFSET")] uint offset);
+        public static extern uint mysql_field_seek([NativeTypeName("MYSQL_RES *")] nint result, [NativeTypeName("MYSQL_FIELD_OFFSET")] uint offset);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_ROW")]
-        public static extern byte** mysql_fetch_row([NativeTypeName("MYSQL_RES *")] nint* result);
+        public static extern byte** mysql_fetch_row([NativeTypeName("MYSQL_RES *")] nint result);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("unsigned long *")]
-        public static extern uint* mysql_fetch_lengths([NativeTypeName("MYSQL_RES *")] nint* result);
+        public static extern uint* mysql_fetch_lengths([NativeTypeName("MYSQL_RES *")] nint result);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("unsigned long")]
@@ -393,10 +393,10 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public static extern int mysql_autocommit_start([NativeTypeName("my_bool *")] byte* ret, [NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("my_bool")] sbyte auto_mode);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mysql_list_fields_cont([NativeTypeName("MYSQL_RES **")] nint** ret, [NativeTypeName("MYSQL *")] nint mysql, int ready_status);
+        public static extern int mysql_list_fields_cont([NativeTypeName("MYSQL_RES **")] nint* ret, [NativeTypeName("MYSQL *")] nint mysql, int ready_status);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mysql_list_fields_start([NativeTypeName("MYSQL_RES **")] nint** ret, [NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("const char *")] byte* table, [NativeTypeName("const char *")] byte* wild);
+        public static extern int mysql_list_fields_start([NativeTypeName("MYSQL_RES **")] nint* ret, [NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("const char *")] byte* table, [NativeTypeName("const char *")] byte* wild);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         public static extern int mysql_autocommit_cont([NativeTypeName("my_bool *")] byte* ret, [NativeTypeName("MYSQL *")] nint mysql, int status);
@@ -459,10 +459,10 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public static extern int mysql_real_query_cont(int* ret, [NativeTypeName("MYSQL *")] nint mysql, int status);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mysql_store_result_start([NativeTypeName("MYSQL_RES **")] nint** ret, [NativeTypeName("MYSQL *")] nint mysql);
+        public static extern int mysql_store_result_start([NativeTypeName("MYSQL_RES **")] nint* ret, [NativeTypeName("MYSQL *")] nint mysql);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mysql_store_result_cont([NativeTypeName("MYSQL_RES **")] nint** ret, [NativeTypeName("MYSQL *")] nint mysql, int status);
+        public static extern int mysql_store_result_cont([NativeTypeName("MYSQL_RES **")] nint* ret, [NativeTypeName("MYSQL *")] nint mysql, int status);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         public static extern int mysql_shutdown_start(int* ret, [NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_enum_shutdown_level")] mysql_enum_shutdown_level shutdown_level);
@@ -501,16 +501,16 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public static extern int mysql_stat_cont([NativeTypeName("const char **")] byte** ret, [NativeTypeName("MYSQL *")] nint mysql, int status);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mysql_free_result_start([NativeTypeName("MYSQL_RES *")] nint* result);
+        public static extern int mysql_free_result_start([NativeTypeName("MYSQL_RES *")] nint result);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mysql_free_result_cont([NativeTypeName("MYSQL_RES *")] nint* result, int status);
+        public static extern int mysql_free_result_cont([NativeTypeName("MYSQL_RES *")] nint result, int status);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mysql_fetch_row_start([NativeTypeName("MYSQL_ROW *")] byte*** ret, [NativeTypeName("MYSQL_RES *")] nint* result);
+        public static extern int mysql_fetch_row_start([NativeTypeName("MYSQL_ROW *")] byte*** ret, [NativeTypeName("MYSQL_RES *")] nint result);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mysql_fetch_row_cont([NativeTypeName("MYSQL_ROW *")] byte*** ret, [NativeTypeName("MYSQL_RES *")] nint* result, int status);
+        public static extern int mysql_fetch_row_cont([NativeTypeName("MYSQL_ROW *")] byte*** ret, [NativeTypeName("MYSQL_RES *")] nint result, int status);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         public static extern int mysql_read_query_result_start([NativeTypeName("my_bool *")] byte* ret, [NativeTypeName("MYSQL *")] nint mysql);
@@ -581,14 +581,14 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         public static extern int mysql_reset_connection([NativeTypeName("MYSQL *")] nint mysql);
 
-        // [NativeTypeName("#define unknown_sqlstate SQLSTATE_UNKNOWN")]
-        // public static readonly byte* unknown_sqlstate = SQLSTATE_UNKNOWN;
+        [NativeTypeName("#define unknown_sqlstate SQLSTATE_UNKNOWN")]
+        public static readonly byte* unknown_sqlstate = SQLSTATE_UNKNOWN;
 
         [NativeTypeName("#define MYSQL_COUNT_ERROR (~(unsigned long long) 0)")]
         public const ulong MYSQL_COUNT_ERROR = (~(ulong)(0));
 
         [NativeTypeName("#define MARIADB_FIELD_ATTR_LAST MARIADB_FIELD_ATTR_FORMAT_NAME")]
-        public const int MARIADB_FIELD_ATTR_LAST = (int)MARIADB_FIELD_ATTR_FORMAT_NAME;
+        public const int MARIADB_FIELD_ATTR_LAST = MARIADB_FIELD_ATTR_FORMAT_NAME;
 
         [NativeTypeName("#define AUTO_SEC_PART_DIGITS 39")]
         public const int AUTO_SEC_PART_DIGITS = 39;

@@ -3,25 +3,25 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
     internal unsafe partial struct st_mariadb_api
     {
         [NativeTypeName("unsigned long long (*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, ulong> mysql_num_rows;
+        public delegate* unmanaged[Stdcall]<nint, ulong> mysql_num_rows;
 
         [NativeTypeName("unsigned int (*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, uint> mysql_num_fields;
+        public delegate* unmanaged[Stdcall]<nint, uint> mysql_num_fields;
 
         [NativeTypeName("my_bool (*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, sbyte> mysql_eof;
+        public delegate* unmanaged[Stdcall]<nint, sbyte> mysql_eof;
 
         [NativeTypeName("MYSQL_FIELD *(*)(MYSQL_RES *, unsigned int) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, uint, nint*> mysql_fetch_field_direct;
+        public delegate* unmanaged[Stdcall]<nint, uint, nint*> mysql_fetch_field_direct;
 
         [NativeTypeName("MYSQL_FIELD *(*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, nint*> mysql_fetch_fields;
+        public delegate* unmanaged[Stdcall]<nint, nint*> mysql_fetch_fields;
 
         [NativeTypeName("MYSQL_ROWS *(*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, st_mysql_rows*> mysql_row_tell;
+        public delegate* unmanaged[Stdcall]<nint, st_mysql_rows*> mysql_row_tell;
 
         [NativeTypeName("unsigned int (*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, uint> mysql_field_tell;
+        public delegate* unmanaged[Stdcall]<nint, uint> mysql_field_tell;
 
         [NativeTypeName("unsigned int (*)(MYSQL *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, uint> mysql_field_count;
@@ -138,43 +138,43 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, uint> mysql_get_proto_info;
 
         [NativeTypeName("MYSQL_RES *(*)(MYSQL *, const char *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, byte*, nint*> mysql_list_dbs;
+        public delegate* unmanaged[Stdcall]<nint, byte*, nint> mysql_list_dbs;
 
         [NativeTypeName("MYSQL_RES *(*)(MYSQL *, const char *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, byte*, nint*> mysql_list_tables;
+        public delegate* unmanaged[Stdcall]<nint, byte*, nint> mysql_list_tables;
 
         [NativeTypeName("MYSQL_RES *(*)(MYSQL *, const char *, const char *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, byte*, byte*, nint*> mysql_list_fields;
+        public delegate* unmanaged[Stdcall]<nint, byte*, byte*, nint> mysql_list_fields;
 
         [NativeTypeName("MYSQL_RES *(*)(MYSQL *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, nint*> mysql_list_processes;
+        public delegate* unmanaged[Stdcall]<nint, nint> mysql_list_processes;
 
         [NativeTypeName("MYSQL_RES *(*)(MYSQL *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, nint*> mysql_store_result;
+        public delegate* unmanaged[Stdcall]<nint, nint> mysql_store_result;
 
         [NativeTypeName("MYSQL_RES *(*)(MYSQL *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, nint*> mysql_use_result;
+        public delegate* unmanaged[Stdcall]<nint, nint> mysql_use_result;
 
         [NativeTypeName("int (*)(MYSQL *, enum mysql_option, const void *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, MySqlOption, void*, int> mysql_options;
 
         [NativeTypeName("void (*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, void> mysql_free_result;
+        public delegate* unmanaged[Stdcall]<nint, void> mysql_free_result;
 
         [NativeTypeName("void (*)(MYSQL_RES *, unsigned long long) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, ulong, void> mysql_data_seek;
+        public delegate* unmanaged[Stdcall]<nint, ulong, void> mysql_data_seek;
 
         [NativeTypeName("MYSQL_ROW_OFFSET (*)(MYSQL_RES *, MYSQL_ROW_OFFSET) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, st_mysql_rows*, st_mysql_rows*> mysql_row_seek;
+        public delegate* unmanaged[Stdcall]<nint, st_mysql_rows*, st_mysql_rows*> mysql_row_seek;
 
         [NativeTypeName("MYSQL_FIELD_OFFSET (*)(MYSQL_RES *, MYSQL_FIELD_OFFSET) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, uint, uint> mysql_field_seek;
+        public delegate* unmanaged[Stdcall]<nint, uint, uint> mysql_field_seek;
 
         [NativeTypeName("MYSQL_ROW (*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, byte**> mysql_fetch_row;
+        public delegate* unmanaged[Stdcall]<nint, byte**> mysql_fetch_row;
 
         [NativeTypeName("unsigned long *(*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint*, uint*> mysql_fetch_lengths;
+        public delegate* unmanaged[Stdcall]<nint, uint*> mysql_fetch_lengths;
 
         [NativeTypeName("unsigned long (*)(char *, const char *, unsigned long) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<byte*, byte*, uint, uint> mysql_escape_string;
@@ -297,10 +297,10 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, uint, byte*, uint, sbyte> mysql_stmt_send_long_data;
 
         [NativeTypeName("MYSQL_RES *(*)(MYSQL_STMT *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, nint*> mysql_stmt_result_metadata;
+        public delegate* unmanaged[Stdcall]<nint, nint> mysql_stmt_result_metadata;
 
         [NativeTypeName("MYSQL_RES *(*)(MYSQL_STMT *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, nint*> mysql_stmt_param_metadata;
+        public delegate* unmanaged[Stdcall]<nint, nint> mysql_stmt_param_metadata;
 
         [NativeTypeName("unsigned int (*)(MYSQL_STMT *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, uint> mysql_stmt_errno;
