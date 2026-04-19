@@ -28,7 +28,7 @@ mysql_option=MySqlOption
 st_mysql*=nint
 st_mysql_stmt*=nint
 st_mysql_field=nint
-st_mysql_res=nint
+st_mysql_res*=nint
 char=byte
 --config
 multi-file

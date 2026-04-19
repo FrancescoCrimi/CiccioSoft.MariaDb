@@ -24,6 +24,9 @@ class Program
 
         mysql.Query("CREATE TABLE IF NOT EXISTS test_table(id INT PRIMARY KEY AUTO_INCREMENT, nome VARCHAR(255))");
         mysql.Query("INSERT INTO test_table(nome) VALUES('MSYS2 User')");
+        mysql.Query("SELECT * FROM test_table");
+
+            MySqlResult result = mysql.mysql_store_result();
 
         mysql.Dispose();
     }
