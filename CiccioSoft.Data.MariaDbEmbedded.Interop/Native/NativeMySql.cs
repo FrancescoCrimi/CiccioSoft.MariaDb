@@ -581,14 +581,14 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         public static extern int mysql_reset_connection([NativeTypeName("MYSQL *")] nint mysql);
 
-        [NativeTypeName("#define unknown_sqlstate SQLSTATE_UNKNOWN")]
-        public static readonly byte* unknown_sqlstate = SQLSTATE_UNKNOWN;
+        // [NativeTypeName("#define unknown_sqlstate SQLSTATE_UNKNOWN")]
+        // public static readonly byte* unknown_sqlstate = SQLSTATE_UNKNOWN;
 
         [NativeTypeName("#define MYSQL_COUNT_ERROR (~(unsigned long long) 0)")]
         public const ulong MYSQL_COUNT_ERROR = (~(ulong)(0));
 
         [NativeTypeName("#define MARIADB_FIELD_ATTR_LAST MARIADB_FIELD_ATTR_FORMAT_NAME")]
-        public const int MARIADB_FIELD_ATTR_LAST = MARIADB_FIELD_ATTR_FORMAT_NAME;
+        public const int MARIADB_FIELD_ATTR_LAST = (int)MARIADB_FIELD_ATTR_FORMAT_NAME;
 
         [NativeTypeName("#define AUTO_SEC_PART_DIGITS 39")]
         public const int AUTO_SEC_PART_DIGITS = 39;
