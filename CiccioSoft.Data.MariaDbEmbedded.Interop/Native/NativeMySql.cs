@@ -224,10 +224,10 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public static extern nint* mysql_use_result([NativeTypeName("MYSQL *")] nint mysql);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mysql_options([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_option")] mysql_option option, [NativeTypeName("const void *")] void* arg);
+        public static extern int mysql_options([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_option")] MySqlOption option, [NativeTypeName("const void *")] void* arg);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mysql_options4([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_option")] mysql_option option, [NativeTypeName("const void *")] void* arg1, [NativeTypeName("const void *")] void* arg2);
+        public static extern int mysql_options4([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_option")] MySqlOption option, [NativeTypeName("const void *")] void* arg1, [NativeTypeName("const void *")] void* arg2);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         public static extern void mysql_free_result([NativeTypeName("MYSQL_RES *")] nint* result);
@@ -250,10 +250,6 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("unsigned long *")]
         public static extern uint* mysql_fetch_lengths([NativeTypeName("MYSQL_RES *")] nint* result);
-
-        [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        [return: NativeTypeName("MYSQL_FIELD *")]
-        public static extern nint* mysql_fetch_field([NativeTypeName("MYSQL_RES *")] nint* result);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("unsigned long")]
@@ -320,13 +316,13 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public static extern nuint mariadb_convert_string([NativeTypeName("const char *")] byte* from, [NativeTypeName("size_t *")] nuint* from_len, [NativeTypeName("MARIADB_CHARSET_INFO *")] nint from_cs, [NativeTypeName("char *")] byte* to, [NativeTypeName("size_t *")] nuint* to_len, [NativeTypeName("MARIADB_CHARSET_INFO *")] nint to_cs, int* errorcode);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int mysql_optionsv([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_option")] mysql_option option, __arglist);
+        public static extern int mysql_optionsv([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_option")] MySqlOption option, __arglist);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int mysql_get_optionv([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_option")] mysql_option option, void* arg, __arglist);
+        public static extern int mysql_get_optionv([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_option")] MySqlOption option, void* arg, __arglist);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mysql_get_option([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_option")] mysql_option option, void* arg);
+        public static extern int mysql_get_option([NativeTypeName("MYSQL *")] nint mysql, [NativeTypeName("enum mysql_option")] MySqlOption option, void* arg);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("unsigned long")]

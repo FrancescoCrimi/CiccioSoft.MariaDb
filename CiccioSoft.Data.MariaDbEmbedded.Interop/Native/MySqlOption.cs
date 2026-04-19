@@ -1,6 +1,6 @@
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 {
-    internal enum mysql_option
+    public enum MySqlOption
     {
         MYSQL_OPT_CONNECT_TIMEOUT,
         MYSQL_OPT_COMPRESS,
