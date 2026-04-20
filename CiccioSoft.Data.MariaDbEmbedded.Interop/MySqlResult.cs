@@ -10,12 +10,15 @@ using Microsoft.Win32.SafeHandles;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 
-public sealed class MySqlResHandle : SafeHandleZeroOrMinusOneIsInvalid
+public sealed class MySqlResultHandle : SafeHandleZeroOrMinusOneIsInvalid
 {
-    internal MySqlResHandle(nint handle) : base(true)
+    internal MySqlResultHandle(nint handle) : base(true)
     {
         SetHandle(handle);
     }
+
+    public override bool IsInvalid => handle == IntPtr.Zero;
+
     protected override bool ReleaseHandle()
     {
         NativeMySql.mysql_free_result(handle);
@@ -23,11 +26,11 @@ public sealed class MySqlResHandle : SafeHandleZeroOrMinusOneIsInvalid
     }
 }
 
-public sealed unsafe class MySqlRes : IDisposable
+public sealed unsafe class MySqlResult : IDisposable
 {
-    private readonly MySqlResHandle _handle;
+    private readonly MySqlResultHandle _handle;
 
-    internal MySqlRes(MySqlResHandle handle)
+    internal MySqlResult(MySqlResultHandle handle)
     {
         _handle = handle;
     }

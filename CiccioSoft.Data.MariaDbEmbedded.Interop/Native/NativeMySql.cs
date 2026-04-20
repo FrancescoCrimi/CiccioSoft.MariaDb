@@ -6,7 +6,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
     internal static unsafe partial class NativeMySql
     {
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mariadb_field_attr([NativeTypeName("MARIADB_CONST_STRING *")] st_ma_const_string* attr, [NativeTypeName("const MYSQL_FIELD *")] nint* field, [NativeTypeName("enum mariadb_field_attr_t")] mariadb_field_attr_t type);
+        public static extern int mariadb_field_attr([NativeTypeName("MARIADB_CONST_STRING *")] st_ma_const_string* attr, [NativeTypeName("const MYSQL_FIELD *")] nint field, [NativeTypeName("enum mariadb_field_attr_t")] mariadb_field_attr_t type);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("struct st_mysql_client_plugin *")]
@@ -47,11 +47,11 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_FIELD *")]
-        public static extern nint* mysql_fetch_field_direct([NativeTypeName("MYSQL_RES *")] nint res, [NativeTypeName("unsigned int")] uint fieldnr);
+        public static extern nint mysql_fetch_field_direct([NativeTypeName("MYSQL_RES *")] nint res, [NativeTypeName("unsigned int")] uint fieldnr);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_FIELD *")]
-        public static extern nint* mysql_fetch_fields([NativeTypeName("MYSQL_RES *")] nint res);
+        public static extern nint mysql_fetch_fields([NativeTypeName("MYSQL_RES *")] nint res);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_ROWS *")]
@@ -581,14 +581,14 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         public static extern int mysql_reset_connection([NativeTypeName("MYSQL *")] nint mysql);
 
-        [NativeTypeName("#define unknown_sqlstate SQLSTATE_UNKNOWN")]
-        public static readonly byte* unknown_sqlstate = SQLSTATE_UNKNOWN;
+        // [NativeTypeName("#define unknown_sqlstate SQLSTATE_UNKNOWN")]
+        // public static readonly byte* unknown_sqlstate = SQLSTATE_UNKNOWN;
 
         [NativeTypeName("#define MYSQL_COUNT_ERROR (~(unsigned long long) 0)")]
         public const ulong MYSQL_COUNT_ERROR = (~(ulong)(0));
 
         [NativeTypeName("#define MARIADB_FIELD_ATTR_LAST MARIADB_FIELD_ATTR_FORMAT_NAME")]
-        public const int MARIADB_FIELD_ATTR_LAST = MARIADB_FIELD_ATTR_FORMAT_NAME;
+        public const int MARIADB_FIELD_ATTR_LAST = (int)MARIADB_FIELD_ATTR_FORMAT_NAME;
 
         [NativeTypeName("#define AUTO_SEC_PART_DIGITS 39")]
         public const int AUTO_SEC_PART_DIGITS = 39;

@@ -5,7 +5,6 @@
 // https://opensource.org/licenses/MIT.
 
 using System;
-using CiccioSoft.Data.MariaDbEmbedded.Interop;
 using CiccioSoft.Data.MariaDbEmbedded.Interop.Native;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Example;
@@ -26,7 +25,7 @@ class Program
         mysql.Query("INSERT INTO test_table(nome) VALUES('MSYS2 User')");
         mysql.Query("SELECT * FROM test_table");
 
-            MySqlResult result = mysql.mysql_store_result();
+        // MySqlResult result = mysql.mysql_store_result();
 
         mysql.Dispose();
     }

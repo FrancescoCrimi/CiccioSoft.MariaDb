@@ -22,10 +22,10 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Cdecl]<st_net*, st_mysql_bind*, void> store_param_func;
 
         [NativeTypeName("void (*)(struct st_mysql_bind *, MYSQL_FIELD *, unsigned char **)")]
-        public delegate* unmanaged[Cdecl]<st_mysql_bind*, nint*, byte**, void> fetch_result;
+        public delegate* unmanaged[Cdecl]<st_mysql_bind*, nint, byte**, void> fetch_result;
 
         [NativeTypeName("void (*)(struct st_mysql_bind *, MYSQL_FIELD *, unsigned char **)")]
-        public delegate* unmanaged[Cdecl]<st_mysql_bind*, nint*, byte**, void> skip_result;
+        public delegate* unmanaged[Cdecl]<st_mysql_bind*, nint, byte**, void> skip_result;
 
         [NativeTypeName("unsigned long")]
         public uint buffer_length;

@@ -12,10 +12,18 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 
 public sealed class MySqlHandle : SafeHandleZeroOrMinusOneIsInvalid
 {
-    internal MySqlHandle(nint handle) : base(true)
+    internal MySqlHandle() : base(true)
     {
-        SetHandle(handle);
+        IntPtr ptr = NativeMySql.mysql_init(IntPtr.Zero);
+        if (ptr == IntPtr.Zero)
+        {
+            throw new Exception("Unable to allocate MYSQL handle via mysql_init.");
+        }
+        SetHandle(ptr);
     }
+
+    public override bool IsInvalid => handle == IntPtr.Zero;
+
     protected override bool ReleaseHandle()
     {
         NativeMySql.mysql_close(handle);
@@ -45,13 +53,7 @@ public sealed unsafe class MySql : IDisposable
     /// <exception cref="Exception">Thrown when native initialization fails.</exception>
     public static MySql Init()
     {
-        IntPtr pMysql = NativeMySql.mysql_init(IntPtr.Zero);
-        if (pMysql == IntPtr.Zero)
-        {
-            throw new Exception("Unable to allocate MYSQL handle via mysql_init.");
-        }
-
-        return new MySql(new MySqlHandle(pMysql));
+        return new MySql(new MySqlHandle());
     }
 
     /// <summary>

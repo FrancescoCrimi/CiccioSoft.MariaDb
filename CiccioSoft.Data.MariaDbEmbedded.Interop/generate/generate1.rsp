@@ -1,13 +1,15 @@
 --file
-./include/mysql.h
+../include/mysql.h
+--traverse
+../include/mariadb_com.h
 --output
-Native
+../Native
 --namespace
 CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 --libraryPath
 libmariadb
 --methodClassName
-NativeMySql
+NativeMariadbCom
 --language
 c
 --with-access-specifier
@@ -27,7 +29,7 @@ mysql_fetch_field*=nint
 mysql_option=MySqlOption
 st_mysql*=nint
 st_mysql_stmt*=nint
-st_mysql_field=nint
+st_mysql_field*=nint
 st_mysql_res*=nint
 char=byte
 --config

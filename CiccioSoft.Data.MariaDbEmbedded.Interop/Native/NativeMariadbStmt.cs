@@ -78,11 +78,11 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_RES *")]
-        public static extern nint* mysql_stmt_result_metadata([NativeTypeName("MYSQL_STMT *")] nint stmt);
+        public static extern nint mysql_stmt_result_metadata([NativeTypeName("MYSQL_STMT *")] nint stmt);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_RES *")]
-        public static extern nint* mysql_stmt_param_metadata([NativeTypeName("MYSQL_STMT *")] nint stmt);
+        public static extern nint mysql_stmt_param_metadata([NativeTypeName("MYSQL_STMT *")] nint stmt);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("unsigned int")]
@@ -135,7 +135,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_FIELD *")]
-        public static extern nint* mariadb_stmt_fetch_fields([NativeTypeName("MYSQL_STMT *")] nint stmt);
+        public static extern nint mariadb_stmt_fetch_fields([NativeTypeName("MYSQL_STMT *")] nint stmt);
 
         [NativeTypeName("#define MYSQL_NO_DATA 100")]
         public const int MYSQL_NO_DATA = 100;

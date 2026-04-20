@@ -12,10 +12,10 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, sbyte> mysql_eof;
 
         [NativeTypeName("MYSQL_FIELD *(*)(MYSQL_RES *, unsigned int) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, uint, nint*> mysql_fetch_field_direct;
+        public delegate* unmanaged[Stdcall]<nint, uint, nint> mysql_fetch_field_direct;
 
         [NativeTypeName("MYSQL_FIELD *(*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, nint*> mysql_fetch_fields;
+        public delegate* unmanaged[Stdcall]<nint, nint> mysql_fetch_fields;
 
         [NativeTypeName("MYSQL_ROWS *(*)(MYSQL_RES *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, st_mysql_rows*> mysql_row_tell;
