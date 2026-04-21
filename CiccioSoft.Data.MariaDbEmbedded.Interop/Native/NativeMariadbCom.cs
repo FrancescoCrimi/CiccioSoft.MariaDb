@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
-using static CiccioSoft.Data.MariaDbEmbedded.Interop.Native.enum_field_types;
+using static CiccioSoft.Data.MariaDbEmbedded.Interop.Native.MySqlFieldTypes;
 using static CiccioSoft.Data.MariaDbEmbedded.Interop.Native.enum_session_state_type;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native

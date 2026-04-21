@@ -15,15 +15,16 @@ c
 --with-access-specifier
 *=internal
 MySqlOption=public
+MySqlFieldTypes=public
 --exclude
 MARIADB_X509_INFO
 ma_charset_info_st
 mysql_fetch_field
 st_mysql
 st_mysql_stmt
-st_mysql_field
 st_mysql_res
 --remap
+enum_field_types=MySqlFieldTypes
 ma_charset_info_st*=nint
 mysql_fetch_field*=nint
 mysql_option=MySqlOption

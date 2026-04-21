@@ -22,8 +22,6 @@ public sealed class MySqlHandle : SafeHandleZeroOrMinusOneIsInvalid
         SetHandle(ptr);
     }
 
-    public override bool IsInvalid => handle == IntPtr.Zero;
-
     protected override bool ReleaseHandle()
     {
         NativeMySql.mysql_close(handle);
@@ -38,7 +36,7 @@ public sealed class MySqlHandle : SafeHandleZeroOrMinusOneIsInvalid
 public sealed unsafe class MySql : IDisposable
 {
     private readonly MySqlHandle _handle;
-    private bool _isConnected;
+    private bool _isConnected = false;
 
     private MySql(MySqlHandle handle)
     {
@@ -102,9 +100,12 @@ public sealed unsafe class MySql : IDisposable
 
         if (connected == IntPtr.Zero)
         {
-            _isConnected = false;
+            // leggi l'errore PRIMA di Dispose, che chiama mysql_close
+            byte* pErr = NativeMySql.mysql_error(_handle.DangerousGetHandle());
+            uint errno = NativeMySql.mysql_errno(_handle.DangerousGetHandle());
+            string msg = Utils.GetStringFromPointerBytes(pErr);
             Dispose();
-            return null!;
+            throw new MySqlException(msg, (int)errno);
         }
         else
         {
@@ -227,9 +228,65 @@ public sealed unsafe class MySql : IDisposable
         return Utils.GetStringFromPointerBytes(pBytes);
     }
 
+    public ulong AffectedRows()
+    {
+        EnsureNotDisposed();
+        return NativeMySql.mysql_affected_rows(_handle.DangerousGetHandle());
+    }
+
+    public ulong InsertId()
+    {
+        EnsureNotDisposed();
+        return NativeMySql.mysql_insert_id(_handle.DangerousGetHandle());
+    }
+
+    public uint WarningCount()
+    {
+        EnsureNotDisposed();
+        return NativeMySql.mysql_warning_count(_handle.DangerousGetHandle());
+    }
+
+    public void AutoCommit(bool enabled)
+    {
+        EnsureNotDisposed();
+        NativeMySql.mysql_autocommit(
+            _handle.DangerousGetHandle(),
+            enabled ? (sbyte)1 : (sbyte)0);
+    }
+
+    public void Commit()
+    {
+        EnsureNotDisposed();
+        if (NativeMySql.mysql_commit(_handle.DangerousGetHandle()) != 0)
+            throw MySqlException.FromHandle(_handle.DangerousGetHandle());
+    }
+
+    public void Rollback()
+    {
+        EnsureNotDisposed();
+        if (NativeMySql.mysql_rollback(_handle.DangerousGetHandle()) != 0)
+            throw MySqlException.FromHandle(_handle.DangerousGetHandle());
+    }
+
+    // factory che lancia eccezione invece di restituire null
+    public MySqlResult? StoreResult()
+    {
+        EnsureNotDisposed();
+        nint ptr = NativeMySql.mysql_store_result(_handle.DangerousGetHandle());
+        if (ptr == 0)
+        {
+            // se c'è un errore reale, lancialo
+            uint err = NativeMySql.mysql_errno(_handle.DangerousGetHandle());
+            if (err != 0)
+                throw MySqlException.FromHandle(_handle.DangerousGetHandle());
+            return null; // query senza result set (INSERT, UPDATE…)
+        }
+        return new MySqlResult(new MySqlResultHandle(ptr));
+    }
+
     private void EnsureNotDisposed()
     {
-        if (_handle.DangerousGetHandle() == IntPtr.Zero)
+        if (_handle.IsClosed || _handle.IsInvalid)
         {
             throw new ObjectDisposedException(nameof(MySql));
         }
@@ -238,5 +295,9 @@ public sealed unsafe class MySql : IDisposable
     /// <summary>
     /// Closes the native connection handle and releases unmanaged resources.
     /// </summary>
-    public void Dispose() => _handle.Dispose();
+    public void Dispose()
+    {
+        _handle.Dispose();
+        GC.SuppressFinalize(this);
+    }
 }

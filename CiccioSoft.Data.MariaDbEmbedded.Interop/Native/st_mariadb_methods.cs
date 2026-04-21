@@ -24,7 +24,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Cdecl]<nint, uint, byte**, uint*, int> db_read_one_row;
 
         [NativeTypeName("my_bool (*)(enum enum_field_types)")]
-        public delegate* unmanaged[Cdecl]<enum_field_types, sbyte> db_supported_buffer_type;
+        public delegate* unmanaged[Cdecl]<MySqlFieldTypes, sbyte> db_supported_buffer_type;
 
         [NativeTypeName("my_bool (*)(MYSQL_STMT *)")]
         public delegate* unmanaged[Cdecl]<nint, sbyte> db_read_prepare_response;

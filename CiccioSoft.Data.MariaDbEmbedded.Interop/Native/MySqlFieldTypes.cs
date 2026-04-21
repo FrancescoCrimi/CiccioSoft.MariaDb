@@ -1,6 +1,6 @@
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 {
-    internal enum enum_field_types
+    public enum MySqlFieldTypes
     {
         MYSQL_TYPE_DECIMAL,
         MYSQL_TYPE_TINY,

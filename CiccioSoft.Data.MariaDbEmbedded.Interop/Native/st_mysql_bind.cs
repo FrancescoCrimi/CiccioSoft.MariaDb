@@ -43,7 +43,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public uint pack_length;
 
         [NativeTypeName("enum enum_field_types")]
-        public enum_field_types buffer_type;
+        public MySqlFieldTypes buffer_type;
 
         [NativeTypeName("my_bool")]
         public sbyte error_value;
