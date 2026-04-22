@@ -5,6 +5,7 @@
 // https://opensource.org/licenses/MIT.
 
 using System;
+using System.Runtime.InteropServices;
 using CiccioSoft.Data.MariaDbEmbedded.Interop.Native;
 using Microsoft.Win32.SafeHandles;
 
@@ -53,6 +54,8 @@ public sealed unsafe class MySql : IDisposable
     {
         return new MySql(new MySqlHandle());
     }
+
+    public SafeHandle Handle => _handle;
 
     /// <summary>
     /// Opens the current initialized handle using <c>mysql_real_connect</c>.
@@ -272,16 +275,24 @@ public sealed unsafe class MySql : IDisposable
     public MySqlResult? StoreResult()
     {
         EnsureNotDisposed();
-        nint ptr = NativeMySql.mysql_store_result(_handle.DangerousGetHandle());
-        if (ptr == 0)
-        {
-            // se c'è un errore reale, lancialo
-            uint err = NativeMySql.mysql_errno(_handle.DangerousGetHandle());
-            if (err != 0)
-                throw MySqlException.FromHandle(_handle.DangerousGetHandle());
-            return null; // query senza result set (INSERT, UPDATE…)
-        }
-        return new MySqlResult(new MySqlResultHandle(ptr));
+
+        // nint ptr = NativeMySql.mysql_store_result(_handle.DangerousGetHandle());
+        // if (ptr == 0)
+        // {
+        //     // se c'è un errore reale, lancialo
+        //     uint err = NativeMySql.mysql_errno(_handle.DangerousGetHandle());
+        //     if (err != 0)
+        //         throw MySqlException.FromHandle(_handle.DangerousGetHandle());
+        //     return null; // query senza result set (INSERT, UPDATE…)
+        // }
+
+        return new MySqlResult(_handle);
+    }
+
+    public MySqlStatement StmtInit()
+    {
+        EnsureNotDisposed();
+        return new MySqlStatement(_handle);        
     }
 
     private void EnsureNotDisposed()

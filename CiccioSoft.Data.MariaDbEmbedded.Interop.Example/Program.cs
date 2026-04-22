@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Francesco Crimi
+// Copyright (c) 2026 Francesco Crimi
 //
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
@@ -13,11 +13,12 @@ class Program
 {
     static void Main(string[] args)
     {
+        Hello();
         //Test1();
         Test2();
     }
 
-    static void Test1( )
+    static void Hello()
     {
         MySql mysql = MySql.Init();
         mysql.SetOption(MySqlOption.MYSQL_OPT_SSL_VERIFY_SERVER_CERT, false);
@@ -25,6 +26,15 @@ class Program
 
         Console.WriteLine($"MariaDB client version: {mysql.GetClientInfo()}");
         Console.WriteLine($"MariaDB server version: {mysql.GetServerInfo()}");
+
+        mysql.Dispose();
+    }
+
+    static void Test1( )
+    {
+        MySql mysql = MySql.Init();
+        mysql.SetOption(MySqlOption.MYSQL_OPT_SSL_VERIFY_SERVER_CERT, false);
+        mysql.Connect("localhost", 3306, "root", "password", "test");
 
         mysql.Query("CREATE TABLE IF NOT EXISTS test_table(id INT PRIMARY KEY AUTO_INCREMENT, nome VARCHAR(255))");
         mysql.Query("INSERT INTO test_table(nome) VALUES('MSYS2 User')");
@@ -52,10 +62,7 @@ class Program
         mysql.SetOption(MySqlOption.MYSQL_OPT_SSL_VERIFY_SERVER_CERT, false);
         mysql.Connect("localhost", 3306, "root", "password", "Northwind");
 
-        Console.WriteLine($"MariaDB client version: {mysql.GetClientInfo()}");
-        Console.WriteLine($"MariaDB server version: {mysql.GetServerInfo()}");
-
-        mysql.Query("SELECT ProductID, ProductName, Price FROM Products WHERE ProductID = 29");
+        mysql.Query("SELECT ProductID, ProductName, Price FROM Products");
 
         using var result = mysql.StoreResult()
             ?? throw new InvalidOperationException("Nessun result set.");
@@ -74,6 +81,20 @@ class Program
             // Console.WriteLine($"{id,5} {nome,-30} {prezzo,10:C} {data:d}");
             Console.WriteLine($"{id,5} {nome,-30} {prezzo,10:C}");
         });
+
+        mysql.Dispose();
+    }
+
+    static void TestStatement()
+    {
+        MySql mysql = MySql.Init();
+        mysql.SetOption(MySqlOption.MYSQL_OPT_SSL_VERIFY_SERVER_CERT, false);
+        mysql.Connect("localhost", 3306, "root", "password", "Northwind");
+
+        MySqlStatement stmt = mysql.StmtInit();
+        stmt.Prepare("SELECT ProductID, ProductName, Price FROM Products WHERE ProductName LIKE ?");
+
+        stmt.Dispose();
         mysql.Dispose();
     }
 }

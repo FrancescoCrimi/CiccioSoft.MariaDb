@@ -12,9 +12,18 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 
 public sealed class MySqlResultHandle : SafeHandleZeroOrMinusOneIsInvalid
 {
-    internal MySqlResultHandle(nint handle) : base(true)
+    internal MySqlResultHandle(MySqlHandle safeHandle) : base(true)
     {
-        SetHandle(handle);
+        nint ptr = NativeMySql.mysql_store_result(safeHandle.DangerousGetHandle());
+        if (ptr == 0)
+        {
+            // se c'è un errore reale, lancialo
+            uint err = NativeMySql.mysql_errno(safeHandle.DangerousGetHandle());
+            if (err != 0)
+                throw MySqlException.FromHandle(safeHandle.DangerousGetHandle());
+            // return null; // query senza result set (INSERT, UPDATE…)
+        }
+        SetHandle(ptr);
     }
 
     protected override bool ReleaseHandle()
@@ -29,9 +38,9 @@ public sealed unsafe class MySqlResult : IDisposable
     private readonly MySqlResultHandle _handle;
     private MySqlField[]? _fieldsCache;
 
-    internal MySqlResult(MySqlResultHandle handle)
+    internal MySqlResult(MySqlHandle safeHandle)
     {
-        _handle = handle;
+        _handle = new MySqlResultHandle(safeHandle);
     }
 
 
@@ -116,10 +125,19 @@ public sealed unsafe class MySqlResult : IDisposable
     }
 
 
+    private void EnsureNotDisposed()
+    {
+        if (_handle.IsClosed || _handle.IsInvalid)
+        {
+            throw new ObjectDisposedException(nameof(MySqlResult));
+        }
+    }
+
     // ── cleanup ──────────────────────────────────────────────────────────
 
     public void Dispose()
     {
         _handle.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
