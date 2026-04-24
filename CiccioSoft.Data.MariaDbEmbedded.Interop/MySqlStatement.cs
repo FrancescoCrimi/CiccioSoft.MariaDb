@@ -12,18 +12,15 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 
 internal class MySqlStatementHandle : SafeHandleZeroOrMinusOneIsInvalid
 {
-    internal MySqlStatementHandle(MySqlHandle safeHandle) : base(true)
+    internal MySqlStatementHandle(nint ptr) : base(true)
     {
-
-        nint ptr = NativeMariadbStmt.mysql_stmt_init(safeHandle.DangerousGetHandle());
-        if (ptr == 0)
-            throw new OutOfMemoryException("mysql_stmt_init failed.");
         SetHandle(ptr);
     }
 
     protected override bool ReleaseHandle()
     {
-        NativeMariadbStmt.mysql_stmt_close(handle);
+        if (handle != 0)
+            NativeMariadbStmt.mysql_stmt_close(handle);
         return true;
     }
 }
@@ -35,20 +32,11 @@ public sealed unsafe class MySqlStatement : IDisposable
     // private nint _stmt;
     // private bool _disposed;
 
-    internal MySqlStatement(MySqlHandle safeHandle)
+    internal MySqlStatement(MySqlStatementHandle handle)
     {
         // _stmt = stmt;
-        _handle = new MySqlStatementHandle(safeHandle);
+        _handle = handle;
     }
-
-    // public static MySqlStatement Init(MySql connection)
-    // {
-    //     nint stmt = NativeMariadbStmt.mysql_stmt_init(
-    //         connection.Handle.DangerousGetHandle());
-    //     if (stmt == 0)
-    //         throw new OutOfMemoryException("mysql_stmt_init failed.");
-    //     return new MySqlStatement(stmt);
-    // }
 
     public void Prepare(string sql)
     {
@@ -68,6 +56,16 @@ public sealed unsafe class MySqlStatement : IDisposable
     //     if (NativeMariadbStmt.mysql_stmt_bind_param(_stmt, binds) != 0)
     //         ThrowStmtError();
     // }
+
+    public void BindParams(MySqlBindBuilder builder)
+    {
+        EnsureNotDisposed();
+        fixed (st_mysql_bind* p = builder.Binds)
+        {
+            if (NativeMariadbStmt.mysql_stmt_bind_param(_handle.DangerousGetHandle(), p) != 0)
+                ThrowStmtError();
+        }
+    }
 
     public void Execute()
     {
@@ -104,9 +102,6 @@ public sealed unsafe class MySqlStatement : IDisposable
 
     public void Dispose()
     {
-        // if (_disposed) return;
-        // _disposed = true;
-        // NativeMariadbStmt.mysql_stmt_close(_handle.DangerousGetHandle());
         _handle.Dispose();
         GC.SuppressFinalize(this);
     }

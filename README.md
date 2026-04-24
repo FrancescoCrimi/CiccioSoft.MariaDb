@@ -48,3 +48,8 @@ The primary goal is to provide a .NET provider for MariaDB Embedded composed of 
 
 - This repository is still in an early stage and represents the foundation for the MariaDB Embedded provider.
 - The final implementation must ensure compatibility with the native MariaDB library and a natural .NET experience.
+
+## AI Instructions
+
+- Use `AGENTS.md` at the repository root for general project context.
+- Use `AGENTS.md` in individual project folders for project-specific rules and build/test commands.

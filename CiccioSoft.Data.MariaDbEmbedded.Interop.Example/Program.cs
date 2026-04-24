@@ -43,7 +43,7 @@ class Program
         MySqlResult? result = mysql.StoreResult();
 
         Console.WriteLine("Dati nella tabella MariaDB:\n");
-        while ((result?.FetchRow()) is MySqlRow row)
+        while (result?.FetchRow(out var row) == true)
         {
             for (int i = 0; i < result?.FieldCount; i++)
             {
@@ -72,7 +72,7 @@ class Program
             Console.WriteLine($"{field.Name,-20} {field.Type,-20} {(field.IsNotNull ? "NOT NULL" : "")}");
 
         // righe
-        result.ForEachRow(row =>
+        while (result?.FetchRow(out var row) == true)
         {
             int? id = row.GetInt32(0);
             string? nome = row.GetString(1);
@@ -80,7 +80,7 @@ class Program
             // DateTime? data = row.GetDateTime(3);
             // Console.WriteLine($"{id,5} {nome,-30} {prezzo,10:C} {data:d}");
             Console.WriteLine($"{id,5} {nome,-30} {prezzo,10:C}");
-        });
+        }
 
         mysql.Dispose();
     }

@@ -23,7 +23,14 @@ _Questa sezione sarà aggiornata con le linee guida per il packaging e il carica
 - Aggiornare sempre la documentazione di esempio quando si rinominano classi o metodi pubblici.
 - Il file `README.md` deve mostrare i casi d'uso più rilevanti e funzionanti per le API pubbliche.
 
-## 5. Aggiunta di nuove linee guida
+## 5. Agent docs
+
+- Mantieni le istruzioni AI principali in `AGENTS.md` alla radice del repository.
+- Aggiungi `AGENTS.md` nella cartella del progetto quando sono necessarie regole o comandi specifici per quel progetto.
+- I file `AGENTS.md` possono essere scritti in italiano, ma i nomi delle classi, dei metodi e della terminologia tecnica devono rispecchiare il codice C#.
+- I file `README.md` devono essere scritti in fluent English for programmers and maintained in English.
+
+## 6. Aggiunta di nuove linee guida
 
 - Aggiungere ogni nuova regola come sezione numerata in questo documento.
 - Mantenere il linguaggio semplice, diretto e focalizzato su decisioni di design e stile.

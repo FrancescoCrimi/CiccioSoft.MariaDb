@@ -16,7 +16,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 /// I puntatori interni diventano invalidi alla chiamata successiva di
 /// <see cref="MySqlResult.FetchRow"/> o <see cref="MySqlResult.Dispose"/>.
 /// </summary>
-public readonly unsafe struct MySqlRow
+public readonly unsafe ref struct MySqlRow
 {
     private readonly byte** _row;
     private readonly uint* _lengths;

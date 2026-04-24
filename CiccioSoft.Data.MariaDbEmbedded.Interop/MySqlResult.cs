@@ -10,25 +10,17 @@ using Microsoft.Win32.SafeHandles;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 
-public sealed class MySqlResultHandle : SafeHandleZeroOrMinusOneIsInvalid
+internal sealed class MySqlResultHandle : SafeHandleZeroOrMinusOneIsInvalid
 {
-    internal MySqlResultHandle(MySqlHandle safeHandle) : base(true)
+    internal MySqlResultHandle(nint ptr) : base(true)
     {
-        nint ptr = NativeMySql.mysql_store_result(safeHandle.DangerousGetHandle());
-        if (ptr == 0)
-        {
-            // se c'è un errore reale, lancialo
-            uint err = NativeMySql.mysql_errno(safeHandle.DangerousGetHandle());
-            if (err != 0)
-                throw MySqlException.FromHandle(safeHandle.DangerousGetHandle());
-            // return null; // query senza result set (INSERT, UPDATE…)
-        }
         SetHandle(ptr);
     }
 
     protected override bool ReleaseHandle()
     {
-        NativeMySql.mysql_free_result(handle);
+        if (handle != 0)
+            NativeMySql.mysql_free_result(handle);
         return true;
     }
 }
@@ -38,9 +30,9 @@ public sealed unsafe class MySqlResult : IDisposable
     private readonly MySqlResultHandle _handle;
     private MySqlField[]? _fieldsCache;
 
-    internal MySqlResult(MySqlHandle safeHandle)
+    internal MySqlResult(MySqlResultHandle handle)
     {
-        _handle = new MySqlResultHandle(safeHandle);
+        _handle = handle;
     }
 
 
@@ -49,42 +41,35 @@ public sealed unsafe class MySqlResult : IDisposable
     public ulong RowCount => NativeMySql.mysql_num_rows(_handle.DangerousGetHandle());
     public uint FieldCount => NativeMySql.mysql_num_fields(_handle.DangerousGetHandle());
 
-    
+
     // ── iterazione righe ─────────────────────────────────────────────────
 
     /// <summary>
     /// Avanza al record successivo.
-    /// Restituisce <see langword="null"/> quando non ci sono più righe.
+    /// Restituisce <see langword="true"/> se c'è una riga disponibile, <see langword="false"/> altrimenti.
     /// <para/>
     /// ATTENZIONE: i puntatori interni di <see cref="MySqlRow"/> sono validi
     /// solo fino alla chiamata successiva di <c>FetchRow</c> o <c>Dispose</c>.
     /// </summary>
-    public MySqlRow? FetchRow()
+    public bool FetchRow(out MySqlRow row)
     {
-        byte** row = NativeMySql.mysql_fetch_row(_handle.DangerousGetHandle());
-        if (row == null) return null;
+        byte** r = NativeMySql.mysql_fetch_row(_handle.DangerousGetHandle());
+        if (r == null)
+        {
+            row = default;
+            return false;
+        }
 
         uint* lengths = NativeMySql.mysql_fetch_lengths(_handle.DangerousGetHandle());
         uint count = FieldCount;
-        return new MySqlRow(row, lengths, count);
-    }
-
-    /// <summary>
-    /// Scorre tutte le righe del result set ed esegue <paramref name="action"/>
-    /// per ognuna. Comodo per result set completamente bufferizzati
-    /// (ottenuti con <c>mysql_store_result</c>).
-    /// </summary>
-    public void ForEachRow(Action<MySqlRow> action)
-    {
-        MySqlRow? row;
-        while ((row = FetchRow()) is not null)
-            action(row.Value);
+        row = new MySqlRow(r, lengths, count);
+        return true;
     }
 
     /// <summary>
     /// Riposiziona il cursore all'inizio del result set.
     /// </summary>
-    public void SeekToStart() =>
+    public void DataSeek() =>
         NativeMySql.mysql_data_seek(_handle.DangerousGetHandle(), 0);
 
 

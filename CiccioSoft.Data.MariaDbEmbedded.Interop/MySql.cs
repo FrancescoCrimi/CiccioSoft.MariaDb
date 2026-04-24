@@ -11,25 +11,20 @@ using Microsoft.Win32.SafeHandles;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 
-public sealed class MySqlHandle : SafeHandleZeroOrMinusOneIsInvalid
+internal sealed class MySqlHandle : SafeHandleZeroOrMinusOneIsInvalid
 {
-    internal MySqlHandle() : base(true)
+    internal MySqlHandle(nint ptr) : base(true)
     {
-        IntPtr ptr = NativeMySql.mysql_init(IntPtr.Zero);
-        if (ptr == IntPtr.Zero)
-        {
-            throw new Exception("Unable to allocate MYSQL handle via mysql_init.");
-        }
         SetHandle(ptr);
     }
 
     protected override bool ReleaseHandle()
     {
-        NativeMySql.mysql_close(handle);
+        if (handle != 0)
+            NativeMySql.mysql_close(handle);
         return true;
     }
 }
-
 
 /// <summary>
 /// Thin idiomatic OOP wrapper around a native <c>MYSQL*</c> connection handle.
@@ -38,6 +33,8 @@ public sealed unsafe class MySql : IDisposable
 {
     private readonly MySqlHandle _handle;
     private bool _isConnected = false;
+
+    public SafeHandle Handle => _handle;
 
     private MySql(MySqlHandle handle)
     {
@@ -52,10 +49,14 @@ public sealed unsafe class MySql : IDisposable
     /// <exception cref="Exception">Thrown when native initialization fails.</exception>
     public static MySql Init()
     {
-        return new MySql(new MySqlHandle());
-    }
+        nint ptr = NativeMySql.mysql_init(nint.Zero);
+        if (ptr == nint.Zero)
+        {
+            throw new Exception("Unable to allocate MYSQL handle via mysql_init.");
+        }
 
-    public SafeHandle Handle => _handle;
+        return new MySql(new MySqlHandle(ptr));
+    }
 
     /// <summary>
     /// Opens the current initialized handle using <c>mysql_real_connect</c>.
@@ -276,23 +277,29 @@ public sealed unsafe class MySql : IDisposable
     {
         EnsureNotDisposed();
 
-        // nint ptr = NativeMySql.mysql_store_result(_handle.DangerousGetHandle());
-        // if (ptr == 0)
-        // {
-        //     // se c'è un errore reale, lancialo
-        //     uint err = NativeMySql.mysql_errno(_handle.DangerousGetHandle());
-        //     if (err != 0)
-        //         throw MySqlException.FromHandle(_handle.DangerousGetHandle());
-        //     return null; // query senza result set (INSERT, UPDATE…)
-        // }
+        nint ptr = NativeMySql.mysql_store_result(_handle.DangerousGetHandle());
+        if (ptr == 0)
+        {
+            // se c'è un errore reale, lancialo
+            uint err = NativeMySql.mysql_errno(_handle.DangerousGetHandle());
+            if (err != 0)
+                throw MySqlException.FromHandle(_handle.DangerousGetHandle());
+            return null; // query senza result set (INSERT, UPDATE…)
+        }
 
-        return new MySqlResult(_handle);
+        return new MySqlResult(new MySqlResultHandle(ptr));
     }
 
     public MySqlStatement StmtInit()
     {
         EnsureNotDisposed();
-        return new MySqlStatement(_handle);        
+
+        nint ptr = NativeMariadbStmt.mysql_stmt_init(_handle.DangerousGetHandle());
+        if (ptr == 0)
+            throw new OutOfMemoryException("mysql_stmt_init failed.");
+
+
+        return new MySqlStatement(new MySqlStatementHandle(ptr));
     }
 
     private void EnsureNotDisposed()
