@@ -21,12 +21,12 @@ public static class MySqlLibrary
 
         unsafe
         {
-            int rc = NativeMySql.mysql_server_init(0, null, null);
+            int rc = MySqlNative.mysql_server_init(0, null, null);
             if (rc != 0)
                 throw new InvalidOperationException(
                     "mysql_library_init failed. Verificare che libmariadb sia installata.");
         }
     }
 
-    public static void Shutdown() => NativeMySql.mysql_server_end();
+    public static void Shutdown() => MySqlNative.mysql_server_end();
 }

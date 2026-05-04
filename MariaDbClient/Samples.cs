@@ -17,11 +17,11 @@ internal static class Program
     // ----------------------------------------------------------------
     //  Parametri di connessione – modificare prima di eseguire
     // ----------------------------------------------------------------
-    private const string Host   = "127.0.0.1";
-    private const string User   = "root";
+    private const string Host = "127.0.0.1";
+    private const string User = "root";
     private const string Passwd = "password";
-    private const string Db     = "test";
-    private const uint   Port   = 3306;
+    private const string Db = "test";
+    private const uint Port = 3306;
 
     // ----------------------------------------------------------------
     //  Entry point
@@ -40,14 +40,14 @@ internal static class Program
             ulong idMozzarella = EseguiInsertConEscape(db);
             EseguiSelect(db);
             EseguiUpdate(db);
-            // EseguiDelete(db, idMozzarella);
-            // EseguiPreparedInsert(db);
-            // EseguiPreparedSelect(db);
-            // EseguiTransazione(db);
-            // EseguiMultiStatement(db);
-            // EseguiStreamingSelect(db);
-            // EseguiPing(db);
-            // Cleanup(db);
+            EseguiDelete(db, idMozzarella);
+            EseguiPreparedInsert(db);
+            EseguiPreparedSelect(db);
+            EseguiTransazione(db);
+            EseguiMultiStatement(db);
+            EseguiStreamingSelect(db);
+            EseguiPing(db);
+            Cleanup(db);
         }
         finally
         {
@@ -66,15 +66,15 @@ internal static class Program
         db.mysql_options(MysqlOption.OptConnectTimeout, 5);
         db.mysql_options(MysqlOption.SetCharsetName, "utf8mb4");
         db.mysql_options(MysqlOption.OptReconnect, true);
-		db.mysql_options(MysqlOption.OptSslCa, false);
+        db.mysql_options(MysqlOption.OptSslCa, false);
 
         // MultiStatements è obbligatorio per la sezione multi-result
         db.mysql_real_connect(
-            host:       Host,
-            user:       User,
-            passwd:     Passwd,
-            db:         Db,
-            port:       Port,
+            host: Host,
+            user: User,
+            passwd: Passwd,
+            db: Db,
+            port: Port,
             clientFlag: ClientFlags.Protocol41 | ClientFlags.MultiStatements
         );
 
@@ -119,7 +119,7 @@ internal static class Program
         string nomeEsc = db.mysql_real_escape_string("Mozzarella \"D.O.P.\"");
         db.mysql_query($"INSERT INTO prodotti (nome, prezzo) VALUES ('{nomeEsc}', 4.50)");
 
-        ulong id       = db.mysql_insert_id();
+        ulong id = db.mysql_insert_id();
         ulong affected = db.mysql_affected_rows();
         Console.WriteLine($"  Inserito id={id}, affected={affected}");
         return id;
@@ -240,25 +240,25 @@ internal static class Program
         stmtSel.mysql_stmt_bind_param(paramBind);
 
         // Buffer di output (uno array per colonna, compatibile con GCHandle.Pinned)
-        var bufId      = new int[1];
-        var bufNome    = new byte[101];
-        var bufPrezzo  = new double[1];     // DECIMAL → double via driver C
-        var lenId      = new nuint[1];
-        var lenNome    = new nuint[1];      // driver scrive qui la lunghezza effettiva
-        var lenPrezzo  = new nuint[1];
-        var nullId     = new byte[1];       // 0 = valore presente, 1 = SQL NULL
-        var nullNome   = new byte[1];
+        var bufId = new int[1];
+        var bufNome = new byte[101];
+        var bufPrezzo = new double[1];     // DECIMAL → double via driver C
+        var lenId = new nuint[1];
+        var lenNome = new nuint[1];      // driver scrive qui la lunghezza effettiva
+        var lenPrezzo = new nuint[1];
+        var nullId = new byte[1];       // 0 = valore presente, 1 = SQL NULL
+        var nullNome = new byte[1];
         var nullPrezzo = new byte[1];
 
         // Pin a lunga durata: restano validi per tutto il loop di fetch
-        var hBufId      = GCHandle.Alloc(bufId,      GCHandleType.Pinned);
-        var hBufNome    = GCHandle.Alloc(bufNome,    GCHandleType.Pinned);
-        var hBufPrezzo  = GCHandle.Alloc(bufPrezzo,  GCHandleType.Pinned);
-        var hLenId      = GCHandle.Alloc(lenId,      GCHandleType.Pinned);
-        var hLenNome    = GCHandle.Alloc(lenNome,    GCHandleType.Pinned);
-        var hLenPrezzo  = GCHandle.Alloc(lenPrezzo,  GCHandleType.Pinned);
-        var hNullId     = GCHandle.Alloc(nullId,     GCHandleType.Pinned);
-        var hNullNome   = GCHandle.Alloc(nullNome,   GCHandleType.Pinned);
+        var hBufId = GCHandle.Alloc(bufId, GCHandleType.Pinned);
+        var hBufNome = GCHandle.Alloc(bufNome, GCHandleType.Pinned);
+        var hBufPrezzo = GCHandle.Alloc(bufPrezzo, GCHandleType.Pinned);
+        var hLenId = GCHandle.Alloc(lenId, GCHandleType.Pinned);
+        var hLenNome = GCHandle.Alloc(lenNome, GCHandleType.Pinned);
+        var hLenPrezzo = GCHandle.Alloc(lenPrezzo, GCHandleType.Pinned);
+        var hNullId = GCHandle.Alloc(nullId, GCHandleType.Pinned);
+        var hNullNome = GCHandle.Alloc(nullNome, GCHandleType.Pinned);
         var hNullPrezzo = GCHandle.Alloc(nullPrezzo, GCHandleType.Pinned);
 
         try
@@ -269,25 +269,25 @@ internal static class Program
                 MysqlBindNative* p = resBind.NativeArray.Ptr;
 
                 // colonna 0: id INT
-                p[0].BufferType   = MysqlFieldType.Long;
-                p[0].Buffer       = (void*)hBufId.AddrOfPinnedObject();
+                p[0].BufferType = MysqlFieldType.Long;
+                p[0].Buffer = (void*)hBufId.AddrOfPinnedObject();
                 p[0].BufferLength = sizeof(int);
-                p[0].Length       = (uint*)hLenId.AddrOfPinnedObject();
-                p[0].IsNull       = (byte*)hNullId.AddrOfPinnedObject();
+                p[0].Length = (uint*)hLenId.AddrOfPinnedObject();
+                p[0].IsNull = (byte*)hNullId.AddrOfPinnedObject();
 
                 // colonna 1: nome VARCHAR
-                p[1].BufferType   = MysqlFieldType.VarString;
-                p[1].Buffer       = (void*)hBufNome.AddrOfPinnedObject();
+                p[1].BufferType = MysqlFieldType.VarString;
+                p[1].Buffer = (void*)hBufNome.AddrOfPinnedObject();
                 p[1].BufferLength = (uint)bufNome.Length;
-                p[1].Length       = (uint*)hLenNome.AddrOfPinnedObject();
-                p[1].IsNull       = (byte*)hNullNome.AddrOfPinnedObject();
+                p[1].Length = (uint*)hLenNome.AddrOfPinnedObject();
+                p[1].IsNull = (byte*)hNullNome.AddrOfPinnedObject();
 
                 // colonna 2: prezzo DECIMAL → DOUBLE
-                p[2].BufferType   = MysqlFieldType.Double;
-                p[2].Buffer       = (void*)hBufPrezzo.AddrOfPinnedObject();
+                p[2].BufferType = MysqlFieldType.Double;
+                p[2].Buffer = (void*)hBufPrezzo.AddrOfPinnedObject();
                 p[2].BufferLength = sizeof(double);
-                p[2].Length       = (uint*)hLenPrezzo.AddrOfPinnedObject();
-                p[2].IsNull       = (byte*)hNullPrezzo.AddrOfPinnedObject();
+                p[2].Length = (uint*)hLenPrezzo.AddrOfPinnedObject();
+                p[2].IsNull = (byte*)hNullPrezzo.AddrOfPinnedObject();
             }
 
             stmtSel.mysql_stmt_bind_result(resBind);
@@ -298,11 +298,11 @@ internal static class Program
             // Il driver popola i buffer ad ogni mysql_stmt_fetch()
             while (stmtSel.mysql_stmt_fetch())
             {
-                int    id   = nullId[0]     == 0 ? bufId[0]    : 0;
-                string nome = nullNome[0]   == 0
+                int id = nullId[0] == 0 ? bufId[0] : 0;
+                string nome = nullNome[0] == 0
                     ? Encoding.UTF8.GetString(bufNome, 0, (int)lenNome[0])
                     : "NULL";
-                double prz  = nullPrezzo[0] == 0 ? bufPrezzo[0] : 0.0;
+                double prz = nullPrezzo[0] == 0 ? bufPrezzo[0] : 0.0;
                 Console.WriteLine($"    id={id,-4} nome={nome,-30} prezzo={prz:F2}");
             }
 
@@ -311,8 +311,8 @@ internal static class Program
         finally
         {
             // Libera i pin sempre, anche in caso di eccezione
-            hBufId.Free();  hBufNome.Free();  hBufPrezzo.Free();
-            hLenId.Free();  hLenNome.Free();  hLenPrezzo.Free();
+            hBufId.Free(); hBufNome.Free(); hBufPrezzo.Free();
+            hLenId.Free(); hLenNome.Free(); hLenPrezzo.Free();
             hNullId.Free(); hNullNome.Free(); hNullPrezzo.Free();
         }
     }

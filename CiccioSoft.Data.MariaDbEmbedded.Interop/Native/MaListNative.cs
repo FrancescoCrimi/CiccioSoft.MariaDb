@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 {
-    internal static unsafe partial class NativeMaList
+    internal static unsafe partial class MaListNative
     {
         [DllImport("libmariadb", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("LIST *")]

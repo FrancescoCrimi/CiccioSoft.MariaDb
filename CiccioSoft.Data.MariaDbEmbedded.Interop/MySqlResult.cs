@@ -20,7 +20,7 @@ internal sealed class MySqlResultHandle : SafeHandleZeroOrMinusOneIsInvalid
     protected override bool ReleaseHandle()
     {
         if (handle != 0)
-            NativeMySql.mysql_free_result(handle);
+            MySqlNative.mysql_free_result(handle);
         return true;
     }
 }
@@ -36,13 +36,30 @@ public sealed unsafe class MySqlResult : IDisposable
     }
 
 
-    // ── informazioni generali ────────────────────────────────────────────
+    #region Informazioni generali
 
-    public ulong RowCount => NativeMySql.mysql_num_rows(_handle.DangerousGetHandle());
-    public uint FieldCount => NativeMySql.mysql_num_fields(_handle.DangerousGetHandle());
+    public ulong NumRows
+    {
+        get
+        {
+            EnsureNotDisposed();
+            return MySqlNative.mysql_num_rows(_handle.DangerousGetHandle());
+        }
+    }
+
+    public uint NumFields
+    {
+        get
+        {
+            EnsureNotDisposed();
+            return MySqlNative.mysql_num_fields(_handle.DangerousGetHandle());
+        }
+    }
+
+    #endregion
 
 
-    // ── iterazione righe ─────────────────────────────────────────────────
+    #region Iterazione righe
 
     /// <summary>
     /// Avanza al record successivo.
@@ -53,27 +70,42 @@ public sealed unsafe class MySqlResult : IDisposable
     /// </summary>
     public bool FetchRow(out MySqlRow row)
     {
-        byte** r = NativeMySql.mysql_fetch_row(_handle.DangerousGetHandle());
-        if (r == null)
+        EnsureNotDisposed();
+
+        // byte** r = NativeMySql.mysql_fetch_row(_handle.DangerousGetHandle());
+        nint r = MySqlNative.mysql_fetch_row(_handle.DangerousGetHandle());
+
+        // if (r == null)
+        if (r == 0)
         {
             row = default;
             return false;
         }
 
-        uint* lengths = NativeMySql.mysql_fetch_lengths(_handle.DangerousGetHandle());
-        uint count = FieldCount;
-        row = new MySqlRow(r, lengths, count);
+        uint* lengths = MySqlNative.mysql_fetch_lengths(_handle.DangerousGetHandle());
+        // uint count = NumFields;
+        // row = new MySqlRow(r, lengths, count);
+
+        ReadOnlySpan<nint> rowSpan = new(r.ToPointer(), (int)NumFields);
+        ReadOnlySpan<uint> lengthsSpan = new(lengths, (int)NumFields);
+        row = new MySqlRow(rowSpan, lengthsSpan, FetchFields());
+
         return true;
     }
 
     /// <summary>
     /// Riposiziona il cursore all'inizio del result set.
     /// </summary>
-    public void DataSeek() =>
-        NativeMySql.mysql_data_seek(_handle.DangerousGetHandle(), 0);
+    public void DataSeek()
+    {
+        EnsureNotDisposed();
+        MySqlNative.mysql_data_seek(_handle.DangerousGetHandle(), 0);
+    }
+
+    #endregion
 
 
-    // ── metadati colonne ─────────────────────────────────────────────────
+    #region Metadati colonne
 
     /// <summary>
     /// Restituisce i metadati di tutte le colonne.
@@ -81,16 +113,20 @@ public sealed unsafe class MySqlResult : IDisposable
     /// </summary>
     public MySqlField[] FetchFields()
     {
+        EnsureNotDisposed();
+
         if (_fieldsCache != null)
             return _fieldsCache;
 
-        uint count = FieldCount;
+        uint count = NumFields;
         _fieldsCache = new MySqlField[count];
 
+        MySqlFieldNative* ptr = MySqlNative.mysql_fetch_fields(_handle.DangerousGetHandle());
+        Span<MySqlFieldNative> nativeFields = new(ptr, (int)count);  //MySqlFieldNative
         for (uint i = 0; i < count; i++)
         {
-            nint pFields = NativeMySql.mysql_fetch_field_direct(_handle.DangerousGetHandle(), i);
-            _fieldsCache[i] = MySqlField.FromPointer(pFields);
+            ref MySqlFieldNative f = ref nativeFields[(int)i];
+            _fieldsCache[i] = new MySqlField(f);
         }
 
         return _fieldsCache;
@@ -101,14 +137,20 @@ public sealed unsafe class MySqlResult : IDisposable
     /// </summary>
     public MySqlField FetchField(uint index)
     {
-        if (index >= FieldCount)
+        EnsureNotDisposed();
+
+        if (index >= NumFields)
             throw new ArgumentOutOfRangeException(nameof(index));
 
-        nint ptr = NativeMySql.mysql_fetch_field_direct(
-            _handle.DangerousGetHandle(), index);
-        return MySqlField.FromPointer(ptr);
+        MySqlFieldNative* ptr = MySqlNative.mysql_fetch_field_direct(_handle.DangerousGetHandle(), index);
+        MySqlFieldNative nativeField = *ptr;
+        return new MySqlField(nativeField);
     }
 
+    #endregion
+
+
+    #region Helper
 
     private void EnsureNotDisposed()
     {
@@ -118,7 +160,8 @@ public sealed unsafe class MySqlResult : IDisposable
         }
     }
 
-    // ── cleanup ──────────────────────────────────────────────────────────
+    #endregion
+
 
     public void Dispose()
     {

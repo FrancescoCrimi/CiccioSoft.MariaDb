@@ -19,7 +19,7 @@ public sealed class MysqlRow
     internal unsafe MysqlRow(byte** row, uint* lengths, MysqlField[] fields)
     {
         _fields = fields;
-        _data   = new byte[fields.Length][];
+        _data = new byte[fields.Length][];
 
         for (int i = 0; i < fields.Length; i++)
         {
@@ -59,7 +59,7 @@ public sealed class MysqlRow
     internal unsafe MysqlRow(byte** row, uint* lengths, MysqlField[] fields, bool trackNull)
     {
         _fields = fields;
-        _data   = new byte[fields.Length][];
+        _data = new byte[fields.Length][];
         _isNull = new bool[fields.Length];
 
         for (int i = 0; i < fields.Length; i++)
@@ -83,9 +83,8 @@ public sealed class MysqlRow
     private bool IsNullInternal(int index) =>
         _isNull is not null && _isNull[index];
 
-    // ------------------------------------------------------------------
-    //  Conversioni typed
-    // ------------------------------------------------------------------
+
+    #region Conversioni typed
 
     public string? GetString(int index)
     {
@@ -150,13 +149,17 @@ public sealed class MysqlRow
     /// <summary>Indexer per accesso per indice.</summary>
     public string? this[int index] => GetString(index);
 
-    // ------------------------------------------------------------------
-    //  Metadati
-    // ------------------------------------------------------------------
+    #endregion
+
+
+    #region Metadati
 
     public MysqlField GetField(int index) => _fields[index];
 
     public MysqlField[] GetFields() => (MysqlField[])_fields.Clone();
+
+    #endregion
+
 
     private int IndexOf(string name)
     {

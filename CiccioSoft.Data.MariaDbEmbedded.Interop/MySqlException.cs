@@ -24,9 +24,9 @@ public sealed class MySqlException : Exception
     // factory da handle nativo
     internal static unsafe MySqlException FromHandle(nint handle)
     {
-        byte* pMsg   = NativeMySql.mysql_error(handle);
-        byte* pState = NativeMySql.mysql_sqlstate(handle);
-        uint  errno  = NativeMySql.mysql_errno(handle);
+        byte* pMsg   = MySqlNative.mysql_error(handle);
+        byte* pState = MySqlNative.mysql_sqlstate(handle);
+        uint  errno  = MySqlNative.mysql_errno(handle);
         return new MySqlException(
             Utils.GetStringFromPointerBytes(pMsg),
             (int)errno,

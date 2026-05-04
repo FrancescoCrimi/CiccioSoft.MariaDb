@@ -115,8 +115,7 @@ public unsafe struct MysqlFieldNative
     public byte*          Db;
     public byte*          Catalog;
     public byte*          Def;
-    /* versione originale ma buggata perche il tipo in c è 
-       unsigned long */
+    /* versione originale ma buggata perche il tipo nativo è unsigned long */
     // public nuint          Length;
     // public nuint          MaxLength;
     public uint           Length;

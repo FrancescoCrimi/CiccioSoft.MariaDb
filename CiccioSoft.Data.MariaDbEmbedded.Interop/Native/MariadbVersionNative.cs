@@ -2,7 +2,7 @@ using System;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 {
-    internal static partial class NativeVersion
+    internal static partial class MariadbVersionNative
     {
         [NativeTypeName("#define PROTOCOL_VERSION 10")]
         public const int PROTOCOL_VERSION = 10;

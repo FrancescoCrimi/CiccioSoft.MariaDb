@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 {
-    internal unsafe partial struct st_mysql_bind
+    internal unsafe partial struct MySqlBindNative
     {
         [NativeTypeName("unsigned long *")]
         public uint* length;
@@ -19,13 +19,13 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public _u_e__Union u;
 
         [NativeTypeName("void (*)(NET *, struct st_mysql_bind *)")]
-        public delegate* unmanaged[Cdecl]<st_net*, st_mysql_bind*, void> store_param_func;
+        public delegate* unmanaged[Cdecl]<st_net*, MySqlBindNative*, void> store_param_func;
 
         [NativeTypeName("void (*)(struct st_mysql_bind *, MYSQL_FIELD *, unsigned char **)")]
-        public delegate* unmanaged[Cdecl]<st_mysql_bind*, nint, byte**, void> fetch_result;
+        public delegate* unmanaged[Cdecl]<MySqlBindNative*, MySqlFieldNative*, byte**, void> fetch_result;
 
         [NativeTypeName("void (*)(struct st_mysql_bind *, MYSQL_FIELD *, unsigned char **)")]
-        public delegate* unmanaged[Cdecl]<st_mysql_bind*, nint, byte**, void> skip_result;
+        public delegate* unmanaged[Cdecl]<MySqlBindNative*, MySqlFieldNative*, byte**, void> skip_result;
 
         [NativeTypeName("unsigned long")]
         public uint buffer_length;

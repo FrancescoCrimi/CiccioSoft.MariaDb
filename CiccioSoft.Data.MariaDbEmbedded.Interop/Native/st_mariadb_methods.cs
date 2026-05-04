@@ -18,10 +18,10 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Cdecl]<nint, int> db_read_query_result;
 
         [NativeTypeName("MYSQL_DATA *(*)(MYSQL *, MYSQL_FIELD *, unsigned int)")]
-        public delegate* unmanaged[Cdecl]<nint, nint, uint, st_mysql_data*> db_read_rows;
+        public delegate* unmanaged[Cdecl]<nint, MySqlFieldNative*, uint, st_mysql_data*> db_read_rows;
 
         [NativeTypeName("int (*)(MYSQL *, unsigned int, MYSQL_ROW, unsigned long *)")]
-        public delegate* unmanaged[Cdecl]<nint, uint, byte**, uint*, int> db_read_one_row;
+        public delegate* unmanaged[Cdecl]<nint, uint, nint, uint*, int> db_read_one_row;
 
         [NativeTypeName("my_bool (*)(enum enum_field_types)")]
         public delegate* unmanaged[Cdecl]<MySqlFieldTypes, sbyte> db_supported_buffer_type;

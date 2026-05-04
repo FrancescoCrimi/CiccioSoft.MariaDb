@@ -12,10 +12,10 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, sbyte> mysql_eof;
 
         [NativeTypeName("MYSQL_FIELD *(*)(MYSQL_RES *, unsigned int) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, uint, nint> mysql_fetch_field_direct;
+        public delegate* unmanaged[Stdcall]<nint, uint, MySqlFieldNative*> mysql_fetch_field_direct;
 
         [NativeTypeName("MYSQL_FIELD *(*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, nint> mysql_fetch_fields;
+        public delegate* unmanaged[Stdcall]<nint, MySqlFieldNative*> mysql_fetch_fields;
 
         [NativeTypeName("MYSQL_ROWS *(*)(MYSQL_RES *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, st_mysql_rows*> mysql_row_tell;
@@ -171,7 +171,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, uint, uint> mysql_field_seek;
 
         [NativeTypeName("MYSQL_ROW (*)(MYSQL_RES *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, byte**> mysql_fetch_row;
+        public delegate* unmanaged[Stdcall]<nint, nint> mysql_fetch_row;
 
         [NativeTypeName("unsigned long *(*)(MYSQL_RES *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, uint*> mysql_fetch_lengths;
@@ -264,7 +264,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, int> mysql_stmt_fetch;
 
         [NativeTypeName("int (*)(MYSQL_STMT *, MYSQL_BIND *, unsigned int, unsigned long) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, st_mysql_bind*, uint, uint, int> mysql_stmt_fetch_column;
+        public delegate* unmanaged[Stdcall]<nint, MySqlBindNative*, uint, uint, int> mysql_stmt_fetch_column;
 
         [NativeTypeName("int (*)(MYSQL_STMT *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, int> mysql_stmt_store_result;
@@ -279,10 +279,10 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public delegate* unmanaged[Stdcall]<nint, enum_stmt_attr_type, void*, sbyte> mysql_stmt_attr_get;
 
         [NativeTypeName("my_bool (*)(MYSQL_STMT *, MYSQL_BIND *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, st_mysql_bind*, sbyte> mysql_stmt_bind_param;
+        public delegate* unmanaged[Stdcall]<nint, MySqlBindNative*, sbyte> mysql_stmt_bind_param;
 
         [NativeTypeName("my_bool (*)(MYSQL_STMT *, MYSQL_BIND *) __attribute__((stdcall))")]
-        public delegate* unmanaged[Stdcall]<nint, st_mysql_bind*, sbyte> mysql_stmt_bind_result;
+        public delegate* unmanaged[Stdcall]<nint, MySqlBindNative*, sbyte> mysql_stmt_bind_result;
 
         [NativeTypeName("my_bool (*)(MYSQL_STMT *) __attribute__((stdcall))")]
         public delegate* unmanaged[Stdcall]<nint, sbyte> mysql_stmt_close;

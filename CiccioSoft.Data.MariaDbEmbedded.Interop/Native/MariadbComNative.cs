@@ -5,7 +5,7 @@ using static CiccioSoft.Data.MariaDbEmbedded.Interop.Native.enum_session_state_t
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 {
-    internal static unsafe partial class NativeMariadbCom
+    internal static unsafe partial class MariadbComNative
     {
         [DllImport("libmariadb", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int ma_net_init([NativeTypeName("NET *")] st_net* net, [NativeTypeName("MARIADB_PVIO *")] st_ma_pvio* pvio);

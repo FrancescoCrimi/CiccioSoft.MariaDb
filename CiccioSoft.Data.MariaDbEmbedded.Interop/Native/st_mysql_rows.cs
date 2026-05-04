@@ -6,7 +6,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public st_mysql_rows* next;
 
         [NativeTypeName("MYSQL_ROW")]
-        public byte** data;
+        public nint data;
 
         [NativeTypeName("unsigned long")]
         public uint length;

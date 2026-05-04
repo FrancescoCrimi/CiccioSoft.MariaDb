@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 {
-    internal static unsafe partial class NativeMariadbCType
+    internal static unsafe partial class MariadbCTypeNative
     {
         [DllImport("libmariadb", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("MARIADB_CHARSET_INFO *")]

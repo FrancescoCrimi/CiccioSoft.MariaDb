@@ -18,30 +18,31 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 /// </summary>
 public readonly unsafe ref struct MySqlRow
 {
-    private readonly byte** _row;
-    private readonly uint* _lengths;
-    private readonly uint _fieldCount;
+    private readonly ReadOnlySpan<nint> _rowSpan;
+    private readonly ReadOnlySpan<uint> _lengthsSpan;
+    private readonly MySqlField[] _fields;
 
-    internal MySqlRow(byte** row, uint* lengths, uint fieldCount)
+    public int FieldCount => _fields.Length;
+
+    internal MySqlRow(ReadOnlySpan<nint> rowSpan, ReadOnlySpan<uint> lengthsSpan, MySqlField[] fields)
     {
-        _row = row;
-        _lengths = lengths;
-        _fieldCount = fieldCount;
+        _rowSpan = rowSpan;
+        _lengthsSpan = lengthsSpan;
+        _fields = fields;
     }
 
-    public int FieldCount => (int)_fieldCount;
 
-
-    // ── null check ───────────────────────────────────────────────────────
-
+    /// <summary>
+    /// Verifica se la colonna è SQL NULL.
+    /// Corrisponde a <c>mysql_fetch_row</c> che restituisce NULL per i valori SQL NULL.
+    /// </summary>
     public bool IsNull(int ordinal)
     {
         CheckOrdinal(ordinal);
-        return _row[ordinal] == null;
+        // return _row[ordinal] == null;
+        return _rowSpan[ordinal] == 0;
     }
 
-    
-    // ── accesso raw ──────────────────────────────────────────────────────
 
     /// <summary>
     /// Bytes grezzi della colonna, senza allocazione.
@@ -50,13 +51,18 @@ public readonly unsafe ref struct MySqlRow
     public ReadOnlySpan<byte> GetRawBytes(int ordinal)
     {
         CheckOrdinal(ordinal);
-        byte* col = _row[ordinal];
-        if (col == null) return ReadOnlySpan<byte>.Empty;
-        return new ReadOnlySpan<byte>(col, (int)_lengths[ordinal]);
+        // byte* col = _row[ordinal];
+        // if (col == null) return ReadOnlySpan<byte>.Empty;
+        // var span  = new ReadOnlySpan<byte>(col, (int)_lengths[ordinal]);
+
+        nint col2 = _rowSpan[ordinal];
+        uint len2 = _lengthsSpan[ordinal];
+        var span2 = new ReadOnlySpan<byte>(col2.ToPointer(), (int)len2);
+
+        return span2;
     }
 
-
-    // ── tipi managed ─────────────────────────────────────────────────────
+    #region Tipi managed
 
     public string? GetString(int ordinal)
     {
@@ -64,16 +70,12 @@ public readonly unsafe ref struct MySqlRow
         return Encoding.UTF8.GetString(GetRawBytes(ordinal));
     }
 
+    public string? GetString(string fieldName) => GetString(IndexOf(fieldName));
+
     public byte[]? GetBytes(int ordinal)
     {
         if (IsNull(ordinal)) return null;
         return GetRawBytes(ordinal).ToArray();
-    }
-
-    public long? GetInt64(int ordinal)
-    {
-        var s = GetString(ordinal);
-        return s is null ? null : long.Parse(s, CultureInfo.InvariantCulture);
     }
 
     public int? GetInt32(int ordinal)
@@ -83,11 +85,23 @@ public readonly unsafe ref struct MySqlRow
                          : int.Parse(s, CultureInfo.InvariantCulture);
     }
 
+    public int? GetInt32(string fieldName) => GetInt32(IndexOf(fieldName));
+
+    public long? GetInt64(int ordinal)
+    {
+        var s = GetString(ordinal);
+        return s is null ? null : long.Parse(s, CultureInfo.InvariantCulture);
+    }
+
+    public long? GetInt64(string fieldName) => GetInt64(IndexOf(fieldName));
+
     public double? GetDouble(int ordinal)
     {
         var s = GetString(ordinal);
         return s is null ? null : double.Parse(s, CultureInfo.InvariantCulture);
     }
+
+    public double? GetDouble(string fieldName) => GetDouble(IndexOf(fieldName));
 
     public decimal? GetDecimal(int ordinal)
     {
@@ -96,11 +110,7 @@ public readonly unsafe ref struct MySqlRow
                          : decimal.Parse(s, CultureInfo.InvariantCulture);
     }
 
-    public bool? GetBool(int ordinal)
-    {
-        var v = GetInt32(ordinal);
-        return v is null ? null : v != 0;
-    }
+    public decimal? GetDecimal(string fieldName) => GetDecimal(IndexOf(fieldName));
 
     public DateTime? GetDateTime(int ordinal)
     {
@@ -110,12 +120,43 @@ public readonly unsafe ref struct MySqlRow
         return DateTime.Parse(s, CultureInfo.InvariantCulture);
     }
 
+    public DateTime? GetDateTime(string fieldName) => GetDateTime(IndexOf(fieldName));
 
-    // ── helper ───────────────────────────────────────────────────────────
+    public bool? GetBool(int ordinal)
+    {
+        var v = GetInt32(ordinal);
+        return v is null ? null : v != 0;
+    }
+
+    public bool? GetBool(string fieldName) => GetBool(IndexOf(fieldName));
+
+    #endregion
+
+
+    #region Helper
 
     private void CheckOrdinal(int ordinal)
     {
-        if ((uint)ordinal >= _fieldCount)
+        if (ordinal >= _fields.Length)
             throw new ArgumentOutOfRangeException(nameof(ordinal));
+    }
+
+    private int IndexOf(string name)
+    {
+        for (int i = 0; i < _fields.Length; i++)
+            if (string.Equals(_fields[i].Name, name, StringComparison.OrdinalIgnoreCase))
+                return i;
+        throw new ArgumentException($"Campo '{name}' non trovato nella riga.");
+    }
+
+    #endregion
+
+
+    public override string ToString()
+    {
+        var parts = new string[_fields.Length];
+        for (int i = 0; i < _fields.Length; i++)
+            parts[i] = $"{_fields[i].Name}={GetString(i) ?? "NULL"}";
+        return string.Join(", ", parts);
     }
 }

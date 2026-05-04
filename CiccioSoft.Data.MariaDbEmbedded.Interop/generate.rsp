@@ -1,7 +1,7 @@
 --file
 ../include/mysql.h
---traverse
-../include/mariadb_ctype.h
+
+
 --output
 ../Native
 
@@ -12,7 +12,7 @@ CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 libmariadb
 
 --methodClassName
-MariadbCTypeNative
+MySqlNative
 
 --language
 c
@@ -27,8 +27,8 @@ MARIADB_X509_INFO
 ma_charset_info_st
 mysql_fetch_field
 st_mysql
-st_mysql_res
 st_mysql_stmt
+st_mysql_res
 
 --remap
 enum_field_types=MySqlFieldTypes
@@ -37,9 +37,9 @@ mysql_fetch_field*=nint
 mysql_option=MySqlOption
 st_mysql*=nint
 st_mysql_bind=MySqlBindNative
+st_mysql_stmt*=nint
 st_mysql_field=MySqlFieldNative
 st_mysql_res*=nint
-st_mysql_stmt*=nint
 MYSQL_ROW=nint
 char=byte
 

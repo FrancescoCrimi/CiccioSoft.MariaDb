@@ -28,65 +28,31 @@ public sealed class MySqlField
     public MySqlFieldTypes Type { get; }
 
     // flag di comodo
-    public bool IsNotNull => (Flags & NativeMariadbCom.NOT_NULL_FLAG) != 0;
-    public bool IsPrimaryKey => (Flags & NativeMariadbCom.PRI_KEY_FLAG) != 0;
-    public bool IsUniqueKey => (Flags & NativeMariadbCom.UNIQUE_KEY_FLAG) != 0;
-    public bool IsBlob => (Flags & NativeMariadbCom.BLOB_FLAG) != 0;
-    public bool IsUnsigned => (Flags & NativeMariadbCom.UNSIGNED_FLAG) != 0;
-    public bool IsAutoIncrement => (Flags & NativeMariadbCom.AUTO_INCREMENT_FLAG) != 0;
-    public bool IsNumeric => (Flags & NativeMariadbCom.NUM_FLAG) != 0;
+    public bool IsNotNull => (Flags & MariadbComNative.NOT_NULL_FLAG) != 0;
+    public bool IsPrimaryKey => (Flags & MariadbComNative.PRI_KEY_FLAG) != 0;
+    public bool IsUniqueKey => (Flags & MariadbComNative.UNIQUE_KEY_FLAG) != 0;
+    public bool IsBlob => (Flags & MariadbComNative.BLOB_FLAG) != 0;
+    public bool IsUnsigned => (Flags & MariadbComNative.UNSIGNED_FLAG) != 0;
+    public bool IsAutoIncrement => (Flags & MariadbComNative.AUTO_INCREMENT_FLAG) != 0;
+    public bool IsNumeric => (Flags & MariadbComNative.NUM_FLAG) != 0;
 
-    private MySqlField(
-        string name, string orgName,
-        string table, string orgTable,
-        string db, string catalog, string? def,
-        uint length, uint maxLength,
-        uint flags, uint decimals, uint charsetNr,
-        MySqlFieldTypes type)
+    internal unsafe MySqlField(MySqlFieldNative native)
     {
-        Name = name;
-        OrgName = orgName;
-        Table = table;
-        OrgTable = orgTable;
-        Database = db;
-        Catalog = catalog;
-        Default = def;
-        Length = length;
-        MaxLength = maxLength;
-        Flags = flags;
-        Decimals = decimals;
-        CharsetNumber = charsetNr;
-        Type = type;
-    }
-
-    /// <summary>
-    /// Costruisce un'istanza managed a partire dal puntatore nativo
-    /// restituito da <c>mysql_fetch_field_direct</c>.
-    /// </summary>
-    internal static unsafe MySqlField FromPointer(nint fieldPtr)
-    {
-        if (fieldPtr == 0)
-            throw new ArgumentNullException(nameof(fieldPtr));
-
-        // cast diretto — nessun offset manuale, nessuna copia
-        st_mysql_field* f = (st_mysql_field*)fieldPtr.ToPointer();
-
-        return new MySqlField(
-            name: Utils.GetStringFromPointerBytes(f->name),
-            orgName: Utils.GetStringFromPointerBytes(f->org_name),
-            table: Utils.GetStringFromPointerBytes(f->table),
-            orgTable: Utils.GetStringFromPointerBytes(f->org_table),
-            db: Utils.GetStringFromPointerBytes(f->db),
-            catalog: Utils.GetStringFromPointerBytes(f->catalog),
-            def: f->def != null
-                           ? Utils.GetStringFromPointerBytes(f->def)
-                           : null,
-            length: f->length,
-            maxLength: f->max_length,
-            flags: f->flags,
-            decimals: f->decimals,
-            charsetNr: f->charsetnr,
-            type: f->type);
+        Name = Utils.GetStringFromPointerBytes(native.name);
+        OrgName = Utils.GetStringFromPointerBytes(native.org_name);
+        Table = Utils.GetStringFromPointerBytes(native.table);
+        OrgTable = Utils.GetStringFromPointerBytes(native.org_table);
+        Database = Utils.GetStringFromPointerBytes(native.db);
+        Catalog = Utils.GetStringFromPointerBytes(native.catalog);
+        Default = native.def != null
+                       ? Utils.GetStringFromPointerBytes(native.def)
+                       : null;
+        Length = native.length;
+        MaxLength = native.max_length;
+        Flags = native.flags;
+        Decimals = native.decimals;
+        CharsetNumber = native.charsetnr;
+        Type = native.type;
     }
 
     public override string ToString() =>

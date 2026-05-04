@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 {
-    internal static unsafe partial class NativeMariadbStmt
+    internal static unsafe partial class MariadbStmtNative
     {
         [DllImport("libmariadb", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         [return: NativeTypeName("unsigned long")]
@@ -35,7 +35,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
         public static extern int mysql_stmt_fetch([NativeTypeName("MYSQL_STMT *")] nint stmt);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
-        public static extern int mysql_stmt_fetch_column([NativeTypeName("MYSQL_STMT *")] nint stmt, [NativeTypeName("MYSQL_BIND *")] st_mysql_bind* bind_arg, [NativeTypeName("unsigned int")] uint column, [NativeTypeName("unsigned long")] uint offset);
+        public static extern int mysql_stmt_fetch_column([NativeTypeName("MYSQL_STMT *")] nint stmt, [NativeTypeName("MYSQL_BIND *")] MySqlBindNative* bind_arg, [NativeTypeName("unsigned int")] uint column, [NativeTypeName("unsigned long")] uint offset);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         public static extern int mysql_stmt_store_result([NativeTypeName("MYSQL_STMT *")] nint stmt);
@@ -54,11 +54,11 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("my_bool")]
-        public static extern sbyte mysql_stmt_bind_param([NativeTypeName("MYSQL_STMT *")] nint stmt, [NativeTypeName("MYSQL_BIND *")] st_mysql_bind* bnd);
+        public static extern sbyte mysql_stmt_bind_param([NativeTypeName("MYSQL_STMT *")] nint stmt, [NativeTypeName("MYSQL_BIND *")] MySqlBindNative* bnd);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("my_bool")]
-        public static extern sbyte mysql_stmt_bind_result([NativeTypeName("MYSQL_STMT *")] nint stmt, [NativeTypeName("MYSQL_BIND *")] st_mysql_bind* bnd);
+        public static extern sbyte mysql_stmt_bind_result([NativeTypeName("MYSQL_STMT *")] nint stmt, [NativeTypeName("MYSQL_BIND *")] MySqlBindNative* bnd);
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("my_bool")]
@@ -135,7 +135,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Native
 
         [DllImport("libmariadb", CallingConvention = CallingConvention.StdCall, ExactSpelling = true)]
         [return: NativeTypeName("MYSQL_FIELD *")]
-        public static extern nint mariadb_stmt_fetch_fields([NativeTypeName("MYSQL_STMT *")] nint stmt);
+        public static extern MySqlFieldNative* mariadb_stmt_fetch_fields([NativeTypeName("MYSQL_STMT *")] nint stmt);
 
         [NativeTypeName("#define MYSQL_NO_DATA 100")]
         public const int MYSQL_NO_DATA = 100;
