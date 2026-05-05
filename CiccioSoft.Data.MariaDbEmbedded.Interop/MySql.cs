@@ -45,7 +45,7 @@ public sealed unsafe class MySql : IDisposable
 
     /// <summary>
     /// Allocates and initializes a connection handle via <c>mysql_init</c>.
-    /// Use <see cref="Open(string,uint,string,string,string)"/> to actually connect.
+    /// Use <see cref="Connect(string,uint,string,string,string,uint)"/> to actually connect.
     /// </summary>
     /// <returns>An initialized (but not connected) <see cref="MySql"/> instance.</returns>
     /// <exception cref="InvalidOperationException">Thrown when native initialization fails.</exception>
