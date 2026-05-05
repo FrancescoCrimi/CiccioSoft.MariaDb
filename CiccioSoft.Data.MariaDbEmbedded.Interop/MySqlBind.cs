@@ -20,6 +20,8 @@ public unsafe sealed class MySqlBind : IDisposable
 
     long[]? _longBuffer;
     int[]? _intBuffer;
+    short[]? _shortBuffer;
+    float[]? _floatBuffer;
     double[]? _doubleBuffer;
     byte[]? _byteBuffer;
     st_mysql_time[]? _timeBuffer;
@@ -108,6 +110,34 @@ public unsafe sealed class MySqlBind : IDisposable
         _bind.buffer = (void*)_hBuffer.AddrOfPinnedObject();
         _bind.buffer_type = MySqlFieldTypes.MYSQL_TYPE_LONG;
         _bind.buffer_length = sizeof(int);
+    }
+
+    public void SetInt16(short value)
+    {
+        EnsureBufferFreed();
+        _shortBuffer = [value];
+        _hBuffer = GCHandle.Alloc(_shortBuffer, GCHandleType.Pinned);
+
+        SetNotNull();
+        _length[0] = sizeof(short);
+
+        _bind.buffer = (void*)_hBuffer.AddrOfPinnedObject();
+        _bind.buffer_type = MySqlFieldTypes.MYSQL_TYPE_SHORT;
+        _bind.buffer_length = sizeof(short);
+    }
+
+    public void SetFloat(float value)
+    {
+        EnsureBufferFreed();
+        _floatBuffer = [value];
+        _hBuffer = GCHandle.Alloc(_floatBuffer, GCHandleType.Pinned);
+
+        SetNotNull();
+        _length[0] = sizeof(float);
+
+        _bind.buffer = (void*)_hBuffer.AddrOfPinnedObject();
+        _bind.buffer_type = MySqlFieldTypes.MYSQL_TYPE_FLOAT;
+        _bind.buffer_length = sizeof(float);
     }
 
     /// <summary>
@@ -213,6 +243,37 @@ public unsafe sealed class MySqlBind : IDisposable
     public void SetDecimal(decimal value)
         => SetString(value.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
+    // public void SetBoolean(bool value)
+    //     => SetInt16(value ? (short)1 : (short)0);
+
+    // public void SetGuid(Guid value)
+    //     => SetString(value.ToString());
+
+    public void SetTimeSpan(TimeSpan value)
+    {
+        EnsureBufferFreed();
+        TimeSpan normalized = value.Duration();
+        _timeBuffer = new st_mysql_time[]
+        {
+            new()
+            {
+                hour = (uint)normalized.TotalHours,
+                minute = (uint)normalized.Minutes,
+                second = (uint)normalized.Seconds,
+                second_part = (uint)(normalized.Milliseconds * 1000),
+                neg = value.Ticks < 0 ? (sbyte)1 : (sbyte)0,
+                time_type = enum_mysql_timestamp_type.MYSQL_TIMESTAMP_TIME
+            }
+        };
+        _hBuffer = GCHandle.Alloc(_timeBuffer, GCHandleType.Pinned);
+
+        SetNotNull();
+        _length[0] = (uint)sizeof(st_mysql_time);
+
+        _bind.buffer = (void*)_hBuffer.AddrOfPinnedObject();
+        _bind.buffer_type = MySqlFieldTypes.MYSQL_TYPE_TIME;
+        _bind.buffer_length = (uint)sizeof(st_mysql_time);
+    }
     #endregion
 
 
@@ -220,25 +281,37 @@ public unsafe sealed class MySqlBind : IDisposable
 
     public long GetInt64()
     {
-        if (_longBuffer == null) throw new Exception("Errore del Cazzo");
+        if (_longBuffer == null) throw new InvalidOperationException("Buffer for long value is not initialized.");
         return _longBuffer[0];
     }
 
     public int GetInt32()
     {
-        if (_intBuffer == null) throw new Exception("Errore del Cazzo");
+        if (_intBuffer == null) throw new InvalidOperationException("Buffer for int value is not initialized.");
         return _intBuffer[0];
+    }
+
+    public short GetInt16()
+    {
+        if (_shortBuffer == null) throw new InvalidOperationException("Buffer for short value is not initialized.");
+        return _shortBuffer[0];
+    }
+
+    public float GetFloat()
+    {
+        if (_floatBuffer == null) throw new InvalidOperationException("Buffer for float value is not initialized.");
+        return _floatBuffer[0];
     }
 
     public double GetDouble()
     {
-        if (_doubleBuffer == null) throw new Exception("Errore del Cazzo");
+        if (_doubleBuffer == null) throw new InvalidOperationException("Buffer for double value is not initialized.");
         return _doubleBuffer[0];
     }
 
     public string GetString()
     {
-        if (_byteBuffer == null) throw new Exception("Errore del Cazzo");
+        if (_byteBuffer == null) throw new InvalidOperationException("Buffer for string value is not initialized.");
         int count = (int)_length[0];
         string str = Encoding.UTF8.GetString(_byteBuffer, 0, count);
         return str;
@@ -246,13 +319,13 @@ public unsafe sealed class MySqlBind : IDisposable
 
     public byte[] GetBytes()
     {
-        if (_byteBuffer == null) throw new Exception("Errore del Cazzo");
+        if (_byteBuffer == null) throw new InvalidOperationException("Buffer for byte value is not initialized.");
         return _byteBuffer;
     }
 
     public DateTime GetDateTime()
     {
-        if (_timeBuffer == null) throw new Exception("Errore del Cazzo");
+        if (_timeBuffer == null) throw new InvalidOperationException("Buffer for DateTime value is not initialized.");
         DateTime datetime = new DateTime(
             year: (int)_timeBuffer[0].year,
             month: (int)_timeBuffer[0].month,
@@ -265,10 +338,25 @@ public unsafe sealed class MySqlBind : IDisposable
     }
 
     public decimal GetDecimal()
-    {
-        throw new NotImplementedException();
+    {                
+        string value = GetString();
+        return decimal.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
     }
 
+    // public bool GetBoolean() => GetInt16() != 0;
+
+    // public Guid GetGuid() => Guid.Parse(GetString());
+
+    public TimeSpan GetTimeSpan()
+    {
+        if (_timeBuffer == null) throw new InvalidOperationException("Buffer for TimeSpan value is not initialized.");
+        TimeSpan duration = new TimeSpan(
+            hours: (int)_timeBuffer[0].hour,
+            minutes: (int)_timeBuffer[0].minute,
+            seconds: (int)_timeBuffer[0].second)
+            .Add(TimeSpan.FromMilliseconds(_timeBuffer[0].second_part / 1000d));
+        return _timeBuffer[0].neg == 1 ? duration.Negate() : duration;
+    }
 
     #endregion 
 
@@ -276,6 +364,8 @@ public unsafe sealed class MySqlBind : IDisposable
     {
         if (_longBuffer != null) Array.Clear(_longBuffer);
         if (_intBuffer != null) Array.Clear(_intBuffer);
+        if (_shortBuffer != null) Array.Clear(_shortBuffer);
+        if (_floatBuffer != null) Array.Clear(_floatBuffer);
         if (_doubleBuffer != null) Array.Clear(_doubleBuffer);
         if (_byteBuffer != null) Array.Clear(_byteBuffer);
         Array.Clear(_length);

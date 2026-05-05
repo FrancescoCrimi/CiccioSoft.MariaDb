@@ -17,7 +17,7 @@ This project introduces the first building blocks for a native MariaDB Embedded 
 ## Example
 
 ```csharp
-using var client = MySql.Open("127.0.0.1", 3306, "root", "secret", "mydb");
+using var client = MySql.Init().Connect("127.0.0.1", 3306, "root", "secret", "mydb");
 client.Ping();
 ```
 
