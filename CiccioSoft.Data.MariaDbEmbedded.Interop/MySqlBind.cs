@@ -67,7 +67,7 @@ public unsafe sealed class MySqlBind : IDisposable
 
     #region Set Value
 
-    /// <summary>Imposta il parametro come SQL NULL.</summary>
+    /// <summary>Sets the parameter to SQL NULL.</summary>
     public void SetNull()
     {
         if (_hBuffer.IsAllocated)
@@ -81,7 +81,7 @@ public unsafe sealed class MySqlBind : IDisposable
     }
 
     /// <summary>
-    /// Imposta un valore <c>long</c> (BIGINT).
+    /// Sets a <c>long</c> (BIGINT) value.
     /// </summary>
     public void SetInt64(long value)
     {
@@ -97,7 +97,7 @@ public unsafe sealed class MySqlBind : IDisposable
         _bind.buffer_length = sizeof(long);
     }
 
-    /// <summary>Imposta un valore <c>int</c> (INT).</summary>
+    /// <summary>Sets an <c>int</c> (INT) value.</summary>
     public void SetInt32(int value)
     {
         EnsureBufferFreed();
@@ -141,7 +141,7 @@ public unsafe sealed class MySqlBind : IDisposable
     }
 
     /// <summary>
-    /// Imposta un valore <c>double</c> (DOUBLE).
+    /// Sets a <c>double</c> (DOUBLE) value.
     /// </summary>
     public void SetDouble(double value)
     {
@@ -157,7 +157,7 @@ public unsafe sealed class MySqlBind : IDisposable
         _bind.buffer_length = sizeof(double);
     }
 
-    /// <summary>Imposta una stringa UTF-8 (VARCHAR / TEXT).</summary>
+    /// <summary>Sets a UTF-8 string value (VARCHAR / TEXT).</summary>
     public void SetString(string value)
     {
         EnsureBufferFreed();
@@ -186,7 +186,7 @@ public unsafe sealed class MySqlBind : IDisposable
         _bind.buffer_length = (uint)_byteBuffer.Length;
     }
 
-    /// <summary>Imposta un array di byte (BLOB / BINARY).</summary>
+    /// <summary>Sets a byte array value (BLOB / BINARY).</summary>
     public void SetBytes(byte[]? value,
         MySqlFieldTypes type = MySqlFieldTypes.MYSQL_TYPE_BLOB)
     {
@@ -211,7 +211,7 @@ public unsafe sealed class MySqlBind : IDisposable
         _bind.buffer_length = (uint)value.Length;
     }
 
-    /// <summary>Imposta una data/ora tramite <see cref="MysqlTimeNative"/>.</summary>
+    /// <summary>Sets a date/time value through <see cref="MysqlTimeNative"/>.</summary>
     public void SetDateTime(DateTime value,
         MySqlFieldTypes type = MySqlFieldTypes.MYSQL_TYPE_DATETIME2)
     {
@@ -239,7 +239,7 @@ public unsafe sealed class MySqlBind : IDisposable
         _bind.buffer_length = (uint)sizeof(st_mysql_time);
     }
 
-    /// <summary>Imposta un <c>decimal</c> come stringa (compatibile con DECIMAL).</summary>
+    /// <summary>Sets a <c>decimal</c> value as a string (DECIMAL-compatible).</summary>
     public void SetDecimal(decimal value)
         => SetString(value.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
@@ -390,7 +390,8 @@ public unsafe sealed class MySqlBind : IDisposable
 
     public void Dispose()
     {
-        _hBuffer.Free();
+        if (_hBuffer.IsAllocated)
+            _hBuffer.Free();
         _hLength.Free();
         _hIsNull.Free();
     }

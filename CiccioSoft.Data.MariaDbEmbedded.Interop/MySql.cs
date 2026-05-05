@@ -45,7 +45,7 @@ public sealed unsafe class MySql : IDisposable
 
 
     // ================================================================
-    //  Inizializzazione
+    //  Initialization
     // ================================================================
 
     /// <summary>
@@ -53,20 +53,20 @@ public sealed unsafe class MySql : IDisposable
     /// Use <see cref="Open(string,uint,string,string,string)"/> to actually connect.
     /// </summary>
     /// <returns>An initialized (but not connected) <see cref="MySql"/> instance.</returns>
-    /// <exception cref="Exception">Thrown when native initialization fails.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when native initialization fails.</exception>
     public static MySql Init()
     {
         nint ptr = MySqlNative.mysql_init(nint.Zero);
         if (ptr == nint.Zero)
         {
-            throw new Exception("Unable to allocate MYSQL handle via mysql_init.");
+            throw new InvalidOperationException("Failed to allocate a MYSQL handle via mysql_init.");
         }
 
         return new MySql(new MySqlHandle(ptr));
     }
 
 
-    #region Opzioni (mysql_options)
+    #region Options (mysql_options)
 
     /// <summary>
     /// Sets a string option on the current connection handle via <c>mysql_options</c>.
@@ -119,7 +119,7 @@ public sealed unsafe class MySql : IDisposable
     #endregion
 
     // ================================================================
-    //  Connessione (mysql_real_connect)
+    //  Connection (mysql_real_connect)
     // ================================================================
 
     /// <summary>
@@ -168,7 +168,7 @@ public sealed unsafe class MySql : IDisposable
 
         if (connected == IntPtr.Zero)
         {
-            // leggi l'errore PRIMA di Dispose, che chiama mysql_close
+            // Read the error before calling Dispose(), which invokes mysql_close.
             byte* pErr = MySqlNative.mysql_error(_handle.DangerousGetHandle());
             uint errno = MySqlNative.mysql_errno(_handle.DangerousGetHandle());
             string msg = Utils.GetStringFromPointerBytes(pErr);
