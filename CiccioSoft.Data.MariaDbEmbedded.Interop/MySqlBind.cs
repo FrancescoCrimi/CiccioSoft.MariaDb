@@ -172,7 +172,7 @@ public unsafe sealed class MySqlBind : IDisposable
         _bind.buffer_length = (uint)_byteBuffer.Length;
     }
 
-        public void SetString(int length)
+    public void SetString(int length)
     {
         EnsureBufferFreed();
         _byteBuffer = new byte[length];
@@ -338,7 +338,7 @@ public unsafe sealed class MySqlBind : IDisposable
     }
 
     public decimal GetDecimal()
-    {                
+    {
         string value = GetString();
         return decimal.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
     }

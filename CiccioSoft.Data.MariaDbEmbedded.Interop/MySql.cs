@@ -27,6 +27,7 @@ internal sealed class MySqlHandle : SafeHandleZeroOrMinusOneIsInvalid
     }
 }
 
+
 /// <summary>
 /// Thin idiomatic OOP wrapper around a native <c>MYSQL*</c> connection handle.
 /// </summary>
@@ -41,12 +42,6 @@ public sealed unsafe class MySql : IDisposable
     {
         _handle = handle;
     }
-
-
-
-    // ================================================================
-    //  Initialization
-    // ================================================================
 
     /// <summary>
     /// Allocates and initializes a connection handle via <c>mysql_init</c>.
@@ -118,9 +113,6 @@ public sealed unsafe class MySql : IDisposable
 
     #endregion
 
-    // ================================================================
-    //  Connection (mysql_real_connect)
-    // ================================================================
 
     /// <summary>
     /// Opens the current initialized handle using <c>mysql_real_connect</c>.
@@ -182,11 +174,6 @@ public sealed unsafe class MySql : IDisposable
         }
     }
 
-
-    // ================================================================
-    //  Selezione database (mysql_select_db)
-    // ================================================================
-
     /// <summary>
     /// Seleziona il database corrente.
     /// Corrisponde a <c>mysql_select_db</c>.
@@ -203,11 +190,6 @@ public sealed unsafe class MySql : IDisposable
         }
     }
 
-
-    // ================================================================
-    //  Ping (mysql_ping)
-    // ================================================================
-
     /// <summary>
     /// Checks if the server connection is alive by calling <c>mysql_ping</c>.
     /// </summary>
@@ -217,11 +199,6 @@ public sealed unsafe class MySql : IDisposable
         EnsureNotDisposed();
         return MySqlNative.mysql_ping(_handle.DangerousGetHandle());
     }
-
-
-    // ================================================================
-    //  Query semplici
-    // ================================================================
 
     /// <summary>
     /// Executes a SQL statement using the native <c>mysql_query</c> API.
@@ -244,7 +221,7 @@ public sealed unsafe class MySql : IDisposable
     }
 
 
-    #region  Result Set
+    #region Result Set
 
     /// <summary>
     /// Recupera l'intero result set in memoria client dopo una query SELECT.
@@ -352,10 +329,6 @@ public sealed unsafe class MySql : IDisposable
 
     #endregion
 
-
-    // ================================================================
-    //  Errori
-    // ================================================================
 
     /// <summary>
     /// Gets the last error message associated with the current connection handle.
@@ -474,9 +447,6 @@ public sealed unsafe class MySql : IDisposable
 
     #endregion
 
-    // ================================================================
-    //  Escape
-    // ================================================================
 
     /// <summary>
     /// Effettua l'escape di una stringa per uso sicuro in una query.
@@ -526,10 +496,6 @@ public sealed unsafe class MySql : IDisposable
     #endregion
 
 
-    // ================================================================
-    //  Prepared statements
-    // ================================================================
-
     /// <summary>
     /// Alloca e restituisce un nuovo <see cref="MysqlStmt"/>.
     /// Corrisponde a <c>mysql_stmt_init</c>.
@@ -546,6 +512,9 @@ public sealed unsafe class MySql : IDisposable
         return new MySqlStmt(new MySqlStmtHandle(ptr));
     }
 
+
+    #region Helper
+
     private void EnsureNotDisposed()
     {
         if (_handle.IsClosed || _handle.IsInvalid)
@@ -553,6 +522,9 @@ public sealed unsafe class MySql : IDisposable
             throw new ObjectDisposedException(nameof(MySql));
         }
     }
+
+    #endregion
+
 
     /// <summary>
     /// Closes the native connection handle and releases unmanaged resources.
