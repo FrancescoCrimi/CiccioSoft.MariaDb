@@ -185,8 +185,8 @@ public sealed unsafe class MySql : IDisposable
 
         fixed (byte* ptr = bytes)
         {
-            int rc = MySqlNative.mysql_select_db(_handle.DangerousGetHandle(), ptr);
-            // if (rc != 0) ThrowLastError();
+            if (MySqlNative.mysql_select_db(_handle.DangerousGetHandle(), ptr) != 0)
+                throw MySqlException.FromHandle(_handle.DangerousGetHandle());
         }
     }
 
