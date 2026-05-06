@@ -7,8 +7,8 @@ using CiccioSoft.Data.MariaDbEmbedded.Interop.Native;
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 
 /// <summary>
-/// Metadati di una colonna del result set.
-/// Wrapper managed di <c>MYSQL_FIELD</c>.
+/// Metadata for a result-set column.
+/// Managed wrapper for <c>MYSQL_FIELD</c>.
 /// </summary>
 public sealed class MySqlField
 {
@@ -18,16 +18,16 @@ public sealed class MySqlField
     public string OrgTable { get; }
     public string Database { get; }
     public string Catalog { get; }
-    public string? Default { get; }   // null se non richiesto con mysql_list_fields
+    public string? Default { get; }   // null when not requested via mysql_list_fields
 
-    public uint Length { get; }   // larghezza dichiarata della colonna
-    public uint MaxLength { get; }   // larghezza massima nei dati effettivi
+    public uint Length { get; }   // declared column width
+    public uint MaxLength { get; }   // maximum width in the actual data
     public uint Flags { get; }
     public uint Decimals { get; }
     public uint CharsetNumber { get; }
     public MySqlFieldTypes Type { get; }
 
-    // flag di comodo
+    // convenience flags
     public bool IsNotNull => (Flags & MariadbComNative.NOT_NULL_FLAG) != 0;
     public bool IsPrimaryKey => (Flags & MariadbComNative.PRI_KEY_FLAG) != 0;
     public bool IsUniqueKey => (Flags & MariadbComNative.UNIQUE_KEY_FLAG) != 0;

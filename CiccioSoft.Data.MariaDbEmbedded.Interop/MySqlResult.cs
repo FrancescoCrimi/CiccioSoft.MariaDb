@@ -62,11 +62,11 @@ public sealed unsafe class MySqlResult : IDisposable
     #region Iterazione righe
 
     /// <summary>
-    /// Avanza al record successivo.
-    /// Restituisce <see langword="true"/> se c'è una riga disponibile, <see langword="false"/> altrimenti.
+    /// Advances to the next row.
+    /// Returns <see langword="true"/> when a row is available; otherwise <see langword="false"/>.
     /// <para/>
-    /// ATTENZIONE: i puntatori interni di <see cref="MySqlRow"/> sono validi
-    /// solo fino alla chiamata successiva di <c>FetchRow</c> o <c>Dispose</c>.
+    /// WARNING: internal pointers inside <see cref="MySqlRow"/> remain valid
+    /// only until the next <c>FetchRow</c> call or <c>Dispose</c>.
     /// </summary>
     public bool FetchRow(out MySqlRow row)
     {
@@ -94,7 +94,7 @@ public sealed unsafe class MySqlResult : IDisposable
     }
 
     /// <summary>
-    /// Riposiziona il cursore all'inizio del result set.
+    /// Repositions the cursor at the beginning of the result set.
     /// </summary>
     public void DataSeek()
     {
@@ -108,8 +108,8 @@ public sealed unsafe class MySqlResult : IDisposable
     #region Metadati colonne
 
     /// <summary>
-    /// Restituisce i metadati di tutte le colonne.
-    /// Il risultato è memoizzato: la chiamata nativa avviene una sola volta.
+    /// Returns metadata for all columns.
+    /// The result is cached: the native call is performed once.
     /// </summary>
     public MySqlField[] FetchFields()
     {
@@ -133,7 +133,7 @@ public sealed unsafe class MySqlResult : IDisposable
     }
 
     /// <summary>
-    /// Metadati di una singola colonna per indice.
+    /// Metadata for a single column by index.
     /// </summary>
     public MySqlField FetchField(uint index)
     {

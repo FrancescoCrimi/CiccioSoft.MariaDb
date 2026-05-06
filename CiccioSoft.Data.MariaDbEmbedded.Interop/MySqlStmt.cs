@@ -27,8 +27,8 @@ internal class MySqlStmtHandle : SafeHandleZeroOrMinusOneIsInvalid
 
 
 /// <summary>
-/// Wrapper managed per un prepared statement nativo (<c>MYSQL_STMT*</c>).
-/// I nomi dei metodi coincidono con le funzioni C <c>mysql_stmt_*</c>.
+/// Managed wrapper for a native prepared statement (<c>MYSQL_STMT*</c>).
+/// Method names are aligned with native C functions <c>mysql_stmt_*</c>.
 /// </summary>
 public sealed unsafe class MySqlStmt : IDisposable
 {
@@ -44,8 +44,8 @@ public sealed unsafe class MySqlStmt : IDisposable
     // ------------------------------------------------------------------
 
     /// <summary>
-    /// Prepara la query SQL sul server.
-    /// Corrisponde a <c>mysql_stmt_prepare</c>.
+    /// Prepares SQL text on the server.
+    /// Maps to <c>mysql_stmt_prepare</c>.
     /// </summary>
     public void Prepare(string sql)
     {
@@ -63,8 +63,8 @@ public sealed unsafe class MySqlStmt : IDisposable
     #region  BindParam / BindResult
 
     /// <summary>
-    /// Associa i parametri di input (<c>?</c>) allo statement.
-    /// Corrisponde a <c>mysql_stmt_bind_param</c>.
+    /// Binds input parameters (<c>?</c>) to the statement.
+    /// Maps to <c>mysql_stmt_bind_param</c>.
     /// </summary>
     public void BindParam(MySqlBindBuilder binds)
     {
@@ -78,8 +78,8 @@ public sealed unsafe class MySqlStmt : IDisposable
     }
 
     /// <summary>
-    /// Associa i buffer di output per i risultati.
-    /// Corrisponde a <c>mysql_stmt_bind_result</c>.
+    /// Binds output buffers for result columns.
+    /// Maps to <c>mysql_stmt_bind_result</c>.
     /// </summary>
     public void BindResult(MySqlBindBuilder binds)
     {
@@ -100,8 +100,8 @@ public sealed unsafe class MySqlStmt : IDisposable
     // ------------------------------------------------------------------
 
     /// <summary>
-    /// Esegue lo statement preparato.
-    /// Corrisponde a <c>mysql_stmt_execute</c>.
+    /// Executes the prepared statement.
+    /// Maps to <c>mysql_stmt_execute</c>.
     /// </summary>
     public void Execute()
     {
@@ -114,8 +114,8 @@ public sealed unsafe class MySqlStmt : IDisposable
     #region StoreResult / FreeResult
 
     /// <summary>
-    /// Trasferisce l'intero result set in memoria client.
-    /// Corrisponde a <c>mysql_stmt_store_result</c>.
+    /// Transfers the full result set into client memory.
+    /// Maps to <c>mysql_stmt_store_result</c>.
     /// </summary>
     public void StoreResult()
     {
@@ -125,8 +125,8 @@ public sealed unsafe class MySqlStmt : IDisposable
     }
 
     /// <summary>
-    /// Libera il result set del prepared statement.
-    /// Corrisponde a <c>mysql_stmt_free_result</c>.
+    /// Releases the prepared statement result set.
+    /// Maps to <c>mysql_stmt_free_result</c>.
     /// </summary>
     public void FreeResult()
     {
@@ -141,9 +141,9 @@ public sealed unsafe class MySqlStmt : IDisposable
     #region Fetch / FetchColumn
 
     /// <summary>
-    /// Legge la riga successiva nel buffer associato con bind_result.
-    /// Restituisce <c>true</c> se c'è una riga, <c>false</c> a fine set.
-    /// Corrisponde a <c>mysql_stmt_fetch</c>.
+    /// Fetches the next row into buffers bound by <c>BindResult</c>.
+    /// Returns <c>true</c> when a row is available, otherwise <c>false</c> at end-of-data.
+    /// Maps to <c>mysql_stmt_fetch</c>.
     /// </summary>
     public bool Fetch()
     {
@@ -157,8 +157,8 @@ public sealed unsafe class MySqlStmt : IDisposable
     }
 
     /// <summary>
-    /// Legge una singola colonna della riga corrente.
-    /// Corrisponde a <c>mysql_stmt_fetch_column</c>.
+    /// Fetches a single column from the current row.
+    /// Maps to <c>mysql_stmt_fetch_column</c>.
     /// </summary>
     public void FetchColumn(MySqlBind bind, uint column, uint offset = 0)
     {
@@ -178,8 +178,8 @@ public sealed unsafe class MySqlStmt : IDisposable
     // ------------------------------------------------------------------
 
     /// <summary>
-    /// Resetta lo statement azzerando i buffer.
-    /// Corrisponde a <c>mysql_stmt_reset</c>.
+    /// Resets statement state and bound buffers.
+    /// Maps to <c>mysql_stmt_reset</c>.
     /// </summary>
     public void Reset()
     {
@@ -190,10 +190,10 @@ public sealed unsafe class MySqlStmt : IDisposable
 
 
     // ------------------------------------------------------------------
-    //  Metadati e informazioni di stato
+    //  Metadata and status information
     // ------------------------------------------------------------------
 
-    /// <summary>Numero di colonne nel result set. Corrisponde a <c>mysql_stmt_field_count</c>.</summary>
+    /// <summary>Number of columns in the statement result set. Maps to <c>mysql_stmt_field_count</c>.</summary>
     public uint NumFields
     {
         get
@@ -203,28 +203,28 @@ public sealed unsafe class MySqlStmt : IDisposable
         }
     }
 
-    /// <summary>Numero di parametri (<c>?</c>). Corrisponde a <c>mysql_stmt_param_count</c>.</summary>
+    /// <summary>Number of parameter markers (<c>?</c>). Maps to <c>mysql_stmt_param_count</c>.</summary>
     public uint ParamCount()
     {
         EnsureNotDisposed();
         return MariadbStmtNative.mysql_stmt_param_count(_handle.DangerousGetHandle());
     }
 
-    /// <summary>Righe modificate/inserite/cancellate. Corrisponde a <c>mysql_stmt_affected_rows</c>.</summary>
+    /// <summary>Rows changed/inserted/deleted. Maps to <c>mysql_stmt_affected_rows</c>.</summary>
     public ulong AffectedRows()
     {
         EnsureNotDisposed();
         return MariadbStmtNative.mysql_stmt_affected_rows(_handle.DangerousGetHandle());
     }
 
-    /// <summary>Ultimo AUTO_INCREMENT generato. Corrisponde a <c>mysql_stmt_insert_id</c>.</summary>
+    /// <summary>Last generated AUTO_INCREMENT value. Maps to <c>mysql_stmt_insert_id</c>.</summary>
     public ulong InsertId()
     {
         EnsureNotDisposed();
         return MariadbStmtNative.mysql_stmt_insert_id(_handle.DangerousGetHandle());
     }
 
-    /// <summary>Numero di righe nel result set (solo dopo store_result). Corrisponde a <c>mysql_stmt_num_rows</c>.</summary>
+    /// <summary>Number of rows in the result set (valid after <c>StoreResult</c>). Maps to <c>mysql_stmt_num_rows</c>.</summary>
     public ulong NumRows
     {
         get
@@ -235,8 +235,8 @@ public sealed unsafe class MySqlStmt : IDisposable
     }
 
     /// <summary>
-    /// Restituisce il result set dei metadati delle colonne.
-    /// Corrisponde a <c>mysql_stmt_result_metadata</c>.
+    /// Returns the column metadata result set.
+    /// Maps to <c>mysql_stmt_result_metadata</c>.
     /// </summary>
     public MySqlResult? ResultMetadata()
     {
@@ -245,21 +245,21 @@ public sealed unsafe class MySqlStmt : IDisposable
         return ptr == IntPtr.Zero ? null : new MySqlResult(new MySqlResultHandle(ptr));
     }
 
-    /// <summary>Cursore corrente per navigazione. Corrisponde a <c>mysql_stmt_row_tell</c>.</summary>
+    /// <summary>Current cursor offset for navigation. Maps to <c>mysql_stmt_row_tell</c>.</summary>
     // public ulong RowTell()
     // {
     //     EnsureNotDisposed();
     //     return MariadbStmtNative.mysql_stmt_row_tell(_handle.DangerousGetHandle());
     // }
 
-    // /// <summary>Sposta il cursore. Corrisponde a <c>mysql_stmt_row_seek</c>.</summary>
+    // /// <summary>Moves the cursor. Maps to <c>mysql_stmt_row_seek</c>.</summary>
     // public ulong RowSeek(ulong offset)
     // {
     //     EnsureNotDisposed();
     //     return MariadbStmtNative.mysql_stmt_row_seek(_handle.DangerousGetHandle(), offset);
     // }
 
-    /// <summary>Sposta il cursore assoluto. Corrisponde a <c>mysql_stmt_data_seek</c>.</summary>
+    /// <summary>Moves to an absolute row offset. Maps to <c>mysql_stmt_data_seek</c>.</summary>
     public void DataSeek(ulong offset)
     {
         EnsureNotDisposed();
@@ -269,7 +269,7 @@ public sealed unsafe class MySqlStmt : IDisposable
 
     #region Errori dello statement
 
-    /// <summary>Messaggio di errore corrente. Corrisponde a <c>mysql_stmt_error</c>.</summary>
+    /// <summary>Current error message text. Maps to <c>mysql_stmt_error</c>.</summary>
     public string Error()
     {
         EnsureNotDisposed();
@@ -277,14 +277,14 @@ public sealed unsafe class MySqlStmt : IDisposable
         return Utils.GetStringFromPointerBytes(ptr);
     }
 
-    /// <summary>Codice di errore numerico. Corrisponde a <c>mysql_stmt_errno</c>.</summary>
+    /// <summary>Numeric error code. Maps to <c>mysql_stmt_errno</c>.</summary>
     public uint Errno()
     {
         EnsureNotDisposed();
         return MariadbStmtNative.mysql_stmt_errno(_handle.DangerousGetHandle());
     }
 
-    /// <summary>SQLSTATE corrente. Corrisponde a <c>mysql_stmt_sqlstate</c>.</summary>
+    /// <summary>Current SQLSTATE value. Maps to <c>mysql_stmt_sqlstate</c>.</summary>
     public string Sqlstate()
     {
         EnsureNotDisposed();
@@ -296,8 +296,8 @@ public sealed unsafe class MySqlStmt : IDisposable
 
 
     /// <summary>
-    /// Avanza al prossimo result set in una query multi-risultato.
-    /// Corrisponde a <c>mysql_stmt_next_result</c>.
+    /// Advances to the next result set in a multi-result execution.
+    /// Maps to <c>mysql_stmt_next_result</c>.
     /// </summary>
     public bool NextResult()
     {
