@@ -16,6 +16,11 @@ public static class MySqlLibrary
 
     public static void Initialize()
     {
+        EnsureInitialized();
+    }
+
+    internal static void EnsureInitialized()
+    {
         if (Interlocked.CompareExchange(ref _initialized, 1, 0) != 0)
             return;
 
@@ -23,10 +28,19 @@ public static class MySqlLibrary
         {
             int rc = MySqlNative.mysql_server_init(0, null, null);
             if (rc != 0)
+            {
+                Interlocked.Exchange(ref _initialized, 0);
                 throw new InvalidOperationException(
                     "mysql_library_init failed. Verificare che libmariadb sia installata.");
+            }
         }
     }
 
-    public static void Shutdown() => MySqlNative.mysql_server_end();
+    public static void Shutdown()
+    {
+        if (Interlocked.CompareExchange(ref _initialized, 0, 1) != 1)
+            return;
+
+        MySqlNative.mysql_server_end();
+    }
 }

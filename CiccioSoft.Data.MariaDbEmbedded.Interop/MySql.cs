@@ -51,6 +51,8 @@ public sealed unsafe class MySql : IDisposable
     /// <exception cref="InvalidOperationException">Thrown when native initialization fails.</exception>
     public static MySql Init()
     {
+        MySqlLibrary.EnsureInitialized();
+
         nint ptr = MySqlNative.mysql_init(nint.Zero);
         if (ptr == nint.Zero)
         {
