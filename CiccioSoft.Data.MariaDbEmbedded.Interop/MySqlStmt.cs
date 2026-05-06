@@ -194,7 +194,7 @@ public sealed unsafe class MySqlStmt : IDisposable
     // ------------------------------------------------------------------
 
     /// <summary>Numero di colonne nel result set. Corrisponde a <c>mysql_stmt_field_count</c>.</summary>
-    public uint NumFields
+    public uint FieldCount
     {
         get
         {
