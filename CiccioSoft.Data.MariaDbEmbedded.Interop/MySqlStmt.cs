@@ -69,7 +69,8 @@ public sealed unsafe class MySqlStmt : IDisposable
     public void BindParam(MySqlBindBuilder binds)
     {
         EnsureNotDisposed();
-        fixed (MySqlBindNative* ptr = binds.GetNativeArray().AsSpan<MySqlBindNative>())
+        var span = binds.GetNativeArray().AsSpan<MySqlBindNative>();
+        fixed (MySqlBindNative* ptr = span)
         {
             if (MariadbStmtNative.mysql_stmt_bind_param(_handle.DangerousGetHandle(), ptr) != 0)
                 ThrowStmtError();
@@ -83,7 +84,8 @@ public sealed unsafe class MySqlStmt : IDisposable
     public void BindResult(MySqlBindBuilder binds)
     {
         EnsureNotDisposed();
-        fixed (MySqlBindNative* ptr = binds.GetNativeArray().AsSpan<MySqlBindNative>())
+        var span = binds.GetNativeArray().AsSpan<MySqlBindNative>();
+        fixed (MySqlBindNative* ptr = span)
         {
             if (MariadbStmtNative.mysql_stmt_bind_result(_handle.DangerousGetHandle(), ptr) != 0)
                 ThrowStmtError();
@@ -154,16 +156,19 @@ public sealed unsafe class MySqlStmt : IDisposable
         return false;
     }
 
-    // /// <summary>
-    // /// Legge una singola colonna della riga corrente.
-    // /// Corrisponde a <c>mysql_stmt_fetch_column</c>.
-    // /// </summary>
-    // public void FetchColumn(MySqlBind bind, uint column, nuint offset = 0)
-    // {
-    //     EnsureNotDisposed();
-    //     int rc = MariadbStmtNative.mysql_stmt_fetch_column(_handle.DangerousGetHandle(), &bind.Native, column, offset);
-    //     if (rc != 0) ThrowStmtError();
-    // }
+    /// <summary>
+    /// Legge una singola colonna della riga corrente.
+    /// Corrisponde a <c>mysql_stmt_fetch_column</c>.
+    /// </summary>
+    public void FetchColumn(MySqlBind bind, uint column, uint offset = 0)
+    {
+        EnsureNotDisposed();        
+        fixed (MySqlBindNative* ptr = &bind.Native)
+        {
+            int rc = MariadbStmtNative.mysql_stmt_fetch_column(_handle.DangerousGetHandle(), ptr, column, offset);
+            if (rc != 0) ThrowStmtError();
+        }
+    }
 
     #endregion
 
@@ -223,29 +228,29 @@ public sealed unsafe class MySqlStmt : IDisposable
         return MariadbStmtNative.mysql_stmt_num_rows(_handle.DangerousGetHandle());
     }
 
-    // /// <summary>
-    // /// Restituisce il result set dei metadati delle colonne.
-    // /// Corrisponde a <c>mysql_stmt_result_metadata</c>.
-    // /// </summary>
-    // public MysqlResult? mysql_stmt_result_metadata()
-    // {
-    //     EnsureNotDisposed();
-    //     var res = NativeMariadbStmt.mysql_stmt_result_metadata(_handle.DangerousGetHandle());
-    //     return res == IntPtr.Zero ? null : new MysqlResult(res);
-    // }
+    /// <summary>
+    /// Restituisce il result set dei metadati delle colonne.
+    /// Corrisponde a <c>mysql_stmt_result_metadata</c>.
+    /// </summary>
+    public MySqlResult? ResultMetadata()
+    {
+        EnsureNotDisposed();
+        var ptr = MariadbStmtNative.mysql_stmt_result_metadata(_handle.DangerousGetHandle());
+        return ptr == IntPtr.Zero ? null : new MySqlResult(new MySqlResultHandle(ptr));
+    }
 
-    // /// <summary>Cursore corrente per navigazione. Corrisponde a <c>mysql_stmt_row_tell</c>.</summary>
+    /// <summary>Cursore corrente per navigazione. Corrisponde a <c>mysql_stmt_row_tell</c>.</summary>
     // public ulong RowTell()
     // {
     //     EnsureNotDisposed();
-    //     return NativeMariadbStmt.mysql_stmt_row_tell(_stmt);
+    //     return MariadbStmtNative.mysql_stmt_row_tell(_handle.DangerousGetHandle());
     // }
 
     // /// <summary>Sposta il cursore. Corrisponde a <c>mysql_stmt_row_seek</c>.</summary>
     // public ulong RowSeek(ulong offset)
     // {
     //     EnsureNotDisposed();
-    //     return NativeMariadbStmt.mysql_stmt_row_seek(_handle.DangerousGetHandle(), offset);
+    //     return MariadbStmtNative.mysql_stmt_row_seek(_handle.DangerousGetHandle(), offset);
     // }
 
     /// <summary>Sposta il cursore assoluto. Corrisponde a <c>mysql_stmt_data_seek</c>.</summary>
@@ -259,7 +264,7 @@ public sealed unsafe class MySqlStmt : IDisposable
     #region Errori dello statement
 
     /// <summary>Messaggio di errore corrente. Corrisponde a <c>mysql_stmt_error</c>.</summary>
-    public string mysql_stmt_error()
+    public string Error()
     {
         EnsureNotDisposed();
         var ptr = MariadbStmtNative.mysql_stmt_error(_handle.DangerousGetHandle());
@@ -267,7 +272,7 @@ public sealed unsafe class MySqlStmt : IDisposable
     }
 
     /// <summary>Codice di errore numerico. Corrisponde a <c>mysql_stmt_errno</c>.</summary>
-    public uint mysql_stmt_errno()
+    public uint Errno()
     {
         EnsureNotDisposed();
         return MariadbStmtNative.mysql_stmt_errno(_handle.DangerousGetHandle());
