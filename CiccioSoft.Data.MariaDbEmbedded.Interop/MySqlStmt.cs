@@ -193,8 +193,9 @@ public sealed unsafe class MySqlStmt : IDisposable
     //  Metadata and status information
     // ------------------------------------------------------------------
 
-    /// <summary>Number of columns in the statement result set. Maps to <c>mysql_stmt_field_count</c>.</summary>
-    public uint NumFields
+
+    /// <summary>Number of columns in the statement result set. Maps to <c>mysql_stmt_field_count</c>..</summary>
+    public uint FieldCount
     {
         get
         {
