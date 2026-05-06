@@ -9,5 +9,4 @@
   <Project Path="CiccioSoft.Data.MariaDbEmbedded.Interop/CiccioSoft.Data.MariaDbEmbedded.Interop.csproj" />
   <Project Path="CiccioSoft.Data.MariaDbEmbedded.Tests/CiccioSoft.Data.MariaDbEmbedded.Tests.csproj" />
   <Project Path="CiccioSoft.Data.MariaDbEmbedded/CiccioSoft.Data.MariaDbEmbedded.csproj" />
-  <Project Path="MariaDbClient/MariaDbClient.csproj" />
 </Solution>
