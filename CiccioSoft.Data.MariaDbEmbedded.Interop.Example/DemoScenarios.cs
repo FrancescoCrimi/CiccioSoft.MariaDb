@@ -153,7 +153,7 @@ internal static class DemoScenarios
 
         stmt.Execute();
         stmt.StoreResult();
-        ConsoleOutput.Message($"Righe nel result: {stmt.NumRows()}");
+        ConsoleOutput.Message($"Righe nel result: {stmt.NumRows}");
 
         while (stmt.Fetch())
         {

@@ -194,10 +194,13 @@ public sealed unsafe class MySqlStmt : IDisposable
     // ------------------------------------------------------------------
 
     /// <summary>Numero di colonne nel result set. Corrisponde a <c>mysql_stmt_field_count</c>.</summary>
-    public uint FieldCount()
+    public uint NumFields
     {
-        EnsureNotDisposed();
-        return MariadbStmtNative.mysql_stmt_field_count(_handle.DangerousGetHandle());
+        get
+        {
+            EnsureNotDisposed();
+            return MariadbStmtNative.mysql_stmt_field_count(_handle.DangerousGetHandle());
+        }
     }
 
     /// <summary>Numero di parametri (<c>?</c>). Corrisponde a <c>mysql_stmt_param_count</c>.</summary>
@@ -222,10 +225,13 @@ public sealed unsafe class MySqlStmt : IDisposable
     }
 
     /// <summary>Numero di righe nel result set (solo dopo store_result). Corrisponde a <c>mysql_stmt_num_rows</c>.</summary>
-    public ulong NumRows()
+    public ulong NumRows
     {
-        EnsureNotDisposed();
-        return MariadbStmtNative.mysql_stmt_num_rows(_handle.DangerousGetHandle());
+        get
+        {
+            EnsureNotDisposed();
+            return MariadbStmtNative.mysql_stmt_num_rows(_handle.DangerousGetHandle());
+        }
     }
 
     /// <summary>
