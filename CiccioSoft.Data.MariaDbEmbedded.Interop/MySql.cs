@@ -69,7 +69,7 @@ public sealed unsafe class MySql : IDisposable
     /// <param name="option">Native option key to configure.</param>
     /// <param name="value">Option value encoded as UTF-8 and passed as null-terminated string.</param>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
-    public int SetOption(MySqlOption option, string value)
+    public void SetOption(MySqlOption option, string value)
     {
         EnsureNotDisposed();
         byte[] valueBytes = Utils.BuildUtf8NullTerminated(value);
@@ -78,7 +78,8 @@ public sealed unsafe class MySql : IDisposable
         {
             fixed (byte* pvalue = valueBytes)
             {
-                return MySqlNative.mysql_options(_handle.DangerousGetHandle(), option, pvalue);
+                if (MySqlNative.mysql_options(_handle.DangerousGetHandle(), option, pvalue) != 0)
+                    ThrowError();
             }
         }
     }
@@ -89,14 +90,15 @@ public sealed unsafe class MySql : IDisposable
     /// <param name="option">Native option key to configure.</param>
     /// <param name="value">Unsigned numeric option value.</param>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
-    public int SetOption(MySqlOption option, uint value)
+    public void SetOption(MySqlOption option, uint value)
     {
         EnsureNotDisposed();
 
         unsafe
         {
             uint localValue = value;
-            return MySqlNative.mysql_options(_handle.DangerousGetHandle(), option, (byte*)&localValue);
+            if (MySqlNative.mysql_options(_handle.DangerousGetHandle(), option, (byte*)&localValue) != 0)
+                ThrowError();
         }
     }
 
@@ -106,9 +108,9 @@ public sealed unsafe class MySql : IDisposable
     /// <param name="option">Native option key to configure.</param>
     /// <param name="enabled"><see langword="true"/> to enable the option; otherwise <see langword="false"/>.</param>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
-    public int SetOption(MySqlOption option, bool enabled)
+    public void SetOption(MySqlOption option, bool enabled)
     {
-        return SetOption(option, enabled ? 1u : 0u);
+        SetOption(option, enabled ? 1u : 0u);
     }
 
     #endregion
@@ -186,7 +188,7 @@ public sealed unsafe class MySql : IDisposable
         fixed (byte* ptr = bytes)
         {
             if (MySqlNative.mysql_select_db(_handle.DangerousGetHandle(), ptr) != 0)
-                throw MySqlException.FromHandle(_handle.DangerousGetHandle());
+                ThrowError();
         }
     }
 
@@ -194,10 +196,11 @@ public sealed unsafe class MySql : IDisposable
     /// Checks if the server connection is alive by calling <c>mysql_ping</c>.
     /// </summary>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
-    public int Ping()
+    public void Ping()
     {
         EnsureNotDisposed();
-        return MySqlNative.mysql_ping(_handle.DangerousGetHandle());
+        if (MySqlNative.mysql_ping(_handle.DangerousGetHandle()) != 0)
+            ThrowError();
     }
 
     /// <summary>
@@ -206,7 +209,7 @@ public sealed unsafe class MySql : IDisposable
     /// <param name="sql">SQL command text to execute.</param>
     /// <returns>Native <c>mysql_query</c> result code (zero when successful).</returns>
     /// <exception cref="ObjectDisposedException">Thrown when the client has already been disposed.</exception>
-    public int Query(string sql)
+    public void Query(string sql)
     {
         EnsureNotDisposed();
         byte[] queryBytes = Utils.BuildUtf8NullTerminated(sql);
@@ -215,7 +218,8 @@ public sealed unsafe class MySql : IDisposable
         {
             fixed (byte* psql = queryBytes)
             {
-                return MySqlNative.mysql_query(_handle.DangerousGetHandle(), psql);
+                if (MySqlNative.mysql_query(_handle.DangerousGetHandle(), psql) != 0)
+                    ThrowError();
             }
         }
     }
@@ -236,9 +240,8 @@ public sealed unsafe class MySql : IDisposable
         if (ptr == 0)
         {
             // se c'è un errore reale, lancialo
-            uint err = MySqlNative.mysql_errno(_handle.DangerousGetHandle());
-            if (err != 0)
-                throw MySqlException.FromHandle(_handle.DangerousGetHandle());
+            if (MySqlNative.mysql_errno(_handle.DangerousGetHandle()) != 0)
+                ThrowError();
             return null; // query senza result set (INSERT, UPDATE…)
         }
 
@@ -257,9 +260,8 @@ public sealed unsafe class MySql : IDisposable
         if (ptr == 0)
         {
             // se c'è un errore reale, lancialo
-            uint err = MySqlNative.mysql_errno(_handle.DangerousGetHandle());
-            if (err != 0)
-                throw MySqlException.FromHandle(_handle.DangerousGetHandle());
+            if (MySqlNative.mysql_errno(_handle.DangerousGetHandle()) != 0)
+                ThrowError();
             return null; // query senza result set (INSERT, UPDATE…)
         }
 
@@ -420,9 +422,8 @@ public sealed unsafe class MySql : IDisposable
     public void AutoCommit(bool enabled)
     {
         EnsureNotDisposed();
-        MySqlNative.mysql_autocommit(
-            _handle.DangerousGetHandle(),
-            enabled ? (sbyte)1 : (sbyte)0);
+        if (MySqlNative.mysql_autocommit(_handle.DangerousGetHandle(), enabled ? (sbyte)1 : (sbyte)0) != 0)
+            ThrowError();
     }
 
     /// <summary>
@@ -432,7 +433,7 @@ public sealed unsafe class MySql : IDisposable
     {
         EnsureNotDisposed();
         if (MySqlNative.mysql_commit(_handle.DangerousGetHandle()) != 0)
-            throw MySqlException.FromHandle(_handle.DangerousGetHandle());
+            ThrowError();
     }
 
     /// <summary>
@@ -442,7 +443,7 @@ public sealed unsafe class MySql : IDisposable
     {
         EnsureNotDisposed();
         if (MySqlNative.mysql_rollback(_handle.DangerousGetHandle()) != 0)
-            throw MySqlException.FromHandle(_handle.DangerousGetHandle());
+            ThrowError();
     }
 
     #endregion
@@ -521,6 +522,17 @@ public sealed unsafe class MySql : IDisposable
         {
             throw new ObjectDisposedException(nameof(MySql));
         }
+    }
+
+    private void ThrowError()
+    {
+        byte* pMsg = MySqlNative.mysql_error(_handle.DangerousGetHandle());
+        byte* pState = MySqlNative.mysql_sqlstate(_handle.DangerousGetHandle());
+        uint errno = MySqlNative.mysql_errno(_handle.DangerousGetHandle());
+        throw new MySqlException(
+            Utils.GetStringFromPointerBytes(pMsg),
+            (int)errno,
+            Utils.GetStringFromPointerBytes(pState));
     }
 
     #endregion

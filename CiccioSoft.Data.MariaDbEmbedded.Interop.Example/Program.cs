@@ -290,7 +290,7 @@ class Program
                 while (res?.FetchRow(out var r) == true)
                     Console.WriteLine($"  Result #{resultIndex}: {r.ToString()}");
             }
-            
+
             resultIndex++;
         }
         while (mysql.NextResult());
@@ -308,7 +308,7 @@ class Program
 
         using MySqlResult? res = mysql.UseResult();
         if (res is null) return;
-        
+
         while (res.FetchRow(out MySqlRow row) == true)
             Console.WriteLine($"  id={row.GetInt32("id")}  nome={row.GetString("nome")}");
     }
@@ -319,8 +319,8 @@ class Program
     private static void EseguiPing(MySql mysql)
     {
         Console.WriteLine("\n=== Ping ===");
-        int rc = mysql.Ping();
-        Console.WriteLine($"  mysql_ping → {(rc == 0 ? "OK" : $"ERRORE (rc={rc})")}");
+        mysql.Ping();
+        Console.WriteLine("  mysql_ping → OK");
         Console.WriteLine($"  Stato server: {mysql.Stat()}");
     }
 

@@ -33,12 +33,9 @@ internal class MySqlStmtHandle : SafeHandleZeroOrMinusOneIsInvalid
 public sealed unsafe class MySqlStmt : IDisposable
 {
     private readonly MySqlStmtHandle _handle;
-    // private nint _stmt;
-    // private bool _disposed;
 
     internal MySqlStmt(MySqlStmtHandle handle)
     {
-        // _stmt = stmt;
         _handle = handle;
     }
 
@@ -63,7 +60,7 @@ public sealed unsafe class MySqlStmt : IDisposable
     }
 
 
-    #region  mysql_stmt_bind_param / mysql_stmt_bind_result
+    #region  BindParam / BindResult
 
     /// <summary>
     /// Associa i parametri di input (<c>?</c>) allo statement.
@@ -111,9 +108,8 @@ public sealed unsafe class MySqlStmt : IDisposable
             ThrowStmtError();
     }
 
-    // ------------------------------------------------------------------
-    //  mysql_stmt_store_result / mysql_stmt_free_result
-    // ------------------------------------------------------------------
+
+    #region StoreResult / FreeResult
 
     /// <summary>
     /// Trasferisce l'intero result set in memoria client.
@@ -137,10 +133,10 @@ public sealed unsafe class MySqlStmt : IDisposable
         if (rc != 0) ThrowStmtError();
     }
 
+    #endregion
 
-    // ------------------------------------------------------------------
-    //  mysql_stmt_fetch / mysql_stmt_fetch_column
-    // ------------------------------------------------------------------
+
+    #region Fetch / FetchColumn
 
     /// <summary>
     /// Legge la riga successiva nel buffer associato con bind_result.
@@ -162,12 +158,15 @@ public sealed unsafe class MySqlStmt : IDisposable
     // /// Legge una singola colonna della riga corrente.
     // /// Corrisponde a <c>mysql_stmt_fetch_column</c>.
     // /// </summary>
-    // public void FetchColumn(MysqlBind bind, uint column, nuint offset = 0)
+    // public void FetchColumn(MySqlBind bind, uint column, nuint offset = 0)
     // {
     //     EnsureNotDisposed();
-    //     int rc = NativeMariadbStmt.mysql_stmt_fetch_column(_handle.DangerousGetHandle(), bind.NativeArray.Ptr, column, offset);
+    //     int rc = MariadbStmtNative.mysql_stmt_fetch_column(_handle.DangerousGetHandle(), &bind.Native, column, offset);
     //     if (rc != 0) ThrowStmtError();
     // }
+
+    #endregion
+
 
     // ------------------------------------------------------------------
     //  mysql_stmt_reset
@@ -256,16 +255,16 @@ public sealed unsafe class MySqlStmt : IDisposable
         MariadbStmtNative.mysql_stmt_data_seek(_handle.DangerousGetHandle(), offset);
     }
 
-    // ------------------------------------------------------------------
-    //  Errori dello statement
-    // ------------------------------------------------------------------
 
-    // /// <summary>Messaggio di errore corrente. Corrisponde a <c>mysql_stmt_error</c>.</summary>
-    // public string mysql_stmt_error()
-    // {
-    //     EnsureNotDisposed();
-    //     return NativeMariadbStmt.PtrToStringUtf8(NativeMariadbStmt.mysql_stmt_error(_handle.DangerousGetHandle())) ?? string.Empty;
-    // }
+    #region Errori dello statement
+
+    /// <summary>Messaggio di errore corrente. Corrisponde a <c>mysql_stmt_error</c>.</summary>
+    public string mysql_stmt_error()
+    {
+        EnsureNotDisposed();
+        var ptr = MariadbStmtNative.mysql_stmt_error(_handle.DangerousGetHandle());
+        return Utils.GetStringFromPointerBytes(ptr);
+    }
 
     /// <summary>Codice di errore numerico. Corrisponde a <c>mysql_stmt_errno</c>.</summary>
     public uint mysql_stmt_errno()
@@ -274,12 +273,16 @@ public sealed unsafe class MySqlStmt : IDisposable
         return MariadbStmtNative.mysql_stmt_errno(_handle.DangerousGetHandle());
     }
 
-    // /// <summary>SQLSTATE corrente. Corrisponde a <c>mysql_stmt_sqlstate</c>.</summary>
-    // public string Sqlstate()
-    // {
-    //     EnsureNotDisposed();
-    //     return NativeMariadbStmt.PtrToStringUtf8(NativeMariadbStmt.mysql_stmt_sqlstate(_handle.DangerousGetHandle())) ?? "00000";
-    // }
+    /// <summary>SQLSTATE corrente. Corrisponde a <c>mysql_stmt_sqlstate</c>.</summary>
+    public string Sqlstate()
+    {
+        EnsureNotDisposed();
+        var ptr = MariadbStmtNative.mysql_stmt_sqlstate(_handle.DangerousGetHandle());
+        return Utils.GetStringFromPointerBytes(ptr);
+    }
+
+    #endregion
+
 
     /// <summary>
     /// Avanza al prossimo result set in una query multi-risultato.
@@ -294,20 +297,10 @@ public sealed unsafe class MySqlStmt : IDisposable
     }
 
 
-
-
-
-
-
-
-
-
     // public uint ParamCount => NativeMariadbStmt.mysql_stmt_param_count(_handle.DangerousGetHandle());
 
-    // private void EnsureNotDisposed()
-    // {
-    //     if (_disposed) throw new ObjectDisposedException(nameof(MySqlStatement));
-    // }
+
+    #region Helper
 
     private void EnsureNotDisposed()
     {
@@ -327,6 +320,9 @@ public sealed unsafe class MySqlStmt : IDisposable
             (int)errno,
             Utils.GetStringFromPointerBytes(pState));
     }
+
+    #endregion
+
 
     public void Dispose()
     {

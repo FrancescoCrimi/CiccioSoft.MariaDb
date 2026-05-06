@@ -5,7 +5,6 @@
 // https://opensource.org/licenses/MIT.
 
 using System;
-using CiccioSoft.Data.MariaDbEmbedded.Interop.Native;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 
@@ -18,18 +17,6 @@ public sealed class MySqlException : Exception
         : base(message)
     {
         ErrorCode = errorCode;
-        SqlState  = sqlState;
-    }
-
-    // factory da handle nativo
-    internal static unsafe MySqlException FromHandle(nint handle)
-    {
-        byte* pMsg   = MySqlNative.mysql_error(handle);
-        byte* pState = MySqlNative.mysql_sqlstate(handle);
-        uint  errno  = MySqlNative.mysql_errno(handle);
-        return new MySqlException(
-            Utils.GetStringFromPointerBytes(pMsg),
-            (int)errno,
-            Utils.GetStringFromPointerBytes(pState));
+        SqlState = sqlState;
     }
 }
