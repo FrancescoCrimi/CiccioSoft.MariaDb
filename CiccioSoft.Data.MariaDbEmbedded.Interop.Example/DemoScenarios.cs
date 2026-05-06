@@ -1,4 +1,10 @@
-using CiccioSoft.Data.MariaDbEmbedded.Interop.Native;
+// Copyright (c) 2026 Francesco Crimi
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
+
+using System;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop.Example;
 
@@ -198,7 +204,7 @@ internal static class DemoScenarios
         {
             using var result = mysql.StoreResult();
             while (result?.FetchRow(out var row) == true)
-                ConsoleOutput.Message($"Result #{resultIndex}: {row}");
+                ConsoleOutput.Message($"Result #{resultIndex}: {row.ToString()}");
 
             resultIndex++;
         }
