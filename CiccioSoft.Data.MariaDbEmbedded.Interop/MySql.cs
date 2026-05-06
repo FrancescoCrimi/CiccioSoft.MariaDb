@@ -490,7 +490,7 @@ public sealed unsafe class MySql : IDisposable
     {
         EnsureNotDisposed();
         int rc = MySqlNative.mysql_next_result(_handle.DangerousGetHandle());
-        // if (rc > 0) ThrowLastError();
+        if (rc > 0) ThrowError();
         return rc == 0;
     }
 
