@@ -50,7 +50,7 @@ public sealed unsafe class MySqlStmt : IDisposable
     public void Prepare(string sql)
     {
         EnsureNotDisposed();
-        byte[] sqlBytes = Utils.BuildUtf8NullTerminated(sql);
+        ReadOnlySpan<byte> sqlBytes = Utils.BuildUtf8NullTerminated(sql);
         int rc;
         fixed (byte* p = sqlBytes)
             rc = MariadbStmtNative.mysql_stmt_prepare(

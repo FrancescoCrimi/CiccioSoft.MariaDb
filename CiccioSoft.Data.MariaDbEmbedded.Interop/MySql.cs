@@ -72,7 +72,7 @@ public sealed unsafe class MySql : IDisposable
     public void SetOption(MySqlOption option, string value)
     {
         EnsureNotDisposed();
-        byte[] valueBytes = Utils.BuildUtf8NullTerminated(value);
+        ReadOnlySpan<byte> valueBytes = Utils.BuildUtf8NullTerminated(value);
 
         unsafe
         {
@@ -135,10 +135,10 @@ public sealed unsafe class MySql : IDisposable
             throw new InvalidOperationException("Connection is already open.");
         }
 
-        byte[] hostBytes = Utils.BuildUtf8NullTerminated(host);
-        byte[] userBytes = Utils.BuildUtf8NullTerminated(user);
-        byte[] passwordBytes = Utils.BuildUtf8NullTerminated(password);
-        byte[] databaseBytes = Utils.BuildUtf8NullTerminated(database);
+        ReadOnlySpan<byte> hostBytes = Utils.BuildUtf8NullTerminated(host);
+        ReadOnlySpan<byte> userBytes = Utils.BuildUtf8NullTerminated(user);
+        ReadOnlySpan<byte> passwordBytes = Utils.BuildUtf8NullTerminated(password);
+        ReadOnlySpan<byte> databaseBytes = Utils.BuildUtf8NullTerminated(database);
 
         IntPtr connected;
         unsafe
@@ -183,7 +183,7 @@ public sealed unsafe class MySql : IDisposable
     public void SelectDb(string db)
     {
         EnsureNotDisposed();
-        byte[] bytes = Utils.BuildUtf8NullTerminated(db);
+        ReadOnlySpan<byte> bytes = Utils.BuildUtf8NullTerminated(db);
 
         fixed (byte* ptr = bytes)
         {
@@ -212,7 +212,7 @@ public sealed unsafe class MySql : IDisposable
     public void Query(string sql)
     {
         EnsureNotDisposed();
-        byte[] queryBytes = Utils.BuildUtf8NullTerminated(sql);
+        ReadOnlySpan<byte> queryBytes = Utils.BuildUtf8NullTerminated(sql);
 
         unsafe
         {

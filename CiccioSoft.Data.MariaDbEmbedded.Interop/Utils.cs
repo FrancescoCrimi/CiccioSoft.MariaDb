@@ -27,11 +27,21 @@ internal static class Utils
         return Encoding.UTF8.GetString(span);
     }
 
-    internal static byte[] BuildUtf8NullTerminated(string value)
+    internal static ReadOnlySpan<byte> BuildUtf8NullTerminated(string value)
     {
-        byte[] bytes = Encoding.UTF8.GetBytes(value ?? string.Empty);
-        byte[] nullTerminated = new byte[bytes.Length + 1];
-        bytes.CopyTo(nullTerminated, 0);
-        return nullTerminated;
-    }    
+        Span<byte> buffer;
+
+        if (string.IsNullOrEmpty(value))
+        {
+            buffer = new byte[1];
+            buffer[0] = 0;
+            return buffer;
+        }
+
+        int byteCount = Encoding.UTF8.GetByteCount(value);
+        buffer = new byte[byteCount + 1];
+        Encoding.UTF8.GetBytes(value, buffer);
+        buffer[byteCount] = 0;
+        return buffer;
+    }
 }
