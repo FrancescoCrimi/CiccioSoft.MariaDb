@@ -32,12 +32,20 @@ public sealed class MySqlTests
     }
 
     [Fact]
-    public void Query_ReturnType_IsInt()
+    public void Query_ReturnType_IsVoid()
     {
         MethodInfo method = typeof(MySql).GetMethod(nameof(MySql.Query), [typeof(string)])
             ?? throw new InvalidOperationException("Unable to find Query(string) method.");
 
-        Assert.Equal(typeof(int), method.ReturnType);
+        Assert.Equal(typeof(void), method.ReturnType);
+    }
+
+    [Fact]
+    public void Query_ThrowsMySqlExceptionOnError()
+    {
+        using MySql sut = CreateDisposedClient();
+
+        Assert.Throws<MySqlException>(() => sut.Query("SELECT 1"));
     }
 
     // [Fact]
@@ -68,13 +76,8 @@ public sealed class MySqlTests
 
     private static MySql CreateDisposedClient()
     {
-        ConstructorInfo ctor = typeof(MySql).GetConstructor(
-            BindingFlags.NonPublic | BindingFlags.Instance,
-            binder: null,
-            [typeof(IntPtr)],
-            modifiers: null)
-            ?? throw new InvalidOperationException("Unable to find private MySql(IntPtr) constructor.");
-
-        return (MySql)ctor.Invoke([IntPtr.Zero]);
+        MySql client = MySql.Init();
+        client.Dispose();
+        return client;
     }
 }
