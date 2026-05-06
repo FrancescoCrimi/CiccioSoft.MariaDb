@@ -12,7 +12,7 @@ namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 
 internal static class Utils
 {
-    [MethodImpl(MethodImplOptions.AggressiveInlining)] // Forza il JIT a eliminare la chiamata al metodo
+    [MethodImpl(MethodImplOptions.AggressiveInlining)] // Encourages JIT inlining to eliminate call overhead
     internal unsafe static string GetStringFromPointerBytes(byte* pBytes)
     {
         if (pBytes == null)

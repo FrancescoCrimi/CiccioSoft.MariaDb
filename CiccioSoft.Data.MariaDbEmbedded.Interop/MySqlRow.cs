@@ -11,10 +11,10 @@ using System.Text;
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 
 /// <summary>
-/// Riga corrente di un result set nativo.
-/// È una <c>ref struct</c>: non può essere conservata oltre il ciclo di lettura.
-/// I puntatori interni diventano invalidi alla chiamata successiva di
-/// <see cref="MySqlResult.FetchRow"/> o <see cref="MySqlResult.Dispose"/>.
+/// Current row from a native result set.
+/// This is a <c>ref struct</c>: it cannot be stored beyond the read loop.
+/// Internal pointers become invalid after the next call to
+/// <see cref="MySqlResult.FetchRow"/> or <see cref="MySqlResult.Dispose"/>.
 /// </summary>
 public readonly unsafe ref struct MySqlRow
 {
@@ -33,8 +33,8 @@ public readonly unsafe ref struct MySqlRow
 
 
     /// <summary>
-    /// Verifica se la colonna è SQL NULL.
-    /// Corrisponde a <c>mysql_fetch_row</c> che restituisce NULL per i valori SQL NULL.
+    /// Checks whether the column value is SQL NULL.
+    /// Maps to <c>mysql_fetch_row</c> which returns NULL pointers for SQL NULL values.
     /// </summary>
     public bool IsNull(int ordinal)
     {
@@ -45,8 +45,8 @@ public readonly unsafe ref struct MySqlRow
 
 
     /// <summary>
-    /// Bytes grezzi della colonna, senza allocazione.
-    /// Utile per BLOB o per conversioni custom.
+    /// Returns raw column bytes without allocations.
+    /// Useful for BLOB values or custom conversions.
     /// </summary>
     public ReadOnlySpan<byte> GetRawBytes(int ordinal)
     {
@@ -116,7 +116,7 @@ public readonly unsafe ref struct MySqlRow
     {
         var s = GetString(ordinal);
         if (s is null) return null;
-        // MariaDB restituisce "YYYY-MM-DD HH:MM:SS" oppure "YYYY-MM-DD"
+        // MariaDB returns "YYYY-MM-DD HH:MM:SS" or "YYYY-MM-DD"
         return DateTime.Parse(s, CultureInfo.InvariantCulture);
     }
 
@@ -146,7 +146,7 @@ public readonly unsafe ref struct MySqlRow
         for (int i = 0; i < _fields.Length; i++)
             if (string.Equals(_fields[i].Name, name, StringComparison.OrdinalIgnoreCase))
                 return i;
-        throw new ArgumentException($"Campo '{name}' non trovato nella riga.");
+        throw new ArgumentException($"Field '{name}' was not found in the row.");
     }
 
     #endregion

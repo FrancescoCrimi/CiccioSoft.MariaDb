@@ -9,7 +9,10 @@ using CiccioSoft.Data.MariaDbEmbedded.Interop.Native;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 
-// Classe helper per costruire array di MYSQL_BIND
+/// <summary>
+/// Helper that builds an array of <c>MYSQL_BIND</c> entries consumed by
+/// <c>mysql_stmt_bind_param</c> and <c>mysql_stmt_bind_result</c>.
+/// </summary>
 public sealed class MySqlBindBuilder : IDisposable
 {
     private readonly int _count;
@@ -20,6 +23,9 @@ public sealed class MySqlBindBuilder : IDisposable
         get { return _mySqlBinds[index]; }
     }
 
+    /// <summary>
+    /// Creates <paramref name="count"/> managed bind slots for a statement.
+    /// </summary>
     public MySqlBindBuilder(int count)
     {
         _count = count;
@@ -36,6 +42,9 @@ public sealed class MySqlBindBuilder : IDisposable
         return binds;
     }
 
+    /// <summary>
+    /// Releases every pinned bind buffer previously prepared for statement bind APIs.
+    /// </summary>
     public void Dispose()
     {
         foreach (var bind in _mySqlBinds)

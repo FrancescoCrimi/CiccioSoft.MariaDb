@@ -10,10 +10,17 @@ using CiccioSoft.Data.MariaDbEmbedded.Interop.Native;
 
 namespace CiccioSoft.Data.MariaDbEmbedded.Interop;
 
+/// <summary>
+/// Process-wide MariaDB client/embedded library lifecycle wrapper.
+/// Maps to <c>mysql_server_init</c> and <c>mysql_server_end</c>.
+/// </summary>
 public static class MySqlLibrary
 {
     private static int _initialized = 0;
 
+    /// <summary>
+    /// Initializes the native library once for the current process via <c>mysql_server_init</c>.
+    /// </summary>
     public static void Initialize()
     {
         EnsureInitialized();
@@ -36,6 +43,9 @@ public static class MySqlLibrary
         }
     }
 
+    /// <summary>
+    /// Shuts down the native library for the current process via <c>mysql_server_end</c>.
+    /// </summary>
     public static void Shutdown()
     {
         if (Interlocked.CompareExchange(ref _initialized, 0, 1) != 1)
