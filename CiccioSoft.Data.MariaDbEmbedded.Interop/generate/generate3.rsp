@@ -29,6 +29,9 @@ mysql_fetch_field
 st_mysql
 st_mysql_res
 st_mysql_stmt
+list_rest
+list_push
+list_pop
 
 --remap
 enum_field_types=MySqlFieldTypes

@@ -29,6 +29,19 @@ mysql_fetch_field
 st_mysql
 st_mysql_res
 st_mysql_stmt
+MARIADB_FIELD_ATTR_LAST
+unknown_sqlstate
+IS_PRI_KEY
+IS_NOT_NULL
+IS_BLOB
+IS_NUM
+IS_NUM_FIELD
+INTERNAL_NUM_FIELD
+SET_CLIENT_ERROR
+set_mariadb_error
+CLEAR_CLIENT_ERROR
+mysql_reload
+mariadb_connect
 
 --remap
 enum_field_types=MySqlFieldTypes
