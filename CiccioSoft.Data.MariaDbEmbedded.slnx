@@ -9,4 +9,22 @@
   <Project Path="CiccioSoft.Data.MariaDbEmbedded.Interop/CiccioSoft.Data.MariaDbEmbedded.Interop.csproj" />
   <Project Path="CiccioSoft.Data.MariaDbEmbedded.Tests/CiccioSoft.Data.MariaDbEmbedded.Tests.csproj" />
   <Project Path="CiccioSoft.Data.MariaDbEmbedded/CiccioSoft.Data.MariaDbEmbedded.csproj" />
+
+
+  <Project Path="MySqlConnector-2.5.0/src/MySqlConnector.Authentication.Ed25519/MySqlConnector.Authentication.Ed25519.csproj" />
+
+  <!-- <Project Path="src/MySqlConnector.DependencyInjection/MySqlConnector.DependencyInjection.csproj" />
+  <Project Path="src/MySqlConnector.Logging.log4net/MySqlConnector.Logging.log4net.csproj" />
+  <Project Path="src/MySqlConnector.Logging.Microsoft.Extensions.Logging/MySqlConnector.Logging.Microsoft.Extensions.Logging.csproj" />
+  <Project Path="src/MySqlConnector.Logging.NLog/MySqlConnector.Logging.NLog.csproj" />
+  <Project Path="src/MySqlConnector.Logging.Serilog/MySqlConnector.Logging.Serilog.csproj" /> -->
+
+  <Project Path="MySqlConnector-2.5.0/src/MySqlConnector/MySqlConnector.csproj" />
+  <Project Path="MySqlConnector-2.5.0/tests/Conformance.Tests/Conformance.Tests.csproj" />
+  <Project Path="MySqlConnector-2.5.0/tests/IntegrationTests/IntegrationTests.csproj" />
+
+  <!-- <Project Path="tests/MySqlConnector.DependencyInjection.Tests/MySqlConnector.DependencyInjection.Tests.csproj" />
+  <Project Path="tests/MySqlConnector.NativeAot.Tests/MySqlConnector.NativeAot.Tests.csproj" /> -->
+
+  <Project Path="MySqlConnector-2.5.0/tests/MySqlConnector.Tests/MySqlConnector.Tests.csproj" />
 </Solution>

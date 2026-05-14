@@ -483,4 +483,4 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 
-Native.old/
+MySqlConnector-2.5.0/
