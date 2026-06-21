@@ -1,4 +1,4 @@
-# CiccioSoft.Data.MariaDbEmbedded Development Guidelines
+# CiccioSoft.Data.MariaDb Development Guidelines
 
 Questo documento raccoglie le linee guida per lo sviluppo della libreria. Serve come riferimento centrale per mantenere coerenza, qualità e stile nel codice.
 

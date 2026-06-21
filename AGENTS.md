@@ -1,20 +1,20 @@
 ---
 name: AGENTS
-description: "Workspace-level agent instructions for CiccioSoft.Data.MariaDbEmbedded. Use this file to understand project architecture, common conventions, and the primary build/test workflow."
+description: "Workspace-level agent instructions for CiccioSoft.MariaDb. Use this file to understand project architecture, common conventions, and the primary build/test workflow."
 ---
 
-# CiccioSoft.Data.MariaDbEmbedded Agent Instructions
+# CiccioSoft.MariaDb Agent Instructions
 
 ## What this project is
 
 - A .NET provider for MariaDB Embedded.
 - Two-layer architecture:
-  - `CiccioSoft.Data.MariaDbEmbedded.Interop`: low-level P/Invoke wrapper around MariaDB Connector/C.
-  - `CiccioSoft.Data.MariaDbEmbedded`: ADO.NET provider layer built on top of the interop layer.
+  - `CiccioSoft.Interop.MariaDb`: low-level P/Invoke wrapper around MariaDB Connector/C.
+  - `CiccioSoft.Data.MariaDb`: ADO.NET provider layer built on top of the interop layer.
 - Supporting projects:
-  - `CiccioSoft.Data.MariaDbEmbedded.Interop.Example`: sample usage of the interop layer.
-  - `CiccioSoft.Data.MariaDbEmbedded.Tests`: provider-level tests.
-  - `CiccioSoft.Data.MariaDbEmbedded.Interop.Tests`: interop-level tests.
+  - `CiccioSoft.Interop.MariaDb.Example`: sample usage of the interop layer.
+  - `CiccioSoft.Data.MariaDb.Tests`: provider-level tests.
+  - `CiccioSoft.Interop.MariaDb.Tests`: interop-level tests.
 
 ## Lingua
 
@@ -31,13 +31,13 @@ description: "Workspace-level agent instructions for CiccioSoft.Data.MariaDbEmbe
 ## Common tasks
 
 - Build the full solution:
-  - `dotnet build CiccioSoft.Data.MariaDbEmbedded.slnx`
+  - `dotnet build CiccioSoft.MariaDb.slnx`
 - Run provider tests:
-  - `dotnet test CiccioSoft.Data.MariaDbEmbedded.Tests/CiccioSoft.Data.MariaDbEmbedded.Tests.csproj`
+  - `dotnet test CiccioSoft.Data.MariaDb.Tests/CiccioSoft.Data.MariaDb.Tests.csproj`
 - Run interop tests:
-  - `dotnet test CiccioSoft.Data.MariaDbEmbedded.Interop.Tests/CiccioSoft.Data.MariaDbEmbedded.Interop.Tests.csproj`
+  - `dotnet test CiccioSoft.Interop.MariaDb.Tests/CiccioSoft.Interop.MariaDb.Tests.csproj`
 - Run the example project:
-  - `dotnet run --project CiccioSoft.Data.MariaDbEmbedded.Interop.Example/CiccioSoft.Data.MariaDbEmbedded.Interop.Example.csproj`
+  - `dotnet run --project CiccioSoft.Interop.MariaDb.Example/CiccioSoft.Interop.MariaDb.Example.csproj`
 
 ## What to avoid
 
@@ -49,6 +49,6 @@ description: "Workspace-level agent instructions for CiccioSoft.Data.MariaDbEmbe
 
 - `README.md`: project overview and goals.
 - `GUIDELINES.md`: development and naming guidelines.
-- `CiccioSoft.Data.MariaDbEmbedded.slnx`: solution definition for build/test.
-- `CiccioSoft.Data.MariaDbEmbedded.Interop.csproj`: interop layer project.
-- `CiccioSoft.Data.MariaDbEmbedded.csproj`: provider layer project.
+- `CiccioSoft.Data.MariaDb.slnx`: solution definition for build/test.
+- `CiccioSoft.Data.MariaDb.Interop.csproj`: interop layer project.
+- `CiccioSoft.Data.MariaDb.csproj`: provider layer project.

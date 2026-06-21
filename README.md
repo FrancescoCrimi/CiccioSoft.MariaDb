@@ -1,4 +1,4 @@
-# CiccioSoft.Data.MariaDbEmbedded
+# CiccioSoft.MariaDb
 
 This repository contains the library for an ADO.NET provider for MariaDB Embedded, designed to work similarly to existing .NET providers for SQLite.
 
@@ -6,21 +6,21 @@ This repository contains the library for an ADO.NET provider for MariaDB Embedde
 
 The primary goal is to provide a .NET provider for MariaDB Embedded composed of two layers:
 
-1. `CiccioSoft.Data.MariaDbEmbedded.Interop`
+1. `CiccioSoft.Interop.MariaDb`
    - Low-level library exposing an idiomatic, OOP wrapper for MariaDB Connector/C.
    - Implements a P/Invoke binding to MariaDB native APIs and a managed layer with .NET objects.
 
-2. `CiccioSoft.Data.MariaDbEmbedded`
+2. `CiccioSoft.Data.MariaDb`
    - The actual .NET provider built on top of the `Interop` layer.
    - Provides ADO.NET integration and the typical experience of embedded .NET database providers.
 
 ## Architecture
 
-- `CiccioSoft.Data.MariaDbEmbedded.Interop`
+- `CiccioSoft.Interop.MariaDb`
   - Contains the native structures, methods, and P/Invoke definitions for MariaDB.
   - Low-level library exposing an idiomatic, OOP wrapper for MariaDB Connector/C.
 
-- `CiccioSoft.Data.MariaDbEmbedded`
+- `CiccioSoft.Data.MariaDb`
   - Contains the ADO.NET provider that uses the `Interop` layer.
   - This is the layer .NET applications will use to connect to MariaDB Embedded.
 
@@ -36,9 +36,9 @@ The primary goal is to provide a .NET provider for MariaDB Embedded composed of 
 
 ## Getting started
 
-1. Build the `CiccioSoft.Data.MariaDbEmbedded.Interop` project.
+1. Build the `CiccioSoft.Interop.MariaDb` project.
 2. Use the `MySql.Open(...)` wrapper to open connections to MariaDB Embedded.
-3. Extend the `CiccioSoft.Data.MariaDbEmbedded` provider to support full ADO.NET.
+3. Extend the `CiccioSoft.Data.MariaDb` provider to support full ADO.NET.
 
 ## Documentation
 
