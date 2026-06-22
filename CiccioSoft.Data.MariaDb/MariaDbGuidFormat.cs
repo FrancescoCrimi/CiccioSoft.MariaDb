@@ -1,9 +1,20 @@
+// Original portions of this file are based on MySqlConnector.
+// Repo: https://github.com/mysql-net/MySqlConnector
+// Original File: /src/MySqlConnector/MySqlGuidFormat.cs (o il percorso reale del file)
+// Copyright (c) 2016-2026 Bradley Grainger
+// 
+// Copyright (c) 2026 Francesco Crimi
+// 
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
+
 namespace CiccioSoft.Data.MariaDb;
 
 /// <summary>
 /// Determines which column type (if any) should be read as a <c>System.Guid</c>.
 /// </summary>
-public enum MySqlGuidFormat
+public enum MariaDbGuidFormat
 {
 	/// <summary>
 	/// Same as <c>Char36</c> if <c>OldGuids=False</c>; same as <c>LittleEndianBinary16</c> if <c>OldGuids=True</c>.

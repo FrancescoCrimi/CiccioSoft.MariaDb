@@ -1,3 +1,14 @@
+// Original portions of this file are based on MySqlConnector.
+// Repo: https://github.com/mysql-net/MySqlConnector
+// Original File: /src/MySqlConnector/MySqlConnectionStringBuilder.cs (o il percorso reale del file)
+// Copyright (c) 2016-2026 Bradley Grainger
+// 
+// Copyright (c) 2026 Francesco Crimi
+// 
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
+
 using System.Collections;
 using System.Collections.Frozen;
 using System.ComponentModel;
@@ -11,23 +22,22 @@ namespace CiccioSoft.Data.MariaDb;
 #pragma warning disable CA1010 // Generic interface should also be implemented
 
 /// <summary>
-/// <see cref="MySqlConnectionStringBuilder"/> allows you to construct a MySQL connection string by setting properties on the builder then reading the <see cref="DbConnectionStringBuilder.ConnectionString"/> property.
+/// <see cref="MariaDbConnectionStringBuilder"/> allows you to construct a MySQL connection string by setting properties on the builder then reading the <see cref="DbConnectionStringBuilder.ConnectionString"/> property.
 /// </summary>
-/// <remarks>See <a href="https://mysqlconnector.net/connection-options/">Connection String Options</a> for more documentation on the options.</remarks>
-public sealed class MySqlConnectionStringBuilder : DbConnectionStringBuilder
+public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
 {
     /// <summary>
-    /// Initializes a new <see cref="MySqlConnectionStringBuilder"/>.
+    /// Initializes a new <see cref="MariaDbConnectionStringBuilder"/>.
     /// </summary>
-    public MySqlConnectionStringBuilder()
+    public MariaDbConnectionStringBuilder()
     {
     }
 
     /// <summary>
-    /// Initializes a new <see cref="MySqlConnectionStringBuilder"/> with properties set from the specified connection string.
+    /// Initializes a new <see cref="MariaDbConnectionStringBuilder"/> with properties set from the specified connection string.
     /// </summary>
     /// <param name="connectionString">The connection string to use to set property values on this object.</param>
-    public MySqlConnectionStringBuilder(string connectionString)
+    public MariaDbConnectionStringBuilder(string connectionString)
     {
         ConnectionString = connectionString;
     }
@@ -108,10 +118,10 @@ public sealed class MySqlConnectionStringBuilder : DbConnectionStringBuilder
     /// Specifies how load is distributed across backend servers.
     /// </summary>
     [Category("Connection")]
-    [DefaultValue(MySqlLoadBalance.RoundRobin)]
+    [DefaultValue(MariaDbLoadBalance.RoundRobin)]
     [Description("Specifies how load is distributed across backend servers.")]
     [DisplayName("Load Balance")]
-    public MySqlLoadBalance LoadBalance
+    public MariaDbLoadBalance LoadBalance
     {
         get => MySqlConnectionStringOption.LoadBalance.GetValue(this);
         set => MySqlConnectionStringOption.LoadBalance.SetValue(this, value);
@@ -121,10 +131,10 @@ public sealed class MySqlConnectionStringBuilder : DbConnectionStringBuilder
     /// The protocol to use to connect to the MySQL Server.
     /// </summary>
     [Category("Connection")]
-    [DefaultValue(MySqlConnectionProtocol.Socket)]
+    [DefaultValue(MariaDbConnectionProtocol.Socket)]
     [Description("The protocol to use to connect to the MySQL Server.")]
     [DisplayName("Connection Protocol")]
-    public MySqlConnectionProtocol ConnectionProtocol
+    public MariaDbConnectionProtocol ConnectionProtocol
     {
         get => MySqlConnectionStringOption.ConnectionProtocol.GetValue(this);
         set => MySqlConnectionStringOption.ConnectionProtocol.SetValue(this, value);
@@ -150,10 +160,10 @@ public sealed class MySqlConnectionStringBuilder : DbConnectionStringBuilder
     /// Whether to use SSL/TLS when connecting to the MySQL server.
     /// </summary>
     [Category("TLS")]
-    [DefaultValue(MySqlSslMode.Preferred)]
+    [DefaultValue(MariaDbSslMode.Preferred)]
     [Description("Whether to use SSL/TLS when connecting to the MySQL server.")]
     [DisplayName("SSL Mode")]
-    public MySqlSslMode SslMode
+    public MariaDbSslMode SslMode
     {
         get => MySqlConnectionStringOption.SslMode.GetValue(this);
         set => MySqlConnectionStringOption.SslMode.SetValue(this, value);
@@ -188,13 +198,13 @@ public sealed class MySqlConnectionStringBuilder : DbConnectionStringBuilder
     }
 
     /// <summary>
-    /// Uses a certificate from the specified Certificate Store on the machine. The default value of <see cref="MySqlCertificateStoreLocation.None"/> means the certificate store is not used; a value of <see cref="MySqlCertificateStoreLocation.CurrentUser"/> or <see cref="MySqlCertificateStoreLocation.LocalMachine"/> uses the specified store.
+    /// Uses a certificate from the specified Certificate Store on the machine. The default value of <see cref="MariaDbCertificateStoreLocation.None"/> means the certificate store is not used; a value of <see cref="MySqlCertificateStoreLocation.CurrentUser"/> or <see cref="MySqlCertificateStoreLocation.LocalMachine"/> uses the specified store.
     /// </summary>
     [Category("TLS")]
-    [DefaultValue(MySqlCertificateStoreLocation.None)]
+    [DefaultValue(MariaDbCertificateStoreLocation.None)]
     [Description("Uses a certificate from the specified Certificate Store on the machine.")]
     [DisplayName("Certificate Store Location")]
-    public MySqlCertificateStoreLocation CertificateStoreLocation
+    public MariaDbCertificateStoreLocation CertificateStoreLocation
     {
         get => MySqlConnectionStringOption.CertificateStoreLocation.GetValue(this);
         set => MySqlConnectionStringOption.CertificateStoreLocation.SetValue(this, value);
@@ -555,10 +565,10 @@ public sealed class MySqlConnectionStringBuilder : DbConnectionStringBuilder
     /// The <see cref="DateTimeKind"/> to use when deserializing <c>DATETIME</c> values.
     /// </summary>
     [Category("Other")]
-    [DefaultValue(MySqlDateTimeKind.Unspecified)]
+    [DefaultValue(MariaDbDateTimeKind.Unspecified)]
     [Description("The DateTimeKind to use when deserializing DATETIME values.")]
     [DisplayName("DateTime Kind")]
-    public MySqlDateTimeKind DateTimeKind
+    public MariaDbDateTimeKind DateTimeKind
     {
         get => MySqlConnectionStringOption.DateTimeKind.GetValue(this);
         set => MySqlConnectionStringOption.DateTimeKind.SetValue(this, value);
@@ -594,10 +604,10 @@ public sealed class MySqlConnectionStringBuilder : DbConnectionStringBuilder
     /// Determines which column type (if any) should be read as a <see cref="Guid"/>.
     /// </summary>
     [Category("Other")]
-    [DefaultValue(MySqlGuidFormat.Default)]
+    [DefaultValue(MariaDbGuidFormat.Default)]
     [Description("Determines which column type (if any) should be read as a Guid.")]
     [DisplayName("GUID Format")]
-    public MySqlGuidFormat GuidFormat
+    public MariaDbGuidFormat GuidFormat
     {
         get => MySqlConnectionStringOption.GuidFormat.GetValue(this);
         set => MySqlConnectionStringOption.GuidFormat.SetValue(this, value);
@@ -710,10 +720,10 @@ public sealed class MySqlConnectionStringBuilder : DbConnectionStringBuilder
     /// Whether to use server redirection.
     /// </summary>
     [Category("Connection")]
-    [DefaultValue(MySqlServerRedirectionMode.Disabled)]
+    [DefaultValue(MariaDbServerRedirectionMode.Disabled)]
     [Description("Whether to use server redirection.")]
     [DisplayName("Server Redirection Mode")]
-    public MySqlServerRedirectionMode ServerRedirectionMode
+    public MariaDbServerRedirectionMode ServerRedirectionMode
     {
         get => MySqlConnectionStringOption.ServerRedirectionMode.GetValue(this);
         set => MySqlConnectionStringOption.ServerRedirectionMode.SetValue(this, value);
@@ -850,7 +860,7 @@ public sealed class MySqlConnectionStringBuilder : DbConnectionStringBuilder
 
         if (m_cachedConnectionString != connectionString)
         {
-            var csb = new MySqlConnectionStringBuilder(connectionString);
+            var csb = new MariaDbConnectionStringBuilder(connectionString);
             foreach (string? key in Keys)
             {
                 foreach (var passwordKey in MySqlConnectionStringOption.Password.Keys)
@@ -898,15 +908,15 @@ internal abstract partial class MySqlConnectionStringOption
     public static readonly MySqlConnectionStringReferenceOption<string> UserID;
     public static readonly MySqlConnectionStringReferenceOption<string> Password;
     public static readonly MySqlConnectionStringReferenceOption<string> Database;
-    public static readonly MySqlConnectionStringValueOption<MySqlLoadBalance> LoadBalance;
-    public static readonly MySqlConnectionStringValueOption<MySqlConnectionProtocol> ConnectionProtocol;
+    public static readonly MySqlConnectionStringValueOption<MariaDbLoadBalance> LoadBalance;
+    public static readonly MySqlConnectionStringValueOption<MariaDbConnectionProtocol> ConnectionProtocol;
     public static readonly MySqlConnectionStringReferenceOption<string> PipeName;
 
     // SSL/TLS Options
-    public static readonly MySqlConnectionStringValueOption<MySqlSslMode> SslMode;
+    public static readonly MySqlConnectionStringValueOption<MariaDbSslMode> SslMode;
     public static readonly MySqlConnectionStringReferenceOption<string> CertificateFile;
     public static readonly MySqlConnectionStringReferenceOption<string> CertificatePassword;
-    public static readonly MySqlConnectionStringValueOption<MySqlCertificateStoreLocation> CertificateStoreLocation;
+    public static readonly MySqlConnectionStringValueOption<MariaDbCertificateStoreLocation> CertificateStoreLocation;
     public static readonly MySqlConnectionStringReferenceOption<string> CertificateThumbprint;
     public static readonly MySqlConnectionStringReferenceOption<string> SslCert;
     public static readonly MySqlConnectionStringReferenceOption<string> SslKey;
@@ -936,10 +946,10 @@ internal abstract partial class MySqlConnectionStringOption
     public static readonly MySqlConnectionStringReferenceOption<string> CharacterSet;
     public static readonly MySqlConnectionStringValueOption<uint> ConnectionTimeout;
     public static readonly MySqlConnectionStringValueOption<bool> ConvertZeroDateTime;
-    public static readonly MySqlConnectionStringValueOption<MySqlDateTimeKind> DateTimeKind;
+    public static readonly MySqlConnectionStringValueOption<MariaDbDateTimeKind> DateTimeKind;
     public static readonly MySqlConnectionStringValueOption<uint> DefaultCommandTimeout;
     public static readonly MySqlConnectionStringValueOption<bool> ForceSynchronous;
-    public static readonly MySqlConnectionStringValueOption<MySqlGuidFormat> GuidFormat;
+    public static readonly MySqlConnectionStringValueOption<MariaDbGuidFormat> GuidFormat;
     public static readonly MySqlConnectionStringValueOption<bool> IgnoreCommandTransaction;
     public static readonly MySqlConnectionStringValueOption<bool> IgnorePrepare;
     public static readonly MySqlConnectionStringValueOption<bool> InteractiveSession;
@@ -948,7 +958,7 @@ internal abstract partial class MySqlConnectionStringOption
     public static readonly MySqlConnectionStringValueOption<bool> OldGuids;
     public static readonly MySqlConnectionStringValueOption<bool> PersistSecurityInfo;
     public static readonly MySqlConnectionStringValueOption<bool> Pipelining;
-    public static readonly MySqlConnectionStringValueOption<MySqlServerRedirectionMode> ServerRedirectionMode;
+    public static readonly MySqlConnectionStringValueOption<MariaDbServerRedirectionMode> ServerRedirectionMode;
     public static readonly MySqlConnectionStringReferenceOption<string> ServerRsaPublicKeyFile;
     public static readonly MySqlConnectionStringReferenceOption<string> ServerSPN;
     public static readonly MySqlConnectionStringValueOption<bool> TreatTinyAsBoolean;
@@ -965,8 +975,8 @@ internal abstract partial class MySqlConnectionStringOption
     public string Key => m_keys[0];
     public IReadOnlyList<string> Keys => m_keys;
 
-    public abstract object GetObject(MySqlConnectionStringBuilder builder);
-    public abstract void SetObject(MySqlConnectionStringBuilder builder, object value);
+    public abstract object GetObject(MariaDbConnectionStringBuilder builder);
+    public abstract void SetObject(MariaDbConnectionStringBuilder builder, object value);
 
     protected MySqlConnectionStringOption(IReadOnlyList<string> keys)
     {
@@ -1010,11 +1020,11 @@ internal abstract partial class MySqlConnectionStringOption
 
         AddOption(options, LoadBalance = new(
             keys: ["Load Balance", "LoadBalance"],
-            defaultValue: MySqlLoadBalance.RoundRobin));
+            defaultValue: MariaDbLoadBalance.RoundRobin));
 
         AddOption(options, ConnectionProtocol = new(
             keys: ["Connection Protocol", "ConnectionProtocol", "Protocol"],
-            defaultValue: MySqlConnectionProtocol.Socket));
+            defaultValue: MariaDbConnectionProtocol.Socket));
 
         AddOption(options, PipeName = new(
             keys: ["Pipe Name", "PipeName", "Pipe"],
@@ -1023,7 +1033,7 @@ internal abstract partial class MySqlConnectionStringOption
         // SSL/TLS Options
         AddOption(options, SslMode = new(
             keys: ["SSL Mode", "SslMode"],
-            defaultValue: MySqlSslMode.Preferred));
+            defaultValue: MariaDbSslMode.Preferred));
 
         AddOption(options, CertificateFile = new(
             keys: ["Certificate File", "CertificateFile"],
@@ -1035,7 +1045,7 @@ internal abstract partial class MySqlConnectionStringOption
 
         AddOption(options, CertificateStoreLocation = new(
             keys: ["Certificate Store Location", "CertificateStoreLocation"],
-            defaultValue: MySqlCertificateStoreLocation.None));
+            defaultValue: MariaDbCertificateStoreLocation.None));
 
         AddOption(options, CertificateThumbprint = new(
             keys: ["Certificate Thumbprint", "CertificateThumbprint", "Certificate Thumb Print"],
@@ -1182,7 +1192,7 @@ internal abstract partial class MySqlConnectionStringOption
 
         AddOption(options, DateTimeKind = new(
             keys: ["DateTime Kind", "DateTimeKind"],
-            defaultValue: MySqlDateTimeKind.Unspecified));
+            defaultValue: MariaDbDateTimeKind.Unspecified));
 
         AddOption(options, DefaultCommandTimeout = new(
             keys: ["Default Command Timeout", "DefaultCommandTimeout", "Command Timeout"],
@@ -1194,7 +1204,7 @@ internal abstract partial class MySqlConnectionStringOption
 
         AddOption(options, GuidFormat = new(
             keys: ["GUID Format", "GuidFormat"],
-            defaultValue: MySqlGuidFormat.Default));
+            defaultValue: MariaDbGuidFormat.Default));
 
         AddOption(options, IgnoreCommandTransaction = new(
             keys: ["Ignore Command Transaction", "IgnoreCommandTransaction"],
@@ -1230,7 +1240,7 @@ internal abstract partial class MySqlConnectionStringOption
 
         AddOption(options, ServerRedirectionMode = new(
             keys: ["Server Redirection Mode", "ServerRedirectionMode"],
-            defaultValue: MySqlServerRedirectionMode.Disabled));
+            defaultValue: MariaDbServerRedirectionMode.Disabled));
 
         AddOption(options, ServerRsaPublicKeyFile = new(
             keys: ["Server RSA Public Key File", "ServerRsaPublicKeyFile"],
@@ -1278,15 +1288,15 @@ internal sealed class MySqlConnectionStringValueOption<T> : MySqlConnectionStrin
         m_coerce = coerce;
     }
 
-    public T GetValue(MySqlConnectionStringBuilder builder) =>
+    public T GetValue(MariaDbConnectionStringBuilder builder) =>
         builder.TryGetValue(Key, out var objectValue) ? ChangeType(objectValue) : m_defaultValue;
 
-    public void SetValue(MySqlConnectionStringBuilder builder, T value) =>
+    public void SetValue(MariaDbConnectionStringBuilder builder, T value) =>
         builder.DoSetValue(Key, m_coerce is null ? value : m_coerce(value));
 
-    public override object GetObject(MySqlConnectionStringBuilder builder) => GetValue(builder);
+    public override object GetObject(MariaDbConnectionStringBuilder builder) => GetValue(builder);
 
-    public override void SetObject(MySqlConnectionStringBuilder builder, object value) => SetValue(builder, ChangeType(value));
+    public override void SetObject(MariaDbConnectionStringBuilder builder, object value) => SetValue(builder, ChangeType(value));
 
     private T ChangeType(object objectValue)
     {
@@ -1298,7 +1308,7 @@ internal sealed class MySqlConnectionStringValueOption<T> : MySqlConnectionStrin
                 return (T)(object)false;
         }
 
-        if ((typeof(T) == typeof(MySqlLoadBalance) || typeof(T) == typeof(MySqlSslMode) || typeof(T) == typeof(MySqlServerRedirectionMode) || typeof(T) == typeof(MySqlDateTimeKind) || typeof(T) == typeof(MySqlGuidFormat) || typeof(T) == typeof(MySqlConnectionProtocol) || typeof(T) == typeof(MySqlCertificateStoreLocation)) && objectValue is string enumString)
+        if ((typeof(T) == typeof(MariaDbLoadBalance) || typeof(T) == typeof(MariaDbSslMode) || typeof(T) == typeof(MariaDbServerRedirectionMode) || typeof(T) == typeof(MariaDbDateTimeKind) || typeof(T) == typeof(MariaDbGuidFormat) || typeof(T) == typeof(MariaDbConnectionProtocol) || typeof(T) == typeof(MariaDbCertificateStoreLocation)) && objectValue is string enumString)
         {
             try
             {
@@ -1336,15 +1346,15 @@ internal sealed class MySqlConnectionStringReferenceOption<T> : MySqlConnectionS
         m_coerce = coerce;
     }
 
-    public T GetValue(MySqlConnectionStringBuilder builder) =>
+    public T GetValue(MariaDbConnectionStringBuilder builder) =>
         builder.TryGetValue(Key, out var objectValue) ? ChangeType(objectValue) : m_defaultValue;
 
-    public void SetValue(MySqlConnectionStringBuilder builder, T? value) =>
+    public void SetValue(MariaDbConnectionStringBuilder builder, T? value) =>
         builder.DoSetValue(Key, m_coerce is null ? value : m_coerce(value));
 
-    public override object GetObject(MySqlConnectionStringBuilder builder) => GetValue(builder);
+    public override object GetObject(MariaDbConnectionStringBuilder builder) => GetValue(builder);
 
-    public override void SetObject(MySqlConnectionStringBuilder builder, object value) => SetValue(builder, ChangeType(value));
+    public override void SetObject(MariaDbConnectionStringBuilder builder, object value) => SetValue(builder, ChangeType(value));
 
     private static T ChangeType(object objectValue) =>
         (T)Convert.ChangeType(objectValue, typeof(T), CultureInfo.InvariantCulture);
