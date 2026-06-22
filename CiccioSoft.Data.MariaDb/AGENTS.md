@@ -3,26 +3,26 @@ name: CiccioSoft.Data.MariaDb
 description: "Istruzioni specifiche per il progetto ADO.NET provider."
 ---
 
-# Istruzioni per il progetto CiccioSoft.Data.MariaDbEmbedded
+# Istruzioni per il progetto CiccioSoft.Data.MariaDb
 
 ## Scopo
 
-- Questo progetto implementa il provider ADO.NET basato su `CiccioSoft.Data.MariaDbEmbedded.Interop`.
-- Fornisce classi come `MariaDbEmbeddedConnection`, `MariaDbEmbeddedCommand`, `MariaDbEmbeddedDataReader`, `MariaDbEmbeddedParameter` e `MariaDbEmbeddedTransaction`.
+- Questo progetto implementa il provider ADO.NET basato su `CiccioSoft.MariaDb.Interop`.
+- Fornisce classi come `MariaDbConnection`, `MariaDbCommand`, `MariaDbDataReader`, `MariaDbParameter` e `MariaDbTransaction`.
 - Deve offrire un’esperienza .NET idiomatica e compatibile con ADO.NET.
 
 ## Cose importanti
 
 - Mantieni l’interfaccia pubblica fedele alle convenzioni ADO.NET.
-- Evita di duplicare la logica che appartiene al livello interop; delega le operazioni native a `CiccioSoft.Data.MariaDbEmbedded.Interop`.
+- Evita di duplicare la logica che appartiene al livello interop; delega le operazioni native a `CiccioSoft.MariaDb.Interop`.
 - Aggiorna `README.md` e `GUIDELINES.md` quando cambi l’API pubblica o il comportamento di connessioni/transazioni.
 
 ## Comandi utili
 
 - Compilare il progetto:
-  - `dotnet build CiccioSoft.Data.MariaDbEmbedded/CiccioSoft.Data.MariaDbEmbedded.csproj`
+  - `dotnet build CiccioSoft.Data.MariaDb/CiccioSoft.Data.MariaDb.csproj`
 - Eseguire i test del provider:
-  - `dotnet test CiccioSoft.Data.MariaDbEmbedded.Tests/CiccioSoft.Data.MariaDbEmbedded.Tests.csproj`
+  - `dotnet test CiccioSoft.Data.MariaDb.Tests/CiccioSoft.Data.MariaDb.Tests.csproj`
 
 ## Lingua
 

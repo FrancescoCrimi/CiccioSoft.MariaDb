@@ -24,22 +24,22 @@ public sealed class MariaDbConnectorFactory : DbProviderFactory
     public static readonly MariaDbConnectorFactory Instance = new();
 
     /// <summary>
-    /// Creates a new <see cref="MySqlCommand"/> object.
+    /// Creates a new <see cref="MariaDbCommand"/> object.
     /// </summary>
     public override DbCommand CreateCommand() => new MariaDbCommand();
 
     /// <summary>
-    /// Creates a new <see cref="MySqlConnection"/> object.
+    /// Creates a new <see cref="MariaDbConnection"/> object.
     /// </summary>
     public override DbConnection CreateConnection() => new MariaDbConnection();
 
     /// <summary>
-    /// Creates a new <see cref="MySqlConnectionStringBuilder"/> object.
+    /// Creates a new <see cref="MariaDbConnectionStringBuilder"/> object.
     /// </summary>
-    public override DbConnectionStringBuilder CreateConnectionStringBuilder() => new MySqlConnectionStringBuilder();
+    public override DbConnectionStringBuilder CreateConnectionStringBuilder() => new MariaDbConnectionStringBuilder();
 
     /// <summary>
-    /// Creates a new <see cref="MySqlParameter"/> object.
+    /// Creates a new <see cref="MariaDbParameter"/> object.
     /// </summary>
     public override DbParameter CreateParameter() => new MariaDbParameter();
 

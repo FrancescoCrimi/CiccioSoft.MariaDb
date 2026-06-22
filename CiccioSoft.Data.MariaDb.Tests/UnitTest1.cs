@@ -1,4 +1,4 @@
-﻿namespace CiccioSoft.Data.MariaDbEmbedded.Tests;
+﻿namespace CiccioSoft.Data.MariaDb.Tests;
 
 public class UnitTest1
 {

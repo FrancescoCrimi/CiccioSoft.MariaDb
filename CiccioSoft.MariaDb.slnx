@@ -4,9 +4,9 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="CiccioSoft.Interop.MariaDb.Example/CiccioSoft.Interop.MariaDb.Example.csproj" />
-  <Project Path="CiccioSoft.Interop.MariaDb.Tests/CiccioSoft.Interop.MariaDb.Tests.csproj" />
-  <Project Path="CiccioSoft.Interop.MariaDb/CiccioSoft.Interop.MariaDb.csproj" />
+  <Project Path="CiccioSoft.MariaDb.Interop.Example/CiccioSoft.MariaDb.Interop.Example.csproj" />
+  <Project Path="CiccioSoft.MariaDb.Interop.Tests/CiccioSoft.MariaDb.Interop.Tests.csproj" />
+  <Project Path="CiccioSoft.MariaDb.Interop/CiccioSoft.MariaDb.Interop.csproj" />
   <Project Path="CiccioSoft.Data.MariaDb.Tests/CiccioSoft.Data.MariaDb.Tests.csproj" />
   <Project Path="CiccioSoft.Data.MariaDb/CiccioSoft.Data.MariaDb.csproj" />
 

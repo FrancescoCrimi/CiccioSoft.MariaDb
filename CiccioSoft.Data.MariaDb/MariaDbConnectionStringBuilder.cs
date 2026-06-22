@@ -22,7 +22,7 @@ namespace CiccioSoft.Data.MariaDb;
 #pragma warning disable CA1010 // Generic interface should also be implemented
 
 /// <summary>
-/// <see cref="MariaDbConnectionStringBuilder"/> allows you to construct a MySQL connection string by setting properties on the builder then reading the <see cref="DbConnectionStringBuilder.ConnectionString"/> property.
+/// <see cref="MariaDbConnectionStringBuilder"/> allows you to construct a MariaDb connection string by setting properties on the builder then reading the <see cref="DbConnectionStringBuilder.ConnectionString"/> property.
 /// </summary>
 public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
 {
@@ -45,13 +45,13 @@ public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
     // Connection Options
 
     /// <summary>
-    /// <para>The host name or network address of the MySQL Server to which to connect. Multiple hosts can be specified in a comma-delimited list.</para>
-    /// <para>On Unix-like systems, this can be a fully qualified path to a MySQL socket file, which will cause a Unix socket to be used instead of a TCP/IP socket. Only a single socket name can be specified.</para>
+    /// <para>The host name or network address of the MariaDb Server to which to connect. Multiple hosts can be specified in a comma-delimited list.</para>
+    /// <para>On Unix-like systems, this can be a fully qualified path to a MariaDb socket file, which will cause a Unix socket to be used instead of a TCP/IP socket. Only a single socket name can be specified.</para>
     /// </summary>
     [AllowNull]
     [Category("Connection")]
     [DefaultValue("")]
-    [Description("The host name or network address of the MySQL Server to which to connect.")]
+    [Description("The host name or network address of the MariaDb Server to which to connect.")]
     [DisplayName("Server")]
     public string Server
     {
@@ -60,11 +60,11 @@ public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
     }
 
     /// <summary>
-    /// The TCP port on which MySQL Server is listening for connections.
+    /// The TCP port on which MariaDb Server is listening for connections.
     /// </summary>
     [Category("Connection")]
     [DefaultValue(3306u)]
-    [Description("The TCP port on which MySQL Server is listening for connections.")]
+    [Description("The TCP port on which MariaDb Server is listening for connections.")]
     [DisplayName("Port")]
     public uint Port
     {
@@ -73,12 +73,12 @@ public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
     }
 
     /// <summary>
-    /// The MySQL user ID.
+    /// The MariaDb user ID.
     /// </summary>
     [AllowNull]
     [Category("Connection")]
     [DefaultValue("")]
-    [Description("The MySQL user ID.")]
+    [Description("The MariaDb user ID.")]
     [DisplayName("User ID")]
     public string UserID
     {
@@ -87,12 +87,12 @@ public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
     }
 
     /// <summary>
-    /// The password for the MySQL user.
+    /// The password for the MariaDb user.
     /// </summary>
     [AllowNull]
     [Category("Connection")]
     [DefaultValue("")]
-    [Description("The password for the MySQL user.")]
+    [Description("The password for the MariaDb user.")]
     [DisplayName("Password")]
     public string Password
     {
@@ -101,7 +101,7 @@ public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
     }
 
     /// <summary>
-    /// (Optional) The case-sensitive name of the initial database to use. This may be required if the MySQL user account only has access rights to particular databases on the server.
+    /// (Optional) The case-sensitive name of the initial database to use. This may be required if the MariaDb user account only has access rights to particular databases on the server.
     /// </summary>
     [AllowNull]
     [Category("Connection")]
@@ -128,11 +128,11 @@ public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
     }
 
     /// <summary>
-    /// The protocol to use to connect to the MySQL Server.
+    /// The protocol to use to connect to the MariaDb Server.
     /// </summary>
     [Category("Connection")]
     [DefaultValue(MariaDbConnectionProtocol.Socket)]
-    [Description("The protocol to use to connect to the MySQL Server.")]
+    [Description("The protocol to use to connect to the MariaDb Server.")]
     [DisplayName("Connection Protocol")]
     public MariaDbConnectionProtocol ConnectionProtocol
     {
@@ -157,11 +157,11 @@ public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
     // SSL/TLS Options
 
     /// <summary>
-    /// Whether to use SSL/TLS when connecting to the MySQL server.
+    /// Whether to use SSL/TLS when connecting to the MariaDb server.
     /// </summary>
     [Category("TLS")]
     [DefaultValue(MariaDbSslMode.Preferred)]
-    [Description("Whether to use SSL/TLS when connecting to the MySQL server.")]
+    [Description("Whether to use SSL/TLS when connecting to the MariaDb server.")]
     [DisplayName("SSL Mode")]
     public MariaDbSslMode SslMode
     {
@@ -482,12 +482,12 @@ public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
     }
 
     /// <summary>
-    /// Sets the <c>program_name</c> connection attribute passed to MySQL Server.
+    /// Sets the <c>program_name</c> connection attribute passed to MariaDb Server.
     /// </summary>
     [AllowNull]
     [Category("Other")]
     [DefaultValue("")]
-    [Description("Sets the program_name connection attribute passed to MySQL Server.")]
+    [Description("Sets the program_name connection attribute passed to MariaDb Server.")]
     [DisplayName("Application Name")]
     public string ApplicationName
     {
@@ -640,11 +640,11 @@ public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
     }
 
     /// <summary>
-    /// Instructs the MySQL server that this is an interactive session.
+    /// Instructs the MariaDb server that this is an interactive session.
     /// </summary>
     [Category("Connection")]
     [DefaultValue(false)]
-    [Description("Instructs the MySQL server that this is an interactive session.")]
+    [Description("Instructs the MariaDb server that this is an interactive session.")]
     [DisplayName("Interactive Session")]
     public bool InteractiveSession
     {
@@ -666,11 +666,11 @@ public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
     }
 
     /// <summary>
-    /// Doesn't escape backslashes in string parameters. For use with the <c>NO_BACKSLASH_ESCAPES</c> MySQL server mode.
+    /// Doesn't escape backslashes in string parameters. For use with the <c>NO_BACKSLASH_ESCAPES</c> MariaDb server mode.
     /// </summary>
     [Category("Other")]
     [DefaultValue(false)]
-    [Description("Doesn't escape backslashes in string parameters. For use with the NO_BACKSLASH_ESCAPES MySQL server mode.")]
+    [Description("Doesn't escape backslashes in string parameters. For use with the NO_BACKSLASH_ESCAPES MariaDb server mode.")]
     [DisplayName("No Backslash Escapes")]
     public bool NoBackslashEscapes
     {
@@ -812,12 +812,12 @@ public sealed class MariaDbConnectionStringBuilder : DbConnectionStringBuilder
     // Other Methods
 
     /// <summary>
-    /// Returns an <see cref="ICollection"/> that contains the keys in the <see cref="MySqlConnectionStringBuilder"/>.
+    /// Returns an <see cref="ICollection"/> that contains the keys in the <see cref="MariaDbConnectionStringBuilder"/>.
     /// </summary>
     public override ICollection Keys => base.Keys.Cast<string>().OrderBy(static x => MySqlConnectionStringOption.OptionNames.IndexOf(x)).ToList();
 
     /// <summary>
-    /// Whether this <see cref="MySqlConnectionStringBuilder"/> contains a set option with the specified name.
+    /// Whether this <see cref="MariaDbConnectionStringBuilder"/> contains a set option with the specified name.
     /// </summary>
     /// <param name="keyword">The option name.</param>
     /// <returns><c>true</c> if an option with that name is set; otherwise, <c>false</c>.</returns>

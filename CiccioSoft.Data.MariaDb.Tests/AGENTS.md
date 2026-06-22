@@ -3,7 +3,7 @@ name: CiccioSoft.Data.MariaDb.Tests
 description: "Istruzioni specifiche per il progetto di test del provider ADO.NET."
 ---
 
-# Istruzioni per il progetto CiccioSoft.Data.MariaDbEmbedded.Tests
+# Istruzioni per il progetto CiccioSoft.Data.MariaDb.Tests
 
 ## Scopo
 
@@ -12,13 +12,13 @@ description: "Istruzioni specifiche per il progetto di test del provider ADO.NET
 
 ## Cose importanti
 
-- Scrivere test per l’uso di `MariaDbEmbeddedConnection`, `MariaDbEmbeddedCommand`, `MariaDbEmbeddedDataReader`, ecc.
+- Scrivere test per l’uso di `MariaDbConnection`, `MariaDbCommand`, `MariaDbDataReader`, ecc.
 - Controllare scenari di apertura/chiusura connessione, transazioni e lettura dati.
 
 ## Comandi utili
 
 - Eseguire i test provider:
-  - `dotnet test CiccioSoft.Data.MariaDbEmbedded.Tests/CiccioSoft.Data.MariaDbEmbedded.Tests.csproj`
+  - `dotnet test CiccioSoft.Data.MariaDb.Tests/CiccioSoft.Data.MariaDb.Tests.csproj`
 
 ## Lingua
 

@@ -1,6 +1,6 @@
 # CiccioSoft.Data.MariaDb Guidelines
 
-This document captures development guidelines for the `CiccioSoft.Data.MariaDbEmbedded` provider project.
+This document captures development guidelines for the `CiccioSoft.Data.MariaDb` provider project.
 
 ## 1. Async-first provider
 
@@ -23,14 +23,14 @@ This document captures development guidelines for the `CiccioSoft.Data.MariaDbEm
 
 ## 3. Separation of concerns
 
-- High-level provider logic lives in `CiccioSoft.Data.MariaDbEmbedded`.
-- Native interop details live in `CiccioSoft.Data.MariaDbEmbedded.Interop`.
+- High-level provider logic lives in `CiccioSoft.Data.MariaDb`.
+- Native interop details live in `CiccioSoft.MariaDb.Interop`.
 - The provider should depend on the interop layer, not on native APIs directly.
 
 ## 4. Naming and idiomatic design
 
 - Use clear and concise C# names that reflect the underlying MariaDB objects and ADO.NET concepts.
-- Prefer `MariaDbEmbeddedConnection`, `MariaDbEmbeddedCommand`, `MariaDbEmbeddedDataReader`, etc.
+- Prefer `MariaDbConnection`, `MariaDbCommand`, `MariaDbDataReader`, etc.
 
 ## 5. Future additions
 
