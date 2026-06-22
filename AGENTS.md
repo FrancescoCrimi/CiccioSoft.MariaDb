@@ -9,12 +9,12 @@ description: "Workspace-level agent instructions for CiccioSoft.MariaDb. Use thi
 
 - A .NET provider for MariaDB Embedded.
 - Two-layer architecture:
-  - `CiccioSoft.Interop.MariaDb`: low-level P/Invoke wrapper around MariaDB Connector/C.
+  - `CiccioSoft.MariaDb.Interop`: low-level P/Invoke wrapper around MariaDB Connector/C.
   - `CiccioSoft.Data.MariaDb`: ADO.NET provider layer built on top of the interop layer.
 - Supporting projects:
-  - `CiccioSoft.Interop.MariaDb.Example`: sample usage of the interop layer.
+  - `CiccioSoft.MariaDb.Interop.Example`: sample usage of the interop layer.
   - `CiccioSoft.Data.MariaDb.Tests`: provider-level tests.
-  - `CiccioSoft.Interop.MariaDb.Tests`: interop-level tests.
+  - `CiccioSoft.MariaDb.Interop.Tests`: interop-level tests.
 
 ## Lingua
 
@@ -35,9 +35,9 @@ description: "Workspace-level agent instructions for CiccioSoft.MariaDb. Use thi
 - Run provider tests:
   - `dotnet test CiccioSoft.Data.MariaDb.Tests/CiccioSoft.Data.MariaDb.Tests.csproj`
 - Run interop tests:
-  - `dotnet test CiccioSoft.Interop.MariaDb.Tests/CiccioSoft.Interop.MariaDb.Tests.csproj`
+  - `dotnet test CiccioSoft.MariaDb.Interop.Tests/CiccioSoft.MariaDb.Interop.Tests.csproj`
 - Run the example project:
-  - `dotnet run --project CiccioSoft.Interop.MariaDb.Example/CiccioSoft.Interop.MariaDb.Example.csproj`
+  - `dotnet run --project CiccioSoft.MariaDb.Interop.Example/CiccioSoft.MariaDb.Interop.Example.csproj`
 
 ## What to avoid
 
@@ -50,5 +50,5 @@ description: "Workspace-level agent instructions for CiccioSoft.MariaDb. Use thi
 - `README.md`: project overview and goals.
 - `GUIDELINES.md`: development and naming guidelines.
 - `CiccioSoft.Data.MariaDb.slnx`: solution definition for build/test.
-- `CiccioSoft.Data.MariaDb.Interop.csproj`: interop layer project.
+- `CiccioSoft.MariaDb.Interop.csproj`: interop layer project.
 - `CiccioSoft.Data.MariaDb.csproj`: provider layer project.
