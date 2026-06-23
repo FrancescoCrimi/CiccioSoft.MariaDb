@@ -1,6 +1,6 @@
 # CiccioSoft.MariaDb.Interop.Example
 
-This project contains a didactic example that demonstrates how to use the `CiccioSoft.Data.MariaDbEmbedded.Interop` layer.
+This project contains a didactic example that demonstrates how to use the `CiccioSoft.MariaDb.Interop` layer.
 
 ## Purpose
 
