@@ -1,4 +1,6 @@
-﻿namespace CiccioSoft.Data.MariaDb.Tests;
+﻿using Xunit;
+
+namespace CiccioSoft.Data.MariaDb.Tests;
 
 public class UnitTest1
 {

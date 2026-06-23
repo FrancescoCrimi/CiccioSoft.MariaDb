@@ -1,4 +1,4 @@
-# CiccioSoft.Data.MariaDb Development Guidelines
+# CiccioSoft.MariaDb Development Guidelines
 
 Questo documento raccoglie le linee guida per lo sviluppo della libreria. Serve come riferimento centrale per mantenere coerenza, qualità e stile nel codice.
 
@@ -7,7 +7,7 @@ Questo documento raccoglie le linee guida per lo sviluppo della libreria. Serve 
 - I nomi delle classi devono rispecchiare i nomi degli oggetti della libreria nativa (ad esempio quelli definiti in `mysql.h`), adattati allo stile C#.
 - Preferire nomi concisi ma descrittivi.
 - Usare PascalCase per nomi di classi, enum e metodi.
-- Usare nomi come `MySql` per wrapper di oggetti MySQL nativi, seguendo la terminologia della libreria nativa.
+- Usare nomi come `MariaDb` per wrapper di oggetti MySQL nativi, seguendo la terminologia della libreria nativa.
 - Evitare suffissi superflui come `Client` quando il nome dell'oggetto nativo è già chiaro e il contesto è allineato.
 
 ## 2. Struttura del repository

@@ -37,7 +37,7 @@ The primary goal is to provide a .NET provider for MariaDB Embedded composed of 
 ## Getting started
 
 1. Build the `CiccioSoft.MariaDb.Interop` project.
-2. Use the `MySql.Open(...)` wrapper to open connections to MariaDB Embedded.
+2. Use the `MariaDb.Open(...)` wrapper to open connections to MariaDB Embedded.
 3. Extend the `CiccioSoft.Data.MariaDb` provider to support full ADO.NET.
 
 ## Documentation

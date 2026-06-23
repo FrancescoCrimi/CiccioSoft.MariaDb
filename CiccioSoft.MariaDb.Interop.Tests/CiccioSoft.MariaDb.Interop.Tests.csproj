@@ -19,7 +19,4 @@
     <ProjectReference Include="..\CiccioSoft.MariaDb.Interop\CiccioSoft.MariaDb.Interop.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
 </Project>
